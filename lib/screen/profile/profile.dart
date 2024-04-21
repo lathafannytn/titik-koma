@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontWeight: FontWeight.w500,
                             color: Colors.blue,
                           ),
-                        ),
+                        ), 
                       ),
                     ],
                   ),
