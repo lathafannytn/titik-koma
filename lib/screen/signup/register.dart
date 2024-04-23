@@ -109,7 +109,6 @@ class Register extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // Replace Google sign-in logic
                     },
                     child: Image.asset("assets/logos/logo_google.png"),
                   ),
@@ -118,7 +117,6 @@ class Register extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Replace Facebook sign-in logic
                     },
                     child: Image.asset("assets/logos/logo_google.png"),
                   ),

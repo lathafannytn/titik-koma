@@ -76,6 +76,7 @@ flutter:
     #gambar promo widget
     - assets/images/promo.png
     - assets/images/whatsapp.png
+    - assets/images/home.jpg
   
 
   fonts:
