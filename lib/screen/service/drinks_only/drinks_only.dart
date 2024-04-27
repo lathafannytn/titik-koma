@@ -30,19 +30,19 @@ class DrinksOnlyPage extends StatelessWidget {
           child: Column(
             children: [
               CardDrinks(
-                packageName: 'Package 1',
-                description: 'This is a description of Package 1.',
-                price: '\$10.00',
+                packageName: 'Package A',
+                description: 'for 20 pax',
+                price: '\Rp 350.000',
               ),
               CardDrinks(
-                packageName: 'Package 2',
-                description: 'This is a description of Package 2.',
-                price: '\$15.00',
+                packageName: 'Package B',
+                description: 'for 60 pax',
+                price: '\Rp 950.000',
               ),
               CardDrinks(
-                packageName: 'Package 3',
-                description: 'This is a description of Package 3.',
-                price: '\$20.00',
+                packageName: 'Package C',
+                description: 'for 80 pax',
+                price: '\Rp 1.200.000',
               ),
               ElevatedButton(
                 onPressed: () {},

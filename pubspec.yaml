@@ -79,6 +79,7 @@ flutter:
     - assets/images/whatsapp.png
     - assets/images/home.jpg
     - assets/images/full_service.jpg
+    - assets/images/drinks_only.jpg
   
 
   fonts:
