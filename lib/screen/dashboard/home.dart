@@ -10,11 +10,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-   
-        children: [
-          Expanded(
-            child: Stack(
+        child: SingleChildScrollView(
+            child: Column(
+          children: [
+            Stack(
               children: [
                 Container(
                   height: 140,
@@ -27,7 +26,7 @@ class HomePage extends StatelessWidget {
                 Column(
                   children: [
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(15),
@@ -82,14 +81,14 @@ class HomePage extends StatelessWidget {
                               child: Icon(
                                 Icons.notifications_active,
                                 color: Colors.white,
-                                size: 30,
+                                size: 25,
                               )),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    // SizedBox(
+                    //   height: 5,
+                    // ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -146,20 +145,15 @@ class HomePage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  // InkWell(
-                                  //   onTap: () {
-                                  //     print('Icon tapped!');
-                                  //   },
-                                  //   child:
-                                  //       Icon(Icons.arrow_forward_ios, size: 20),
-                                  // ),
                                 ],
                               ),
                               SizedBox(height: 10),
+                              //garisnya
                               Divider(
-                                color: Colors.grey,
+                                color: Colors.grey[200],
                                 thickness: 1,
                               ),
+
                               SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment:
@@ -168,7 +162,7 @@ class HomePage extends StatelessWidget {
                                   Text(
                                     "Tukarkan poinmu dengan rewards menarik",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 14.0,
+                                      fontSize: 12.0,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -179,8 +173,7 @@ class HomePage extends StatelessWidget {
                                     child: Container(
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(
-                                        color:
-                                            Color.fromRGBO(68, 208, 145, 1.0),
+                                        color: Colors.black,
                                         shape: BoxShape.circle,
                                       ),
                                       child: Icon(
@@ -201,50 +194,49 @@ class HomePage extends StatelessWidget {
                       width: 10.0,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 8.0, left: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Text(
+                        "Bawa kafe kami ke acara Anda!",
+                        style: GoogleFonts.poppins(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
                           Text(
-                            "Lets find your best favorite service!",
+                            "Popular",
                             style: GoogleFonts.poppins(
-                              fontSize: 30.0,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            "See the most popular service on order",
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Align text to the start of your column
-                      children: <Widget>[
-                        Text(
-                          "Popular",
-                          style: GoogleFonts.poppins(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "See the most popular service on order",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
                     ),
                     PopularWidget(),
                   ],
                 ),
               ],
             ),
-          ),
-        ],
-      )),
+          ],
+        )),
+      ),
     );
   }
 }
