@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,20 +7,49 @@ import 'package:tikom/screen/service/full_service/full_service.dart';
 class PopularWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15.0),
-          child: Row(
-            children: [
-              serviceCard(context, "drinks_only.jpg", "Drinks Only", "Pilihan tepat untuk setiap momen keluarga"),
-              serviceCard(context, "full_service.jpg", "Full Service", "Pilihan lengkap untuk setiap kebutuhan"),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Popular",
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "See the most popular service on order",
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey[600],
+                ),
+              ),
             ],
           ),
         ),
-      ),
+        SizedBox(width: 5), 
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.0),
+              child: Row(
+                children: [
+                  serviceCard(context, "drinks_only.jpg", "Drinks Only", "Pilihan tepat untuk setiap momen keluarga"),
+                  serviceCard(context, "full_service.jpg", "Full Service", "Pilihan lengkap untuk setiap kebutuhan"),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

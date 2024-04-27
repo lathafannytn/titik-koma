@@ -204,30 +204,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 5,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Popular",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "See the most popular service on order",
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
+                      width: 10,
                     ),
                     PopularWidget(),
                   ],
