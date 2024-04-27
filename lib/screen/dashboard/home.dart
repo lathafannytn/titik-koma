@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/screen/widget/popularwidget.dart';
+import 'package:tikom/screen/widget/reveralwidget.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -196,9 +197,9 @@ class HomePage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24.0),
                       child: Text(
-                        "Bawa kafe kami ke acara Anda!",
+                        "Elevate your Event with Titik koma Catering Services",
                         style: GoogleFonts.poppins(
-                            fontSize: 25.0,
+                            fontSize: 23.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
@@ -207,6 +208,12 @@ class HomePage extends StatelessWidget {
                       width: 10,
                     ),
                     PopularWidget(),
+                    Divider(
+                      color: Colors.grey[300],
+                      thickness: 1,
+                      height: 20,
+                    ),
+                    ReveralWidget(),
                   ],
                 ),
               ],

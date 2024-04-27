@@ -80,6 +80,7 @@ flutter:
     - assets/images/home.jpg
     - assets/images/full_service.jpg
     - assets/images/drinks_only.jpg
+    - assets/images/kode_referal.jpg
   
 
   fonts:
