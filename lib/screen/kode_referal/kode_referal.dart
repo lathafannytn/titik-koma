@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_declarations
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 
 class KodeReferralPage extends StatelessWidget {
   @override
@@ -93,77 +96,32 @@ class KodeReferralPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 100,),
+            SizedBox(
+              height: 100,
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: Color.fromRGBO(68, 208, 145, 1.0), // Background color
                 onPrimary: Colors.white, // Text color
                 minimumSize: Size(double.infinity, 50), // Set the button's size
                 shape: RoundedRectangleBorder(
-                  // This creates the rounded corners
-                  borderRadius: BorderRadius.circular(
-                      30), // Adjust the border radius here
+                  borderRadius: BorderRadius.circular(30), // Rounded corners
                 ),
               ),
               onPressed: () {
-                Clipboard.setData(ClipboardData(text: 'F0019B'));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Kode telah disalin!"),
-                  ),
-                );
+                final String referralMessage =
+                    'Use my referral code F0019B to get 50% off when you sign up!';
+                Share.share(referralMessage);
               },
               child: Text(
                 'Bagikan Kode',
                 style: GoogleFonts.poppins(
                     fontSize: 16, fontWeight: FontWeight.bold),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-// class CopyableTextWithIcon extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Row(
-//         mainAxisSize: MainAxisSize.min, // Ensures the Row takes only as much width as needed
-//         children: <Widget>[
-//           Text(
-//             'F0019B',
-//             style: GoogleFonts.poppins(
-//               fontWeight: FontWeight.bold,
-//               fontSize: 24.0,
-//             ),
-//           ),
-//           SizedBox(width: 10), // Space between text and icon
-//           InkWell(
-//             onTap: () {
-//               Clipboard.setData(ClipboardData(text: 'F0019B')).then((_) {
-//                 // Optionally show a toast or some feedback
-//                 Fluttertoast.showToast(
-//                   msg: "Code copied to clipboard",
-//                   toastLength: Toast.LENGTH_SHORT,
-//                   gravity: ToastGravity.CENTER,
-//                   timeInSecForIosWeb: 1,
-//                   backgroundColor: Colors.grey[800],
-//                   textColor: Colors.white,
-//                   fontSize: 16.0,
-//                 );
-//               });
-//             },
-//             child: Icon(
-//               Icons.content_copy, // Clipboard icon
-//               color: Colors.black,
-//               size: 24.0,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

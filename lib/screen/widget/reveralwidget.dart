@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/screen/kode_referal/kode_referal.dart';
@@ -6,11 +5,13 @@ import 'package:tikom/screen/kode_referal/kode_referal.dart';
 class ReveralWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Card(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -22,87 +23,65 @@ class ReveralWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              ReveralCard(
-                imagePath: "assets/images/kode_referal.jpg", // Example image path
-                title: "50% OFF",
-                description: "Yuk, ajak teman kamu download Aplikasi Event & Catering Kopi Titikoma",
+              InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => KodeReferralPage()),
                   );
                 },
-              )
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          8.0), // Rounded corners for the image
+                      child: Image.asset(
+                        'assets/images/icon_kode.png',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit
+                            .contain, // Fit the entire image within the bounds without cropping
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "UP TO",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            "50% OFF",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                              color: Color.fromRGBO(68, 208, 145, 1.0),
+                            ),
+                          ),
+                          Text(
+                            "Yuk, ajak teman kamu download Aplikasi Event & Catering Kopi Titikoma",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 10,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class ReveralCard extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String description;
-  final VoidCallback onTap;
-
-  const ReveralCard({
-    Key? key,
-    required this.imagePath,
-    required this.title,
-    required this.description,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap, // Add onTap functionality
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.symmetric(horizontal: 24.0), // Horizontal padding for screen fit
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            Image.asset(
-              imagePath,
-              width: MediaQuery.of(context).size.width - 48, // Subtract horizontal padding
-              height: 200, // Adjust height accordingly
-              fit: BoxFit.cover,
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              color: Colors.black54, // Semi-transparent black overlay for text visibility
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    description,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 }
-
-

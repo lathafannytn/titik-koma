@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: 140,
+                  height: 200,
                   width: double.infinity,
                   child: Image.asset(
                     "assets/images/home.jpg",
@@ -87,9 +87,6 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // SizedBox(
-                    //   height: 5,
-                    // ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -194,25 +191,20 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       width: 10.0,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Text(
-                        "Elevate your Event with Titik koma Catering Services",
-                        style: GoogleFonts.poppins(
-                            fontSize: 23.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    //   // child: Text(
+                    //   //   "Elevate your Event with Titik koma Catering Services",
+                    //   //   style: GoogleFonts.poppins(
+                    //   //       fontSize: 23.0,
+                    //   //       fontWeight: FontWeight.bold,
+                    //   //       color: Colors.black),
+                    //   // ),
+                    // ),
                     SizedBox(
                       width: 10,
                     ),
                     PopularWidget(),
-                    Divider(
-                      color: Colors.grey[300],
-                      thickness: 1,
-                      height: 20,
-                    ),
                     ReveralWidget(),
                   ],
                 ),

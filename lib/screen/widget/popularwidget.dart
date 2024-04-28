@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/screen/service/drinks_only/drinks_only.dart';
@@ -7,119 +6,56 @@ import 'package:tikom/screen/service/full_service/full_service.dart';
 class PopularWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Popular",
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Card(
+      margin: EdgeInsets.all(16.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: serviceLink(context, "Drinks Only",
+                      "assets/images/icon_drinks.png", DrinksOnlyPage()),
                 ),
-              ),
-              Text(
-                "See the most popular service on order",
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey[600],
+                Container(
+                  color: Colors.grey[200],
+                  width: 1,
+                  height: 70,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 5), 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              child: Row(
-                children: [
-                  serviceCard(context, "drinks_only.jpg", "Drinks Only", "Pilihan tepat untuk setiap momen keluarga"),
-                  serviceCard(context, "full_service.jpg", "Full Service", "Pilihan lengkap untuk setiap kebutuhan"),
-                ],
-              ),
+                Expanded(
+                  child: serviceLink(context, "Full Service",
+                      "assets/images/icon_full.png", FullServicePage()),
+                ),
+              ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  Widget serviceCard(BuildContext context, String imagePath, String serviceName, String description) {
+  Widget serviceLink(
+      BuildContext context, String serviceName, String imagePath, Widget page) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => serviceName == "Drinks Only" ? DrinksOnlyPage() : FullServicePage()),
-        );
-      },
-      child: Container(
-        width: 250.0,
-        height: 150.0,
-        margin: EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 2.0,
-              blurRadius: 3.0,
-              offset: Offset(0, 1.0),
-            )
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                ),
-                child: Image.asset("assets/images/$imagePath", fit: BoxFit.cover),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: EdgeInsets.only(left: 10.0, top: 8.0, bottom: 8.0, right: 5.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      serviceName,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        description,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 10,
-                        ),
-                        overflow: TextOverflow.visible,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => page)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(imagePath, width: 60, height: 60),
+          SizedBox(height: 8),
+          Text(
+            serviceName,
+            style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

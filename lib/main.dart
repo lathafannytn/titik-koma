@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tikom/screen/dashboard/home.dart';
+import 'package:tikom/screen/menu/drinks_menu.dart';
 import 'package:tikom/screen/order/order.dart';
 import 'package:tikom/screen/profile/profile.dart';
-import 'package:tikom/screen/search/search.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -34,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
     HomePage(),
-    SearchPage(),
+    DrinksMenuPage(),
     OrderWidget(),
     ProfilePage()
     // Masukkan widget halaman lain di sini sesuai kebutuhan
@@ -58,8 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-            label: 'Search',
-            icon: Icon(Icons.search),
+            label: 'Menu',
+            icon: Icon(Icons.menu),
           ),
           BottomNavigationBarItem(
             label: 'Orders',
