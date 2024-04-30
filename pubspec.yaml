@@ -91,6 +91,13 @@ flutter:
     - assets/images/kopi_aren_doppio.png
     - assets/images/americano_doppio.png
     - assets/images/honey_oat_latte.png
+    - assets/images/tiger_matcha_latte.png
+    - assets/images/seasalt_caramel_oat_latte.png
+    - assets/images/oat_latte.png
+    - assets/images/moon_mocha.png
+    - assets/images/magic.png
+    - assets/images/kyoto_matcha_latte.png
+    - assets/images/japanese_iced_filter.png
   
 
   fonts:

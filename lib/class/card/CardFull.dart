@@ -4,13 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 class CardFull extends StatelessWidget {
   final String packageName;
   final String description;
-  final String imageUrl; // Assuming you might pass an image URL
-
+  final String imageUrl;
   const CardFull({
     Key? key,
     required this.packageName,
     required this.description,
-    this.imageUrl = 'assets/images/full_service.jpg', // Default image if none provided
+    this.imageUrl = 'assets/images/full_service.jpg',
   }) : super(key: key);
 
   @override
@@ -18,21 +17,22 @@ class CardFull extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10), // Rounded corners for the card
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Padding inside the card
+        padding: const EdgeInsets.all(8.0),
         child: Stack(
           children: [
             Row(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(10)), // Rounded corners on the left side
+                  borderRadius:
+                      BorderRadius.horizontal(left: Radius.circular(10)),
                   child: Image.asset(
                     imageUrl,
-                    width: 100, // Fixed width for the image
-                    height: 100, // Fixed height for the image
-                    fit: BoxFit.cover, // Cover fit to maintain aspect ratio
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Expanded(
@@ -43,7 +43,8 @@ class CardFull extends StatelessWidget {
                       children: [
                         Text(
                           packageName,
-                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20.0),
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
                         ),
                         SizedBox(height: 8.0),
                         Text(
@@ -57,8 +58,8 @@ class CardFull extends StatelessWidget {
               ],
             ),
             Positioned(
-              right: 8, 
-              bottom: 8, 
+              right: 8,
+              bottom: 8,
               child: Container(
                 width: 30,
                 height: 30,

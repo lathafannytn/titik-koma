@@ -61,7 +61,7 @@ class CardDrinks extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text:
-                                    '\nSTART FROM\n', // Use \n to create a new line
+                                    '\nSTART FROM\n',
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -69,7 +69,7 @@ class CardDrinks extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: price, // Main price
+                                text: price,
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
