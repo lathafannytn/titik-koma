@@ -87,7 +87,10 @@ flutter:
     - assets/images/icon_kode.png
 
     #gambar untuk menu
-    - assets/images/menu_latte.png
+    - assets/images/latte.png
+    - assets/images/kopi_aren_doppio.png
+    - assets/images/americano_doppio.png
+    - assets/images/honey_oat_latte.png
   
 
   fonts:

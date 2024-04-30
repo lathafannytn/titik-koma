@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tikom/class/CardDrinks.dart';
+import 'package:tikom/class/card/CardDrinks.dart';
 
 class DrinksOnlyPage extends StatelessWidget {
   @override

@@ -3,7 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tikom/class/CardFull.dart';
+import 'package:tikom/class/card/CardFull.dart';
 
 class FullServicePage extends StatelessWidget {
   @override
