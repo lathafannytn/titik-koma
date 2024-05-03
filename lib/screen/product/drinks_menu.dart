@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:tikom/class/card/DrinkMenuCard.dart'; // Ensure this import path is correct
+import 'package:tikom/class/card/product/product_card.dart';
 
 class DrinksMenuPage extends StatefulWidget {
   @override
@@ -118,7 +118,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           var drink = snapshot.data![index];
-                          return DrinkMenuCard(
+                          return ProductCard(
                             name: drink['nama'],
                             price: drink['harga'],
                             imagePath:

@@ -119,6 +119,8 @@ flutter:
     - assets/icons/logout.svg
     - assets/icons/transaction.svg
     - assets/icons/menu.svg
+    - assets/icons/discount.svg
+    - assets/icons/about.svg
 
 
   fonts:

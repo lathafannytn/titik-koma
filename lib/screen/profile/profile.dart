@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:tikom/screen/profile/components/profile_pic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,18 +42,23 @@ class ProfileScreen extends StatelessWidget {
               press: () => {},
             ),
             ProfileMenu(
-              text: "Notifications",
-              icon: "assets/icons/notif.svg",
+              text: "Voucher Diskon",
+              icon: "assets/icons/discount.svg",
               press: () {},
             ),
             ProfileMenu(
-              text: "Settings",
+              text: "Term & Condition",
               icon: "assets/icons/setting.svg",
               press: () {},
             ),
             ProfileMenu(
               text: "Help Center",
               icon: "assets/icons/help_care.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "About",
+              icon: "assets/icons/about.svg",
               press: () {},
             ),
             ProfileMenu(

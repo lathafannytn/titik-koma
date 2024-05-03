@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tikom/screen/dashboard/home.dart';
-import 'package:tikom/screen/menu/drinks_menu.dart';
-import 'package:tikom/screen/order/order.dart';
+import 'package:tikom/screen/product/drinks_menu.dart';
+import 'package:tikom/screen/transaction/order.dart';
 import 'package:tikom/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
-    OrderWidget(),
+    TransactionPage(),
     ProfileScreen()
   ];
 

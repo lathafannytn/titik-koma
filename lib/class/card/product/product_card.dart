@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DrinkMenuCard extends StatelessWidget {
+class ProductCard extends StatelessWidget {
   final String name;
   final String price;
   final String imagePath;
 
-  DrinkMenuCard(
+  ProductCard(
       {required this.name, required this.price, required this.imagePath});
 
   @override

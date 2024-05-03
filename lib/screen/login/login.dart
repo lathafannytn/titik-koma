@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:tikom/screen/login/loginfooter.dart';
-import 'package:tikom/screen/login/loginform.dart';
-import 'package:tikom/screen/login/loginheader.dart';
+import 'package:tikom/screen/login/components/loginfooter.dart';
+import 'package:tikom/screen/login/components/loginform.dart';
+import 'package:tikom/screen/login/components/loginheader.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);

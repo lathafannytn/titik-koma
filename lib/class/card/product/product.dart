@@ -1,15 +1,13 @@
-
-
-class Produk {
+class Product {
   final String id;
   final String nama;
   final int harga;
   final String deskripsi;
 
-  Produk({required this.id, required this.nama, required this.harga, required this.deskripsi});
+  Product({required this.id, required this.nama, required this.harga, required this.deskripsi});
 
-  factory Produk.fromJson(Map<String, dynamic> json) {
-    return Produk(
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
       id: json['id'],
       nama: json['nama'],
       harga: json['harga'],
