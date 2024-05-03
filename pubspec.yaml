@@ -38,11 +38,16 @@ dependencies:
   google_sign_in: ^5.3.3
   google_fonts: 4.0.5
   share: ^2.0.4
+  flutter_svg: 1.1.6
+
+  image_picker: ^0.8.5
+  permission_handler: ^10.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:
@@ -98,7 +103,23 @@ flutter:
     - assets/images/magic.png
     - assets/images/kyoto_matcha_latte.png
     - assets/images/japanese_iced_filter.png
-  
+
+    #semua icon
+    - assets/icons/favorite.svg
+    - assets/icons/gift_voucher.svg
+    - assets/icons/home.svg
+    - assets/icons/money.svg
+    - assets/icons/shopping.svg
+    - assets/icons/profile.svg
+
+    - assets/icons/user.svg
+    - assets/icons/notif.svg
+    - assets/icons/setting.svg
+    - assets/icons/help_care.svg
+    - assets/icons/logout.svg
+    - assets/icons/transaction.svg
+    - assets/icons/menu.svg
+
 
   fonts:
     - family: Karla

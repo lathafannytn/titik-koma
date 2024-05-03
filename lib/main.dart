@@ -3,7 +3,8 @@ import 'package:tikom/screen/dashboard/home.dart';
 import 'package:tikom/screen/menu/drinks_menu.dart';
 import 'package:tikom/screen/order/order.dart';
 import 'package:tikom/screen/profile/profile.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
         scaffoldBackgroundColor: Color(0xFFF5F5F3),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.grey[200], // Mengubah warna latar belakang BottomNavigationBar
+          backgroundColor: Colors.grey[200],
+          selectedLabelStyle:
+              GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500),
+          unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
         ),
       ),
       home: MyHomePage(),
@@ -37,8 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
     HomePage(),
     DrinksMenuPage(),
     OrderWidget(),
-    ProfilePage()
-    // Masukkan widget halaman lain di sini sesuai kebutuhan
+    ProfileScreen()
   ];
 
   void _onItemTapped(int index) {
@@ -50,32 +53,42 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Home',
-            icon: Icon(Icons.home),
+            icon: SvgPicture.asset('assets/icons/home.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/home.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
             label: 'Menu',
-            icon: Icon(Icons.menu),
+            icon: SvgPicture.asset('assets/icons/menu.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/menu.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
-            label: 'Orders',
-            icon: Icon(Icons.shopping_cart),
+            label: 'Transaction',
+            icon: SvgPicture.asset('assets/icons/transaction.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/transaction.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
             label: 'Profile',
-            icon: Icon(Icons.person),
+            icon: SvgPicture.asset('assets/icons/profile.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/profile.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.grey[800],
-        unselectedItemColor: Colors.grey[500], // Warna item yang tidak dipilih
+        unselectedItemColor: Colors.grey[500],
         onTap: _onItemTapped,
-        selectedLabelStyle: TextStyle(fontFamily: 'Karla'),
       ),
     );
   }

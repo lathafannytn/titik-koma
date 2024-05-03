@@ -1,136 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:tikom/screen/widget/callcenterwidget.dart';
+import 'package:tikom/screen/profile/components/profile_pic.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
 
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
+import 'components/profile_menu.dart';
 
-class _ProfilePageState extends State<ProfilePage> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+class ProfileScreen extends StatelessWidget {
+  static String routeName = "/profile";
 
+  const ProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          color: Colors.black,
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
           'Profile',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
-            fontWeight: FontWeight.w600,
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
-          children: <Widget>[
-            // Bagian Profile Picture
-            
-
-            // Bagian Informasi Pengguna
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 20.0),
-                  const Text(
-                    'Fanny',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const Text(
-                        'Personal Info',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          '>',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const Text(
-                        'Voucher & Discount',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          '>',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      const Text(
-                        'Payment Methods',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          '>',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blue,
-                          ),
-                        ), 
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+          children: [
+            ProfilePic(),
+            SizedBox(height: 20),
+            ProfileMenu(
+              text: "My Account",
+              icon: "assets/icons/user.svg",
+              press: () => {},
             ),
-
-            // PANGGIL CALL CENTER,
-            //ff
-            CallCenterWidget(),
-            
+            ProfileMenu(
+              text: "Notifications",
+              icon: "assets/icons/notif.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Settings",
+              icon: "assets/icons/setting.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Help Center",
+              icon: "assets/icons/help_care.svg",
+              press: () {},
+            ),
+            ProfileMenu(
+              text: "Log Out",
+              icon: "assets/icons/logout.svg",
+              press: () {},
+            ),
           ],
         ),
       ),
