@@ -114,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                                   onTap: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => LoginScreen())),
+                                          builder: (context) => SignIn())),
                                 ),
                                 verticalDivider(),
                                 buildIconColumn(
@@ -148,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                         text: "My Account",
                         icon: "assets/icons/user.svg",
                         press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LoginScreen())),
+                            MaterialPageRoute(builder: (context) => SignIn())),
                       ),
                       ProfileMenu(
                         text: "Terms & Conditions",
