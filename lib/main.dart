@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:tikom/common/shared_pref.dart';
+import 'package:tikom/common/storage_service.dart';
 import 'package:tikom/screen/dashboard/home.dart';
+import 'package:tikom/screen/login/signin.dart';
 import 'package:tikom/screen/product/drinks_menu.dart';
 import 'package:tikom/screen/transaction/order.dart';
 import 'package:tikom/screen/profile/profile.dart';
@@ -8,11 +12,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'models/product.dart';
 
-void main() {
+Future<void> main() async {
+  await GetStorage.init();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +33,27 @@ class MyApp extends StatelessWidget {
           unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
         ),
       ),
-      home: MyHomePage(),
+      // home: MyHomePage(),
+      // home: SignIn(),
+      home: FutureBuilder<String?>(
+        future: StorageService.getData('token'),
+        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // If the future is still loading, show a loading indicator
+            return CircularProgressIndicator();
+          } else {
+            // Check if username is not null
+            if (snapshot.hasData && snapshot.data != null) {
+              // Username is not null, show MyHomePage
+              return MyHomePage();
+            } else {
+              // Username is null, show SignIn
+              return SignIn();
+            }
+          }
+        },
+      ),
+
     );
   }
 }

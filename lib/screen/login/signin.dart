@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_string_escapes, unused_field
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tikom/class/customtextfield.dart';
+import 'package:tikom/common/shared_pref.dart';
+import 'package:tikom/common/storage_service.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/screen/dashboard/home.dart';
 import 'package:tikom/screen/forgotpassword/forgotpass.dart';
@@ -13,6 +17,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../class/constant.dart';
+import 'package:http/http.dart' as http;
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -63,34 +68,43 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _handleLogin() async {
-    // try {
-    //   final token = await AuthApiService.signInOrRegister(
-    //     true,
-    //     email: _emailController.text,
-    //     password: _passwordController.text,
-    //     name: '',
-    //     phoneNumber: '',
-    //     address: '',
-    //     born: '',
-    //   );
+    print('handle login click');
+    print('email = ' + _emailController.text);
+    print('password = ' + _passwordController.text);
 
-    //   if (token != null) {
-    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString('token', token);
-
-    //     // Setelah login berhasil, navigasi ke halaman HomePage
-    //     Navigator.pushReplacement(
-    //       context,
-    //       PageTransition(
-    //         child: HomePage(), // Navigasi ke halaman HomePage
-    //         type: PageTransitionType.bottomToTop,
-    //       ),
-    //     );
-    //   }
-    // } catch (error) {
-    //   // Tangani kesalahan jika login gagal
-    //   print('Error: $error');
-    // }
+    try {
+      final response = await http.post(
+          Uri.parse('https://titik-koma.givenjeremia.com/api/auth/login'),
+          body: {
+            'email': _emailController.text,
+            'password': _passwordController.text
+          });
+      if (response.statusCode == 200) {
+        if (json.decode(response.body)['status'] == 'success') {
+          String token = json.decode(response.body)['token'];
+          StorageService.saveData('token',token);
+          // SharedPreferencesService.saveData('token', token);
+          // SharedPreferencesService.getData('token').then((value) {
+          //   print('token: ' + value.toString());
+          // });
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: MyHomePage(),
+              type: PageTransitionType.bottomToTop,
+            ),
+          );
+        } else {
+          print('Login Gagal');
+        }
+      } else {
+        throw Exception(
+            'Failed to load categories with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server Category: $e');
+    }
   }
 
   @override
@@ -158,14 +172,14 @@ class _SignInState extends State<SignIn> {
                 height: 30,
               ),
               CustomTextfield(
-                controller: _emailController, 
+                controller: _emailController,
                 obscureText: false,
                 hintText: 'Enter Email',
                 icon: Icons.alternate_email,
                 hintStyle: GoogleFonts.poppins(),
               ),
               CustomTextfield(
-                controller: _passwordController, 
+                controller: _passwordController,
                 obscureText: _isObscured,
                 hintText: 'Enter Password',
                 icon: Icons.lock,
@@ -184,8 +198,7 @@ class _SignInState extends State<SignIn> {
               SizedBox(
                 width: double.infinity,
                 child: InkWell(
-                  onTap:
-                      _handleLogin, 
+                  onTap: _handleLogin,
                   child: Container(
                     width: size.width,
                     decoration: BoxDecoration(

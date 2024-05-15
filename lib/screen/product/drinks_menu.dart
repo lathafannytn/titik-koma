@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:tikom/class/card/product/product_card.dart';
+import 'package:tikom/common/shared_pref.dart';
+import 'package:tikom/common/storage_service.dart';
 
 import '../../models/drinks.dart';
 import 'category.dart';
@@ -181,27 +183,32 @@ class DrinksMenuPage extends StatefulWidget {
 
 class _DrinksMenuPageState extends State<DrinksMenuPage> {
   List<Category> categories = [];
+  List<Drinks> drinks = [];
+
   int currentSelected = 0;
   String uuidCategory = "";
+  String token = StorageService.getData('token');
 
   @override
   void initState() {
     super.initState();
-    fetchCategories().then((data) {
-      setState(() {
-        categories = data as List<Category>;
-        if (categories.isNotEmpty) {
-          uuidCategory = categories[0].uuid;
-        }
-      });
-    });
+
+    fetchCategories();
+    print('Token $token');
   }
 
   Future<List<Category>> fetchCategories() async {
+    print(token);
     try {
       final response = await http.get(
-        Uri.parse('https://titik-koma.givenjeremia.com/api/product/category'),
-      );
+          Uri.parse(
+            'https://titik-koma.givenjeremia.com/api/product/category',
+          ),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          });
       if (response.statusCode == 200) {
         final List<Category> categories = [];
         final responseData = json.decode(response.body)['data'];
@@ -220,18 +227,50 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
     }
   }
 
-  Future<List<Drinks>> fetchDrinksByCategory(uuidCategory) async {
+  Future<List<Drinks>> fetchDrinksByCategory(String uuid) async {
+    print('--- Ferarch ');
+    print(uuid);
     try {
-      final response = await http.get(Uri.parse(
-          'https://titik-koma.givenjeremia.com/api/product/category/$uuidCategory'));
+      final response = await http.get(
+          Uri.parse(
+              'https://titik-koma.givenjeremia.com/api/product/category/$uuid'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          });
       if (response.statusCode == 200) {
-        print('dasdas');
-        return Drinks.fromJsonList(json.decode(response.body)['data']);
+        print('Received successful response');
+        final List<Drinks> drinks = [];
+
+        // Decode the response body
+        final decodedBody = json.decode(response.body);
+        print('Decoded body: $decodedBody');
+
+        // Extract the 'data' field from the decoded body
+        final responseData = decodedBody['data'];
+        print('Response data: $responseData');
+
+        // Check if responseData is not null and is a list
+        if (responseData != null && responseData is List) {
+          for (var drinkData in responseData) {
+            print('Processing drink data: $drinkData');
+
+            // Create a Drink object from the JSON data and add it to the list
+            drinks.add(Drinks.fromJson(drinkData));
+          }
+        } else {
+          throw Exception('Invalid response data format');
+        }
+
+        print('Processed drinks: $drinks');
+        return drinks;
       } else {
         throw Exception(
             'Failed to load drinks with status code: ${response.statusCode}');
       }
     } catch (e) {
+      print(e);
       throw Exception('Failed to connect to the server: $e');
     }
   }
@@ -269,8 +308,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return FutureBuilder<List<Drinks>>(
-                  future:
-                      fetchDrinksByCategory(categories[currentSelected].uuid),
+                  future: fetchDrinksByCategory(categories[index].uuid),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -290,7 +328,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                           var drink = snapshot.data![index];
                           return ProductCard(
                             name: drink.name,
-                            price: drink.price,
+                            price: 12311211,
                             imagePath: drink.imgUrl,
                           );
                         },
