@@ -1,50 +1,95 @@
 import 'package:flutter/material.dart';
-import 'voucher.dart';  
 
 class VoucherCard extends StatelessWidget {
-  final Voucher voucher;
+  final String title;
+  final String description;
+  final String expiryDate;
+  final String discount;
 
-  VoucherCard({required this.voucher});
+  const VoucherCard({
+    required this.title,
+    required this.description,
+    required this.expiryDate,
+    required this.discount,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
-      margin: EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Image.network(
-            voucher.imageUrl,
-            fit: BoxFit.cover,
-            height: 150,
-            width: double.infinity,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              voucher.title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 2,
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Hingga $expiryDate",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              voucher.description,
-              style: TextStyle(fontSize: 16),
+            VerticalDivider(
+              thickness: 1,
+              color: Colors.grey[300],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Discount: ${voucher.discount}%',
-              style: TextStyle(fontSize: 16, color: Colors.redAccent),
+            Column(
+              children: [
+                Text(
+                  discount,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 62, 169, 126),
+                  ),
+                ),
+                SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle 'Pakai' action
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary:Color.fromARGB(255, 62, 169, 126),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text(
+                    'Pakai',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

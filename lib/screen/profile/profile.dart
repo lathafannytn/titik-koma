@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tikom/screen/kode_referal/kode_referal.dart';
 import 'package:tikom/screen/login/signin.dart';
+import 'package:tikom/screen/profile/components/edit.dart';
 import 'package:tikom/screen/profile/components/profile_about.dart';
 import 'package:tikom/screen/voucher/voucher_page.dart';
 import 'package:tikom/screen/profile/components/profile_menu.dart';
@@ -148,7 +149,7 @@ class ProfileScreen extends StatelessWidget {
                         text: "My Account",
                         icon: "assets/icons/user.svg",
                         press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => SignIn())),
+                            MaterialPageRoute(builder: (context) => EditProfilePage())),
                       ),
                       ProfileMenu(
                         text: "Terms & Conditions",

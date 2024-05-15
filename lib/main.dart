@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
-    TransactionPage(),
+    OrdersPage(),
     ProfileScreen()
   ];
 
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
-            label: 'Transaction',
+            label: 'Order',
             icon: SvgPicture.asset('assets/icons/transaction.svg',
                 width: 24, height: 24),
             activeIcon: SvgPicture.asset('assets/icons/transaction.svg',

@@ -49,6 +49,7 @@ dependencies:
   sliver_tools: ^0.2.5
   flutter_sticky_header: ^0.6.0
   shared_preferences: ^2.0.6
+  qr_code_scanner: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
