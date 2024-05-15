@@ -39,9 +39,16 @@ dependencies:
   google_fonts: 4.0.5
   share: ^2.0.4
   flutter_svg: 1.1.6
+  flutter_rating_bar: ^4.0.1
+  rubber: 1.1.0
 
   image_picker: ^0.8.5
   permission_handler: ^10.0.0
+
+  flutter_bloc: ^8.0.1
+  sliver_tools: ^0.2.5
+  flutter_sticky_header: ^0.6.0
+  shared_preferences: ^2.0.6
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -90,6 +97,7 @@ flutter:
     - assets/images/icon_drinks.png
     - assets/images/icon_full.png
     - assets/images/icon_kode.png
+    - assets/images/background.png
 
     #gambar untuk menu
     - assets/images/latte.png
@@ -121,6 +129,8 @@ flutter:
     - assets/icons/menu.svg
     - assets/icons/discount.svg
     - assets/icons/about.svg
+    - assets/icons/qr.svg
+    - assets/icons/logo_poin.svg
 
 
   fonts:

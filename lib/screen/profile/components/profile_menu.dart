@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/screen/constant.dart';
 
 class ProfileMenu extends StatelessWidget {
@@ -21,7 +22,10 @@ class ProfileMenu extends StatelessWidget {
         style: TextButton.styleFrom(
           foregroundColor: kPrimaryColor,
           padding: const EdgeInsets.all(20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: Colors.grey, width: 1), // Add a border
+          ),
           backgroundColor: const Color(0xFFF5F6F9),
         ),
         onPressed: press,
@@ -34,8 +38,17 @@ class ProfileMenu extends StatelessWidget {
               height: 22,
             ),
             const SizedBox(width: 20),
-            Expanded(child: Text(text)),
-            const Icon(Icons.arrow_forward_ios, size: 16), // Ukuran ikon bisa disesuaikan
+            Expanded(
+              child: Text(
+                text,
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 16),
           ],
         ),
       ),

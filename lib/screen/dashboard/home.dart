@@ -3,8 +3,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/constant/color.dart';
 import 'package:tikom/screen/widget/popularwidget.dart';
 import 'package:tikom/screen/widget/reveralwidget.dart';
+
 
 class HomePage extends StatelessWidget {
   @override
@@ -20,7 +22,7 @@ class HomePage extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   child: Image.asset(
-                    "assets/images/home.jpg",
+                    "assets/images/background.png",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -87,6 +89,7 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 60,),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Card(
@@ -189,12 +192,9 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 10.0,
+                      width: 5.0,
                     ),
                     
-                    SizedBox(
-                      width: 10,
-                    ),
                     PopularWidget(),
                     ReveralWidget(),
                   ],
@@ -207,3 +207,29 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+// class HomePage extends StatefulWidget {
+//   @override
+//   _HomePageState createState() => _HomePageState();
+// }
+
+// class _HomePageState extends State<HomePage> {
+//   var selected = 0;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: kBackground,
+//       body: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           CustomAppBar(
+//             Icons.arrow_back_ios_outlined,
+//             Icons.search_outlined,
+//           ),
+
+//         ],
+//       )
+//     );
+//   }
+// }

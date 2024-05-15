@@ -6,6 +6,8 @@ import 'package:tikom/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'models/product.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -37,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
@@ -64,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
-            label: 'Menu',
+            label: 'Menu', 
             icon: SvgPicture.asset('assets/icons/menu.svg',
                 width: 24, height: 24),
             activeIcon: SvgPicture.asset('assets/icons/menu.svg',
