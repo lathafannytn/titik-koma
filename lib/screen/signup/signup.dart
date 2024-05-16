@@ -12,7 +12,6 @@ class SignUp extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    // Controllers untuk field email, nama, dan password
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _nameController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
@@ -79,19 +78,19 @@ class SignUp extends StatelessWidget {
                 obscureText: false,
                 hintText: 'Enter Full name',
                 icon: Icons.person,
-                controller: _nameController, // Masukkan controller nama
+                controller: _nameController,
               ),
               CustomTextfield(
                 obscureText: true,
                 hintText: 'Enter Password',
                 icon: Icons.lock,
-                controller: _passwordController, // Masukkan controller password
+                controller: _passwordController, 
               ),
               const SizedBox(
                 height: 10,
               ),
               GestureDetector(
-                onTap: _handleSignUp, // Panggil method handleSignUp saat tombol ditekan
+                onTap: _handleSignUp, 
                 child: Container(
                   width: size.width,
                   decoration: BoxDecoration(
@@ -190,153 +189,3 @@ class SignUp extends StatelessWidget {
   }
 }
 
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:tikom/screen/login/signin.dart';
-
-// class SignUpScreen extends StatefulWidget {
-//   @override
-//   _SignUpScreenState createState() => _SignUpScreenState();
-// }
-
-// class _SignUpScreenState extends State<SignUpScreen> {
-//   late TextEditingController _nameController;
-//   late TextEditingController _emailController;
-//   late TextEditingController _passwordController;
-//   late TextEditingController _phoneNumberController;
-//   late TextEditingController _addressController;
-//   late TextEditingController _bornController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _nameController = TextEditingController();
-//     _emailController = TextEditingController();
-//     _passwordController = TextEditingController();
-//     _phoneNumberController = TextEditingController();
-//     _addressController = TextEditingController();
-//     _bornController = TextEditingController();
-//   }
-
-//   @override
-//   void dispose() {
-//     _nameController.dispose();
-//     _emailController.dispose();
-//     _passwordController.dispose();
-//     _phoneNumberController.dispose();
-//     _addressController.dispose();
-//     _bornController.dispose();
-//     super.dispose();
-//   }
-
-//   Future<void> _signUp() async {
-//     final String name = _nameController.text.trim();
-//     final String email = _emailController.text.trim();
-//     final String password = _passwordController.text.trim();
-//     final String phoneNumber = _phoneNumberController.text.trim();
-//     final String address = _addressController.text.trim();
-//     final String born = _bornController.text.trim();
-
-//     try {
-//       final response = await http.post(
-//         Uri.parse("https://titik-koma.givenjeremia.com/api/auth/register"),
-//         body: {
-//           'name': name,
-//           'email': email,
-//           'password': password,
-//           'phone_number': phoneNumber,
-//           'address': address,
-//           'born': born,
-//         },
-//       );
-
-//       if (response.statusCode == 200) {
-//         Map<String, dynamic> json = jsonDecode(response.body);
-
-//         if (json['result'] == 'success') {
-//           print("Sign up berhasil!");
-//           Navigator.pushReplacement(
-//             context,
-//             MaterialPageRoute(builder: (context) => LoginScreen()),
-//           );
-//         } else {
-//           print("Sign up gagal: ${json['message']}");
-//         }
-//       } else {
-//         print("Gagal terhubung ke server");
-//       }
-//     } catch (error) {
-//       print("Error: $error");
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Sign Up'),
-//       ),
-//       body: SingleChildScrollView(
-//         child: Container(
-//           padding: EdgeInsets.all(20),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               TextFormField(
-//                 controller: _nameController,
-//                 decoration: InputDecoration(labelText: 'Full Name'),
-//               ),
-//               SizedBox(height: 20),
-//               TextFormField(
-//                 controller: _emailController,
-//                 decoration: InputDecoration(labelText: 'Email'),
-//               ),
-//               SizedBox(height: 20),
-//               TextFormField(
-//                 controller: _passwordController,
-//                 obscureText: true,
-//                 decoration: InputDecoration(labelText: 'Password'),
-//               ),
-//               SizedBox(height: 20),
-//               TextFormField(
-//                 controller: _phoneNumberController,
-//                 decoration: InputDecoration(labelText: 'Phone Number'),
-//               ),
-//               SizedBox(height: 20),
-//               TextFormField(
-//                 controller: _addressController,
-//                 decoration: InputDecoration(labelText: 'Address'),
-//               ),
-//               SizedBox(height: 20),
-//               TextFormField(
-//                 controller: _bornController,
-//                 readOnly: true,
-//                 onTap: () async {
-//                   final DateTime? pickedDate = await showDatePicker(
-//                     context: context,
-//                     initialDate: DateTime.now(),
-//                     firstDate: DateTime(1900),
-//                     lastDate: DateTime.now(),
-//                   );
-//                   if (pickedDate != null) {
-//                     setState(() {
-//                       _bornController.text =
-//                           "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
-//                     });
-//                   }
-//                 },
-//                 decoration: InputDecoration(labelText: 'Date of Birth'),
-//               ),
-//               SizedBox(height: 20),
-//               ElevatedButton(
-//                 onPressed: _signUp,
-//                 child: Text('Sign Up'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

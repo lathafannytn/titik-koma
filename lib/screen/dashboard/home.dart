@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/constant/color.dart';
+import 'package:tikom/screen/events/event.dart';
 import 'package:tikom/screen/widget/popularwidget.dart';
 import 'package:tikom/screen/widget/reveralwidget.dart';
 
@@ -200,6 +201,7 @@ class HomePage extends StatelessWidget {
                     
                     PopularWidget(),
                     ReveralWidget(),
+                    PopularEventList(),
                   ],
                 ),
               ],
