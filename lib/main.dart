@@ -135,15 +135,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:tikom/common/shared_pref.dart';
-import 'package:tikom/common/storage_service.dart';
-import 'package:tikom/screen/dashboard/home.dart';
-import 'package:tikom/screen/login/signin.dart';
-import 'package:tikom/screen/product/drinks_menu.dart';
-import 'package:tikom/screen/transaction/order.dart';
-import 'package:tikom/screen/profile/profile.dart';
+import 'package:tikom/utils/storage_service.dart';
+import 'package:tikom/ui/screen/dashboard/home.dart';
+import 'package:tikom/ui/screen/login/signin.dart';
+import 'package:tikom/ui/screen/product/drinks_menu.dart';
+import 'package:tikom/ui/screen/transaction/order.dart';
+import 'package:tikom/ui/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'models/product.dart';
+import 'data/models/product.dart';
 
 
 void main() async {
@@ -198,8 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _screens = [
     HomePage(),
-    //DrinksMenuPage(),
-    SignIn(),
+    DrinksMenuPage(),
+    // SignIn(),
     OrdersPage(),
     ProfileScreen()
   ];
