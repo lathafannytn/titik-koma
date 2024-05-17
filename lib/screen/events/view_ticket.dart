@@ -54,7 +54,7 @@ class ViewTicketPage extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'point this qr to the scan place',
+                  'Point this QR to the scan place',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.grey,
@@ -62,7 +62,7 @@ class ViewTicketPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 // QrImage(
-                //   data: 'https://www.example.com/ticket',
+                //   data: '123456', 
                 //   version: QrVersions.auto,
                 //   size: 200.0,
                 //   foregroundColor: Colors.pink,
@@ -177,3 +177,5 @@ class ViewTicketPage extends StatelessWidget {
     );
   }
 }
+
+

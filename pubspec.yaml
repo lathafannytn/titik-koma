@@ -41,10 +41,8 @@ dependencies:
   flutter_svg: 1.1.6
   flutter_rating_bar: ^4.0.1
   rubber: 1.1.0
-
   image_picker: ^0.8.5
   permission_handler: ^10.0.0
-
   flutter_bloc: ^8.0.1
   sliver_tools: ^0.2.5
   flutter_sticky_header: ^0.6.0
@@ -60,6 +58,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   flutter_datetime_picker: ^1.5.1
+  firebase_core: ^2.24.2
+  cloud_firestore: ^4.14.0
+  firebase_auth: ^4.16.0
 
 dev_dependencies:
   flutter_test:
