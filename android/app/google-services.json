@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "56236496206",
-    "project_id": "tikom-67b9b",
-    "storage_bucket": "tikom-67b9b.appspot.com"
+    "project_number": "572012807540",
+    "project_id": "titik-koma-app",
+    "storage_bucket": "titik-koma-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:56236496206:android:ce3d76d83168424323ba1f",
+        "mobilesdk_app_id": "1:572012807540:android:929398c488d451ce60d821",
         "android_client_info": {
-          "package_name": "tikom.com"
+          "package_name": "com.example.tikom"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "572012807540-msrv36ir11ubb0g21sh98ugjfthus452.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAHN-G3zdrSMjIOWv7T0AAovryargPGgSg"
+          "current_key": "AIzaSyB77VXjR1X1iXRmfKkGA5H6ulRE1RJuVqI"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572012807540-gd4gslc1rnamfre5orumq5v7kkjmmahq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
