@@ -18,7 +18,7 @@ class SignUpScreen extends StatelessWidget {
       'username': usernameController.text,
       'birth_date': birthDateController.text,
     });
-    // Navigate to login screen or next appropriate screen
+    // Navigate to login
   }
 
   @override

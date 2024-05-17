@@ -26,7 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (userSnapshot.docs.isEmpty) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SignUpScreen(phone: phoneController.text)),
+        MaterialPageRoute(
+            builder: (context) => SignUpScreen(phone: phoneController.text)),
       );
     } else {
       await _auth.verifyPhoneNumber(
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'Selamat Datang',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            Text('Masuk atau Daftarkan akun TOMORO COFFEE kamu'),
+            Text('Masuk atau Daftarkan akun COFFEE kamu'),
             SizedBox(height: 20),
             Row(
               children: <Widget>[
