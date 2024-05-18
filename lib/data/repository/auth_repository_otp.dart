@@ -11,21 +11,21 @@ import 'package:tikom/utils/storage_service.dart';
 
 const String tokenKey = 'token';
 
-class AuthenticationRepository {
+class AuthenticationEmailOtpRepository {
   final ApiProvider _provider = ApiProvider();
 
   /// Fetch sign in response from api
   Future<SignInResponse> authenticate({
     required String email,
-    required String password,
+    required String otp,
   }) async {
     final body = jsonEncode({
       'email': email,
-      'password': password,
+      'otp': otp,
     });
 
     final response = await _provider.post(
-      'auth/login',
+      'auth/login-verif-email-otp',
       body: body,
       headers: {
         HttpHeaders.acceptHeader: 'application/json',
@@ -33,12 +33,10 @@ class AuthenticationRepository {
       },
     );
 
-    print(response['status']);
     if (response['status'] == 'success') {
       String token = response['token'];
       persistToken(token);
     }
-
     return SignInResponse.fromJson(response);
   }
 

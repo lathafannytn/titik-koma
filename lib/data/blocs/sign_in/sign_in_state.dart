@@ -11,7 +11,19 @@ class SignInInitial extends SignInState {}
 
 class SignInLoading extends SignInState {}
 
+// class SignInSuccess extends SignInState {
+//   final SignInResponse signInResponse;
 
+//   const SignInSuccess({required this.signInResponse});
+//   print(SignInSuccess) {
+//     // TODO: implement print
+//     throw UnimplementedError();
+//   }
+
+//   @override
+//   List<Object> get props => [signInResponse];
+// }
+class  SignInSuccess extends SignInState {}
 
 class SignInFailure extends SignInState {
   final String error;
