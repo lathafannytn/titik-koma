@@ -94,6 +94,8 @@ class ProductCard extends StatelessWidget {
         children: [
           Expanded(
             child: Image.network(imagePath, fit: BoxFit.cover),
+            // child: Image.network('', fit: BoxFit.cover),
+
           ),
           Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
           Text('\$${price.toStringAsFixed(2)}'),
