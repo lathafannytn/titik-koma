@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tikom/data/blocs/sign_in/sign_in_bloc.dart';
 import 'package:tikom/utils/customtextfield.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/utils/storage_service.dart';
@@ -18,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../utils/constant.dart';
 import 'package:http/http.dart' as http;
+import 'package:tikom/utils/extentions.dart' as AppExt;
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -38,6 +40,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
 class _SignInState extends State<SignIn> {
   bool _isObscured = true;
   GoogleSignInAccount? _currentUser;
+  late SignInBloc _signInBloc;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -94,7 +97,7 @@ class _SignInState extends State<SignIn> {
             );
           });
         } else {
-           final snackBar = SnackBar(
+          final snackBar = SnackBar(
             content: Text('Login Gagal'),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 2),
@@ -116,41 +119,54 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _handleLogin() async {
+    // Hidden Keyboards
+    AppExt.hideKeyboard(context);
     try {
-      final response = await http.post(
-          Uri.parse('https://titik-koma.givenjeremia.com/api/auth/login'),
-          body: {
-            'email': _emailController.text,
-            'password': _passwordController.text
-          });
-      if (response.statusCode == 200) {
-        if (json.decode(response.body)['status'] == 'success') {
-          String token = json.decode(response.body)['token'];
-          StorageService.saveData('token', token);
-          final snackBar = SnackBar(
-                content: Text('Login Success'),
-                backgroundColor: Colors.black,
-                duration: Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              );
+      _signInBloc.add(SignInButtonPressed(email: _emailController.text,password: _passwordController.text));
+      final snackBar = SnackBar(
+          content: Text('Login Success'),
+          backgroundColor: Colors.black,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Future.delayed(Duration(seconds: 2), () {
+        AppExt.pushScreen(context,MyHomePage());
+      });
+    //   final response = await http.post(
+    //       Uri.parse('https://titik-koma.givenjeremia.com/api/auth/login'),
+    //       body: {
+    //         'email': _emailController.text,
+    //         'password': _passwordController.text
+    //       });
+    //   if (response.statusCode == 200) {
+    //     if (json.decode(response.body)['status'] == 'success') {
+    //       String token = json.decode(response.body)['token'];
+    //       StorageService.saveData('token', token);
+    //       final snackBar = SnackBar(
+    //         content: Text('Login Success'),
+    //         backgroundColor: Colors.black,
+    //         duration: Duration(seconds: 2),
+    //         behavior: SnackBarBehavior.floating,
+    //       );
 
-              // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        } else {
-           final snackBar = SnackBar(
-                content: Text('Login Success'),
-                backgroundColor: Colors.red,
-                duration: Duration(seconds: 2),
-                behavior: SnackBarBehavior.floating,
-              );
+    //       // ignore: use_build_context_synchronously
+    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //     } else {
+    //       final snackBar = SnackBar(
+    //         content: Text('Login Success'),
+    //         backgroundColor: Colors.red,
+    //         duration: Duration(seconds: 2),
+    //         behavior: SnackBarBehavior.floating,
+    //       );
 
-              // ignore: use_build_context_synchronously
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-      } else {
-        throw Exception(
-            'Failed to load categories with status code: ${response.statusCode}');
-      }
+    //       // ignore: use_build_context_synchronously
+    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //     }
+    //   } else {
+    //     throw Exception(
+    //         'Failed to load categories with status code: ${response.statusCode}');
+    //   }
     } catch (e) {
       throw Exception('Failed to connect to the server Category: $e');
     }

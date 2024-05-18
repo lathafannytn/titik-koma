@@ -9,10 +9,10 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:tikom/api/api_exceptions.dart';
 // import 'package:startercode_project/api/api.dart';
-// import 'package:startercode_project/utils/constants.dart' as AppConst;
+import 'package:tikom/utils/constant.dart' as AppConst;
 
 class ApiProvider {
-  final String _baseUrl = AppConst.API_URL;
+  final String _baseUrl = AppConst.Constants.baseURL;
   // Map<String, String> headers = {"Content-type": "application/json"};
 
   Future<dynamic> get(dynamic url, {Map<String, String>? headers}) async {
