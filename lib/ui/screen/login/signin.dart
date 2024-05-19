@@ -15,7 +15,7 @@ import 'package:tikom/utils/storage_service.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/dashboard/home.dart';
 import 'package:tikom/ui/screen/forgotpassword/forgotpass.dart';
-import 'package:tikom/ui/screen/signup/signup.dart';
+import 'package:tikom/ui/screen/login/signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -202,26 +202,26 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Center(
-                    child: Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
-                          text: 'Forgot Password? ',
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'Reset Here',
-                          style: GoogleFonts.poppins(
-                            color: Color.fromARGB(255, 9, 76, 58),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ]),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  // Center(
+                  //   child: Text.rich(
+                  //     TextSpan(children: [
+                  //       TextSpan(
+                  //         text: 'Forgot Password? ',
+                  //         style: GoogleFonts.poppins(
+                  //           color: Colors.black,
+                  //         ),
+                  //       ),
+                  //       TextSpan(
+                  //         text: 'Reset Here',
+                  //         style: GoogleFonts.poppins(
+                  //           color: Color.fromARGB(255, 9, 76, 58),
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ]),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(child: Divider(color: Colors.grey)),

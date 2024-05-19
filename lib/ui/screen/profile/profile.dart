@@ -10,6 +10,7 @@ import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
+import 'package:tikom/utils/storage_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -149,8 +150,10 @@ class ProfileScreen extends StatelessWidget {
                       ProfileMenu(
                         text: "My Account",
                         icon: "assets/icons/user.svg",
-                        press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => EditProfilePage())),
+                        press: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage())),
                       ),
                       ProfileMenu(
                         text: "Terms & Conditions",
@@ -165,13 +168,17 @@ class ProfileScreen extends StatelessWidget {
                       ProfileMenu(
                         text: "About",
                         icon: "assets/icons/about.svg",
-                        press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => ProfileAbout())),
+                        press: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileAbout())),
                       ),
                       ProfileMenu(
                         text: "Log Out",
                         icon: "assets/icons/logout.svg",
-                        press: () {},
+                        press: () {
+                          StorageService.removeData('token');
+                        },
                       ),
                     ],
                   ),
