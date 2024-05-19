@@ -21,13 +21,13 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _bornController = TextEditingController();
-  
+
   get http => null;
 
   // Method untuk menangani sign up
   Future<void> _handleSignUp() async {
-    try{
-     final response = await http.post(
+    try {
+      final response = await http.post(
           Uri.parse('https://titik-koma.givenjeremia.com/api/auth/register'),
           body: {
             'email': _emailController.text,
@@ -84,7 +84,10 @@ class _SignUpState extends State<SignUp> {
                 obscureText: false,
                 hintText: 'Enter Email',
                 icon: Icons.alternate_email,
-                controller: _emailController, // Masukkan controller email
+                controller: _emailController,
+              ),
+              const SizedBox(
+                height: 10,
               ),
               CustomTextfield(
                 obscureText: false,
@@ -92,26 +95,33 @@ class _SignUpState extends State<SignUp> {
                 icon: Icons.person,
                 controller: _nameController,
               ),
-              CustomTextfield(
-                obscureText: true,
-                hintText: 'Enter Password',
-                icon: Icons.lock,
-                controller: _passwordController,
+              // CustomTextfield(
+              //   obscureText: true,
+              //   hintText: 'Enter Password',
+              //   icon: Icons.lock,
+              //   controller: _passwordController,
+              // ),
+              const SizedBox(
+                height: 10,
               ),
+
               CustomTextfield(
                 obscureText: false,
                 hintText: 'Enter Phone Number',
                 icon: Icons.phone,
                 controller: _phoneNumberController,
               ),
+              const SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: _bornController,
-                readOnly: true, // User cannot manually enter date
+                readOnly: true,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.calendar_today),
                   hintText: 'Enter Date of Birth',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 onTap: () async {
@@ -137,7 +147,7 @@ class _SignUpState extends State<SignUp> {
                 child: Container(
                   width: size.width,
                   decoration: BoxDecoration(
-                    color: Constants.primaryColor,
+                    color: const Color.fromARGB(255, 9, 76, 58),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding:
@@ -147,7 +157,7 @@ class _SignUpState extends State<SignUp> {
                       'Sign Up',
                       style: GoogleFonts.poppins(
                         color: Colors.white,
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -156,35 +166,37 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Expanded(child: Divider()),
+                  Expanded(child: Divider(color: Colors.grey)),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('OR', style: GoogleFonts.poppins()),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      'Or With',
+                      style: GoogleFonts.poppins(color: Colors.grey),
+                    ),
                   ),
-                  Expanded(child: Divider()),
+                  Expanded(child: Divider(color: Colors.grey)),
                 ],
               ),
               const SizedBox(height: 20),
               Container(
-                width: size.width,
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Constants.primaryColor),
+                  border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 30,
+                      height: 20,
                       child: Image.asset('assets/logos/logo_google.png'),
                     ),
                     Text(
-                      'Sign Up with Google',
+                      ' sign in with Google',
                       style: GoogleFonts.poppins(
-                        color: Constants.blackColor,
-                        fontSize: 18.0,
+                        color: const Color.fromARGB(223, 0, 0, 0),
+                        fontSize: 15.0,
                       ),
                     ),
                   ],

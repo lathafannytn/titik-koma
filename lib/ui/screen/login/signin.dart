@@ -264,6 +264,36 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                          child: SignUp(),
+                          type: PageTransitionType.bottomToTop,
+                        ),
+                      );
+                    },
+                    child: Center(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(
+                            text: "Don't have any Account? ",
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Register',
+                            style: GoogleFonts.poppins(
+                              color: Color.fromARGB(255, 9, 76, 58),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
