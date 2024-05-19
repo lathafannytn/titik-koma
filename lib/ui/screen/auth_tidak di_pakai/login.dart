@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tikom/ui/screen/auth/otp.dart';
-import 'package:tikom/ui/screen/auth/signup.dart';
+import 'package:tikom/ui/screen/auth_tidak%20di_pakai/otp.dart';
+import 'package:tikom/ui/screen/auth_tidak%20di_pakai/signup.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
