@@ -6,15 +6,15 @@ class CustomTextfield extends StatelessWidget {
   final String hintText;
   final IconData icon;
   final Widget? suffixIcon;
-  final TextStyle? hintStyle; // Tambahkan properti hintStyle
-  final TextEditingController controller; // Tambahkan properti controller
+  final TextStyle? hintStyle; 
+  final TextEditingController controller; 
 
   const CustomTextfield({
     Key? key,
     required this.obscureText,
     required this.hintText,
     required this.icon,
-    required this.controller, // Tambahkan properti controller
+    required this.controller, 
     this.suffixIcon,
     this.hintStyle, 
   }) : super(key: key);
@@ -22,13 +22,23 @@ class CustomTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller, // Gunakan properti controller di sini
+      controller: controller, 
       obscureText: obscureText,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         hintText: hintText,
-        hintStyle: hintStyle, // Gunakan properti hintStyle di sini
-        border: OutlineInputBorder(),
+        hintStyle: hintStyle,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          borderSide: BorderSide(color: Color.fromARGB(255, 19, 78, 70)),
+        ),
         suffixIcon: suffixIcon,
       ),
     );

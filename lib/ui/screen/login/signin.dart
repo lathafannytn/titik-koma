@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:tikom/data/blocs/sign_in/sign_in_bloc.dart';
 import 'package:tikom/data/blocs/sign_in_email/sign_in_email_bloc.dart';
 import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/utils/customtextfield.dart';
@@ -60,7 +59,6 @@ class _SignInState extends State<SignIn> {
     _googleSignIn.onCurrentUserChanged.listen((account) {
       setState(() {
         _currentUser = account;
-        // print(_currentUser);
       });
     });
     _googleSignIn.signInSilently();
@@ -88,10 +86,8 @@ class _SignInState extends State<SignIn> {
             behavior: SnackBarBehavior.floating,
           );
 
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-          // Navigate after the SnackBar is closed
           Future.delayed(Duration(seconds: 2), () {
             Navigator.push(
               context,
@@ -108,7 +104,6 @@ class _SignInState extends State<SignIn> {
             behavior: SnackBarBehavior.floating,
           );
 
-          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       } else {
@@ -123,7 +118,6 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _handleLogin() async {
-    // Hidden Keyboards
     try {
       AppExt.hideKeyboard(context);
       _signInBloc.add(SignInButtonPressed(
@@ -171,46 +165,14 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image(
-                    image: const AssetImage('assets/logos/logo_tikom_bulat_hijau_hitam.png'),
-                    height: 100.0,
-                  ),
-                  SizedBox(height: 12.0),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Welcome to ",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
-                          ),
-                        ),
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.baseline,
-                          baseline: TextBaseline.ideographic,
-                          child: Baseline(
-                            baseline: 0.0,
-                            baselineType: TextBaseline.ideographic,
-                            child: Image.asset(
-                              'assets/logos/logo_tikom_hijau_hitam.png',
-                              height: 20,
-                            ),
-                          ),
-                        ),
-                        TextSpan(
-                          text: " !",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: Theme.of(context).textTheme.headlineMedium!.fontSize,
-                          ),
-                        ),
-                      ],
+                  SizedBox(height: 100.0),
+                  Text(
+                    'Email',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 9, 76, 58),
                     ),
                   ),
-                  const SizedBox(height: 30),
                   CustomTextfield(
                     controller: _emailController,
                     obscureText: false,
@@ -218,99 +180,71 @@ class _SignInState extends State<SignIn> {
                     icon: Icons.alternate_email,
                     hintStyle: GoogleFonts.poppins(),
                   ),
-                  // CustomTextfield(
-                  //   controller: _passwordController,
-                  //   obscureText: _isObscured,
-                  //   hintText: 'Enter Password',
-                  //   icon: Icons.lock,
-                  //   hintStyle: GoogleFonts.poppins(),
-                  //   suffixIcon: IconButton(
-                  //     icon: Icon(
-                  //       _isObscured ? Icons.visibility : Icons.visibility_off,
-                  //       color: Colors.grey,
-                  //     ),
-                  //     onPressed: _toggleObscure,
-                  //   ),
-                  // ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
-                    child: InkWell(
-                      onTap: _handleLogin,
-                      child: Container(
-                        width: size.width,
-                        decoration: BoxDecoration(
-                          color: Constants.primaryColor,
-                          borderRadius: BorderRadius.circular(20),
+                    child: ElevatedButton(
+                      onPressed: _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        primary: Color.fromARGB(255, 9, 76, 58),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                        child: Center(
-                          child: Text(
-                            'Sign In',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
+                      ),
+                      child: Text(
+                        'Login',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18.0,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  //forgot password
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                          child: const SignIn(),
-                          type: PageTransitionType.bottomToTop,
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(
+                          text: 'Forgot Password? ',
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                          ),
                         ),
-                      );
-                    },
-                    child: Center(
-                      child: Text.rich(
-                        TextSpan(children: [
-                          TextSpan(
-                            text: 'Forgot Password? ',
-                            style: GoogleFonts.poppins(
-                              color: Constants.blackColor,
-                            ),
+                        TextSpan(
+                          text: 'Reset Here',
+                          style: GoogleFonts.poppins(
+                            color: Color.fromARGB(255, 9, 76, 58),
+                            fontWeight: FontWeight.bold,
                           ),
-                          TextSpan(
-                            text: 'Reset Here',
-                            style: GoogleFonts.poppins(
-                              color: Constants.primaryColor,
-                            ),
-                          ),
-                        ]),
-                      ),
+                        ),
+                      ]),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      Expanded(child: Divider()),
+                      Expanded(child: Divider(color: Colors.grey)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          'OR',
-                          style: GoogleFonts.poppins(),
+                          'Or With',
+                          style: GoogleFonts.poppins(color: Colors.grey),
                         ),
                       ),
-                      Expanded(child: Divider()),
+                      Expanded(child: Divider(color: Colors.grey)),
                     ],
                   ),
                   const SizedBox(height: 20),
                   InkWell(
                     onTap: _handleSignIn,
                     child: Container(
-                      width: size.width,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Constants.primaryColor),
+                        border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -319,10 +253,10 @@ class _SignInState extends State<SignIn> {
                             child: Image.asset('assets/logos/logo_google.png'),
                           ),
                           Text(
-                            ' Sign In with Google',
+                            ' sign in with Google',
                             style: GoogleFonts.poppins(
-                              color: Constants.blackColor,
-                              fontSize: 18.0,
+                              color: const Color.fromARGB(223, 0, 0, 0),
+                              fontSize: 15.0,
                             ),
                           ),
                         ],
@@ -330,35 +264,6 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                          child: SignUp(),
-                          type: PageTransitionType.bottomToTop,
-                        ),
-                      );
-                    },
-                    child: Center(
-                      child: Text.rich(
-                        TextSpan(children: [
-                          TextSpan(
-                            text: "Don't have any Account? ",
-                            style: GoogleFonts.poppins(
-                              color: Constants.blackColor,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Register',
-                            style: GoogleFonts.poppins(
-                              color: Constants.primaryColor,
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -367,5 +272,4 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
-  
 }

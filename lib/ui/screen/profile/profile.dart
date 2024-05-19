@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
+import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
 import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';

@@ -139,6 +139,9 @@ flutter:
     - assets/icons/qr.svg
     - assets/icons/logo_poin.svg
 
+    #gambar untuk asset
+    - assets/asset/robot.png
+
 
   fonts:
     - family: Karla
