@@ -11,6 +11,8 @@ import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
 
+import '../order/add_on.dart';
+
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -113,10 +115,12 @@ class ProfileScreen extends StatelessWidget {
                                   label: 'TIKOM Poin',
                                   iconPath: 'assets/icons/logo_poin.svg',
                                   value: '100',
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignIn())),
+                                  onTap: () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddOnScreen(),
+                                    ),
+                                  ),
                                 ),
                                 verticalDivider(),
                                 buildIconColumn(
@@ -149,8 +153,10 @@ class ProfileScreen extends StatelessWidget {
                       ProfileMenu(
                         text: "My Account",
                         icon: "assets/icons/user.svg",
-                        press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => EditProfilePage())),
+                        press: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage())),
                       ),
                       ProfileMenu(
                         text: "Terms & Conditions",
@@ -165,8 +171,10 @@ class ProfileScreen extends StatelessWidget {
                       ProfileMenu(
                         text: "About",
                         icon: "assets/icons/about.svg",
-                        press: () => Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => ProfileAbout())),
+                        press: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileAbout())),
                       ),
                       ProfileMenu(
                         text: "Log Out",
