@@ -12,6 +12,8 @@ import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
 import 'package:tikom/utils/storage_service.dart';
 
+import '../order/add_on.dart';
+
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -114,10 +116,12 @@ class ProfileScreen extends StatelessWidget {
                                   label: 'TIKOM Poin',
                                   iconPath: 'assets/icons/logo_poin.svg',
                                   value: '100',
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignIn())),
+                                  onTap: () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddOnScreen(),
+                                    ),
+                                  ),
                                 ),
                                 verticalDivider(),
                                 buildIconColumn(

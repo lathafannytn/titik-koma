@@ -6,7 +6,7 @@ import 'package:tikom/utils/storage_service.dart';
 import 'package:tikom/ui/screen/dashboard/home.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
-import 'package:tikom/ui/screen/transaction/order.dart';
+import 'package:tikom/ui/screen/order/order.dart';
 import 'package:tikom/ui/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
