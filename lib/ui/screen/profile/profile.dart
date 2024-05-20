@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
 import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
+import 'package:tikom/ui/screen/order/checkout.dart';
 import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
@@ -118,7 +119,7 @@ class ProfileScreen extends StatelessWidget {
                                   onTap: () => Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AddOnScreen(),
+                                      builder: (context) => CheckoutScreen(),
                                     ),
                                   ),
                                 ),

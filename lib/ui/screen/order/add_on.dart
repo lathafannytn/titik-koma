@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_final_fields
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -390,7 +390,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
-      activeColor: Color.fromARGB(255, 20, 63, 49),
+      activeColor: Color.fromARGB(255, 30, 83, 66),
     );
   }
 }
