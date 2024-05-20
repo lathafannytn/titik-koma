@@ -12,172 +12,6 @@ import 'package:tikom/utils/storage_service.dart';
 import '../../../data/models/drinks.dart';
 import 'category.dart';
 
-// class DrinksMenuPage extends StatefulWidget {
-//   @override
-//   _DrinksMenuPageState createState() => _DrinksMenuPageState();
-// }
-
-// class _DrinksMenuPageState extends State<DrinksMenuPage> {
-//   List<String> categoryList = [
-//     'Coffee',
-//     'Tea',
-//     'Milk',
-//     'Bundle',
-//     'Merchandise',
-//     'Others'
-//   ];
-//   int currentSelected = 0;
-
-//   Future<List<dynamic>> fetchDrinks() async {
-//     try {
-//       final response = await http.get(
-//           Uri.parse('https://titik-koma.givenjeremia.com/api/product/menu'));
-//       if (response.statusCode == 200) {
-//         return json.decode(response.body);
-//       } else {
-//         throw Exception(
-//             'Failed to load drinks with status code: ${response.statusCode}');
-//       }
-//     } catch (e) {
-//       throw Exception('Failed to connect to the server: $e');
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: CustomScrollView(
-//         slivers: <Widget>[
-//           SliverAppBar(
-//             backgroundColor: Colors.transparent,
-//             expandedHeight: 250.0,
-//             floating: false,
-//             pinned: true,
-//             flexibleSpace: LayoutBuilder(
-//               builder: (BuildContext context, BoxConstraints constraints) {
-//                 var top = constraints.biggest.height;
-//                 return FlexibleSpaceBar(
-//                   title: Text('Drinks Menu',
-//                       style: GoogleFonts.poppins(
-//                         textStyle: TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 20,
-//                           fontWeight: FontWeight.bold,
-//                           shadows: <Shadow>[
-//                             Shadow(
-//                               offset: Offset(1.0, 1.0),
-//                               blurRadius: 3.0,
-//                               color: Color.fromARGB(150, 0, 0, 0),
-//                             ),
-//                           ],
-//                         ),
-//                       )),
-//                   centerTitle: true,
-//                   background: Stack(
-//                     fit: StackFit.expand,
-//                     children: [
-//                       Image.network(
-//                         "https://example.com/banner.jpg",
-//                         fit: BoxFit.cover,
-//                         color: Colors.black45,
-//                         colorBlendMode: BlendMode.darken,
-//                       ),
-//                       Container(
-//                         decoration: BoxDecoration(
-//                           color: Colors.black.withOpacity(
-//                               top == 250.0 ? 0.0 : (1 - (top - 80) / 170)),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 );
-//               },
-//             ),
-//             bottom: PreferredSize(
-//               preferredSize: Size.fromHeight(48),
-//               child: Container(
-//                 color: Colors.white,
-//                 child: categorySelection(),
-//               ),
-//             ),
-//           ),
-//           SliverList(
-//             delegate: SliverChildBuilderDelegate(
-//               (BuildContext context, int index) {
-//                 return FutureBuilder<List<dynamic>>(
-//                   future: fetchDrinks(),
-//                   builder: (context, snapshot) {
-//                     if (snapshot.connectionState == ConnectionState.waiting) {
-//                       return Center(child: CircularProgressIndicator());
-//                     } else if (snapshot.hasError) {
-//                       return Center(child: Text("Error: ${snapshot.error}"));
-//                     } else if (snapshot.hasData) {
-//                       return GridView.builder(
-//                         padding: EdgeInsets.all(16),
-//                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                           crossAxisCount: 2,
-//                           crossAxisSpacing: 10,
-//                           mainAxisSpacing: 20,
-//                           childAspectRatio: 0.8,
-//                         ),
-//                         itemCount: snapshot.data!.length,
-//                         itemBuilder: (context, index) {
-//                           var drink = snapshot.data![index];
-//                           return ProductCard(
-//                             name: drink['nama'],
-//                             price: drink['harga'],
-//                             imagePath:
-//                                 'assets/images/${drink['nama'].replaceAll(' ', '_').toLowerCase()}.png',
-//                           );
-//                         },
-//                         shrinkWrap: true,
-//                         physics: NeverScrollableScrollPhysics(),
-//                       );
-//                     } else {
-//                       return Center(child: Text("No data available"));
-//                     }
-//                   },
-//                 );
-//               },
-//               childCount: 1,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget categorySelection() {
-//     return SingleChildScrollView(
-//       scrollDirection: Axis.horizontal,
-//       padding: EdgeInsets.symmetric(vertical: 8),
-//       child: Row(
-//         children: List<Widget>.generate(categoryList.length, (index) {
-//           return Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 10),
-//             child: ChoiceChip(
-//               label: Text(categoryList[index]),
-//               selected: currentSelected == index,
-//               onSelected: (bool selected) {
-//                 setState(() {
-//                   currentSelected = index;
-//                 });
-//               },
-//               backgroundColor: Colors.white,
-//               selectedColor: Colors.blueAccent,
-//               labelStyle: TextStyle(
-//                   color:
-//                       currentSelected == index ? Colors.white : Colors.black),
-//             ),
-//           );
-//         }),
-//       ),
-//     );
-//   }
-// }
-
-//-------------- yang API -----------------------------
-
 class DrinksMenuPage extends StatefulWidget {
   @override
   _DrinksMenuPageState createState() => _DrinksMenuPageState();
@@ -190,40 +24,24 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   int currentSelected = 0;
   String uuidCategory = "";
   String token = StorageService.getToken('token');
+
   @override
   void initState() {
     super.initState();
-
-    // getToken();
     fetchCategories().then((data) {
-
       setState(() {
-      fetchCategories();
-          categories = data as List<Category>;
-          print('Token $token');
-          if (categories.isNotEmpty) {
-              uuidCategory = categories[0].uuid;
-          }
+        categories = data as List<Category>;
+        if (categories.isNotEmpty) {
+          uuidCategory = categories[0].uuid;
+        }
       });
     });
-    print('Token $token');
   }
 
-  // void getToken() async {
-  //   String? storedToken = await StorageService.getData('token');
-  //   setState(() {
-  //     token = storedToken ?? '';
-  //   });
-  //   print('Token get: $token');
-  // }
-
   Future<List<Category>> fetchCategories() async {
-    print(token);
     try {
       final response = await http.get(
-          Uri.parse(
-            'https://titik-koma.givenjeremia.com/api/product/category',
-          ),
+          Uri.parse('https://titik-koma.givenjeremia.com/api/product/category'),
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -237,8 +55,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             categories.add(Category.fromJson(categoryData));
           }
         }
-        print('Category');
-        print(categories);
         return categories;
       } else {
         throw Exception(
@@ -250,8 +66,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   }
 
   Future<List<Drinks>> fetchDrinksByCategory(String uuid) async {
-    print('--- Ferarch ');
-    print(uuid);
     try {
       final response = await http.get(
           Uri.parse(
@@ -262,111 +76,238 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             'Authorization': 'Bearer $token',
           });
       if (response.statusCode == 200) {
-        print('Received successful response');
         final List<Drinks> drinks = [];
-
-        // Decode the response body
         final decodedBody = json.decode(response.body);
-        print('Decoded body: $decodedBody');
-
-        // Extract the 'data' field from the decoded body
         final responseData = decodedBody['data'];
-        print('Response data: $responseData');
-
-        // Check if responseData is not null and is a list
         if (responseData != null && responseData is List) {
           for (var drinkData in responseData) {
-            print('Processing drink data: $drinkData');
-
-            // Create a Drink object from the JSON data and add it to the list
             drinks.add(Drinks.fromJson(drinkData));
           }
         } else {
           throw Exception('Invalid response data format');
         }
-
-        print('Processed drinks: $drinks');
         return drinks;
       } else {
         throw Exception(
             'Failed to load drinks with status code: ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Failed to connect to the server: $e');
     }
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.3,
+          minChildSize: 0.1,
+          maxChildSize: 0.8,
+          expand: false,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      controller: scrollController,
+                      children: [
+                        ListTile(
+                          title: Text('Spanish Aren Latte', style: TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Text('Iced'),
+                          leading: Image.asset('assets/images/kopi_aren_doppio.jpg', width: 50),
+                          trailing: Container(
+                            width: 120,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    // Decrease item quantity logic here
+                                  },
+                                  icon: Icon(Icons.remove_circle_outline, color: Colors.orange),
+                                ),
+                                Text('1', style: TextStyle(fontSize: 16)),
+                                IconButton(
+                                  onPressed: () {
+                                    // Increase item quantity logic here
+                                  },
+                                  icon: Icon(Icons.add_circle_outline, color: Colors.orange),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                          title: Text('Total: Rp 26.000', style: TextStyle(fontWeight: FontWeight.bold)),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              // Add your checkout logic here
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text("Checkout"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            expandedHeight: 200.0,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Drinks Menu',
-                  style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  )),
-              background:
-                  Image.asset("assets/images/home.jpg", fit: BoxFit.cover),
-            ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(48),
-              child: Container(
-                color: Colors.white,
-                child: categorySelection(),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text('Drinks Menu',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )),
+                  background:
+                      Image.asset("assets/images/home.jpg", fit: BoxFit.cover),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(48),
+                  child: Container(
+                    color: Colors.white,
+                    child: categorySelection(),
+                  ),
+                ),
               ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return FutureBuilder<List<Drinks>>(
-                  future: fetchDrinksByCategory(uuidCategory),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
-                    } else if (snapshot.hasData) {
-                      return GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: 0.8,
-                        ),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          var drink = snapshot.data![index];
-                          return ProductCard(
-                            name: drink.name,
-                            price: drink.price,
-                            imagePath: drink.imgUrl,
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return FutureBuilder<List<Drinks>>(
+                      future: fetchDrinksByCategory(uuidCategory),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text("Error: ${snapshot.error}"));
+                        } else if (snapshot.hasData) {
+                          return GridView.builder(
+                            padding: EdgeInsets.all(16),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 20,
+                              childAspectRatio: 0.8,
+                            ),
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              var drink = snapshot.data![index];
+                              return ProductCard(
+                                name: drink.name,
+                                price: drink.price,
+                                imagePath: drink.imgUrl,
+                              );
+                            },
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
                           );
-                        },
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                      );
-                    } else {
-                      return Center(child: Text("No data available"));
-                    }
+                        } else {
+                          return Center(child: Text("No data available"));
+                        }
+                      },
+                    );
                   },
-                );
-              },
-              childCount: 1,
-            ),
+                  childCount: 1,
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: InkWell(
+          onTap: () {
+            _showBottomSheet(context);
+          },
+          child: Container(
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Stack(
+                      children: [
+                        Icon(Icons.shopping_bag, color: Colors.orange, size: 30),
+                        Positioned(
+                          right: 0,
+                          child: Container(
+                            padding: EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 12,
+                              minHeight: 12,
+                            ),
+                            child: Text(
+                              '1',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Rp 26.000",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _showBottomSheet(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text("Checkout"),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -387,15 +328,13 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               selected: currentSelected == index,
               onSelected: (bool selected) {
                 setState(() {
-                  uuidCategory = categories[index].uuid;
                   currentSelected = index;
+                  uuidCategory = categories[index].uuid;
                 });
               },
-              backgroundColor: Colors.white,
-              selectedColor: Colors.blueAccent,
+              selectedColor: Colors.orange,
               labelStyle: TextStyle(
-                  color:
-                      currentSelected == index ? Colors.white : Colors.black),
+                  color: currentSelected == index ? Colors.white : Colors.black),
             ),
           );
         }),

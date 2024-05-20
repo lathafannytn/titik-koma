@@ -150,7 +150,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Tunjungan Plaza 3',
+                'Titik Koma Adijasa',
                 style: GoogleFonts.poppins(
                   textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),

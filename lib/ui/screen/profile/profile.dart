@@ -120,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
                                   onTap: () => Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => CheckoutScreen(),
+                                      builder: (context) => AddOnScreen(),
                                     ),
                                   ),
                                 ),

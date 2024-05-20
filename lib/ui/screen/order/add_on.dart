@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_final_fields
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -342,29 +340,27 @@ class _AddOnScreenState extends State<AddOnScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 80.0, 
-        height: 80.0,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Color.fromARGB(255, 20, 63, 49) : Colors.grey),
-          borderRadius: BorderRadius.circular(8.0),
-          color: isSelected ? Colors.green[50] : Colors.white,
+          color: isSelected ? Colors.green[100] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+          border: isSelected
+              ? Border.all(color: Colors.green, width: 2)
+              : Border.all(color: Colors.grey, width: 1),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        child: Row(
           children: [
             Icon(
               icon,
-              size: 24.0,
-              color: isSelected ? Color.fromARGB(255, 20, 63, 49) : Colors.black,
+              color: isSelected ? Colors.green : Colors.grey,
             ),
-            SizedBox(height: 4.0),
+            SizedBox(width: 8),
             Text(
               label,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
-                  fontSize: 16.0,
-                  color: isSelected ? Color.fromARGB(255, 20, 63, 49) : Colors.black,
+                  fontSize: 16,
+                  color: isSelected ? Colors.green : Colors.grey,
                 ),
               ),
             ),
@@ -390,7 +386,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
-      activeColor: Color.fromARGB(255, 30, 83, 66),
+      activeColor: Colors.green,
     );
   }
 }
