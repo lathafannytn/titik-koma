@@ -11,6 +11,7 @@ import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
+import 'package:tikom/utils/storage_service.dart';
 
 import '../order/add_on.dart';
 
@@ -180,7 +181,9 @@ class ProfileScreen extends StatelessWidget {
                       ProfileMenu(
                         text: "Log Out",
                         icon: "assets/icons/logout.svg",
-                        press: () {},
+                        press: () {
+                          StorageService.removeData('token');
+                        },
                       ),
                     ],
                   ),
