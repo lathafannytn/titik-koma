@@ -11,6 +11,7 @@ import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/storage_service.dart';
 
 import '../order/add_on.dart';
@@ -182,7 +183,19 @@ class ProfileScreen extends StatelessWidget {
                         text: "Log Out",
                         icon: "assets/icons/logout.svg",
                         press: () {
-                          StorageService.removeData('token');
+                          DialogTemp().Konfirmasi(
+                            context: context,
+                            onYes: () {
+                              StorageService.removeData('token');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignIn()));
+                            },
+                            title: "Apakah Ingin Keluar Aplikasi?",
+                            onYesText: 'Ya',
+                          );
+                         
                         },
                       ),
                     ],
