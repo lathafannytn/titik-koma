@@ -27,7 +27,7 @@ class AuthenticationSignUpRepository {
     });
 
     final response = await _provider.post(
-      'auth/login-only-email',
+      'auth/register-new',
       body: body,
       headers: {
         HttpHeaders.acceptHeader: 'application/json',

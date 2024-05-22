@@ -9,6 +9,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tikom/data/blocs/sign_in_email/sign_in_email_bloc.dart';
 import 'package:tikom/ui/screen/login/otp.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/ui/widgets/loading_dialog.dart';
 import 'package:tikom/utils/customtextfield.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/utils/storage_service.dart';
@@ -120,8 +122,15 @@ class _SignInState extends State<SignIn> {
   Future<void> _handleLogin() async {
     try {
       AppExt.hideKeyboard(context);
-      _signInBloc.add(SignInButtonPressed(
-          email: _emailController.text));
+      DialogTemp().Konfirmasi(
+        context: context,
+        onYes: () {
+          LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
+          _signInBloc.add(SignInButtonPressed(email: _emailController.text));
+        },
+        title: "Apakah Ingin Login?",
+        onYesText: 'Ya',
+      );
     } catch (e) {
       throw Exception('Error : $e');
     }
@@ -135,7 +144,9 @@ class _SignInState extends State<SignIn> {
       create: (context) => _signInBloc,
       child: BlocListener<SignInEmailBloc, SignInEmailState>(
         listener: (context, state) {
+         
           if (state is SignInSuccess) {
+            AppExt.popScreen(context);
             final snackBar = SnackBar(
               content: Text('Login Success'),
               backgroundColor: Colors.black,
@@ -145,16 +156,39 @@ class _SignInState extends State<SignIn> {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Future.delayed(Duration(seconds: 2), () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => OtpEmailScreen(email: _emailController.text)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          OtpEmailScreen(email: _emailController.text)));
             });
           } else if (state is SignInFailure) {
-            final snackBar = SnackBar(
-              content: Text('Login Failed: ${state.error}'),
-              backgroundColor: Colors.red,
-              duration: Duration(seconds: 2),
-              behavior: SnackBarBehavior.floating,
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            AppExt.popScreen(context);
+            if(state.message == 'Email Not Found'){
+                DialogTemp().Konfirmasi(
+                        context: context,
+                        onYes: () {
+                          LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
+                          // To Regis Page
+                            Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SignUp(email: _emailController.text,))
+                                    );
+                        },
+                        title: "Email Tidak Terdaftar?",
+                        onYesText: 'Daftar',
+                  );
+            }
+            else{
+              final snackBar = SnackBar(
+                content: Text('Login Failed: ${state.error}'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
           }
         },
         child: Scaffold(
@@ -264,36 +298,36 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   PageTransition(
-                      //     child: SignUp(),
-                      //     type: PageTransitionType.bottomToTop,
-                      //   ),
-                      // );
-                    },
-                    child: Center(
-                      child: Text.rich(
-                        TextSpan(children: [
-                          TextSpan(
-                            text: "Don't have any Account? ",
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Register',
-                            style: GoogleFonts.poppins(
-                              color: Color.fromARGB(255, 9, 76, 58),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ]),
-                      ),
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     // Navigator.pushReplacement(
+                  //     //   context,
+                  //     //   PageTransition(
+                  //     //     child: SignUp(),
+                  //     //     type: PageTransitionType.bottomToTop,
+                  //     //   ),
+                  //     // );
+                  //   },
+                  //   child: Center(
+                  //     child: Text.rich(
+                  //       TextSpan(children: [
+                  //         TextSpan(
+                  //           text: "Don't have any Account? ",
+                  //           style: GoogleFonts.poppins(
+                  //             color: Colors.black,
+                  //           ),
+                  //         ),
+                  //         TextSpan(
+                  //           text: 'Register',
+                  //           style: GoogleFonts.poppins(
+                  //             color: Color.fromARGB(255, 9, 76, 58),
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //         ),
+                  //       ]),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

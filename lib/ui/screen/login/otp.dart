@@ -1,11 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/data/blocs/sign_in_otp/sign_in_otp_bloc.dart';
+import 'package:tikom/data/repository/auth_repository_email.dart';
 import 'package:tikom/main.dart';
+import 'package:tikom/utils/extentions.dart' as AppExt;
 
 class OtpEmailScreen extends StatefulWidget {
   final String email;
@@ -24,6 +29,10 @@ class _OtpScreenState extends State<OtpEmailScreen> {
 
   late SignInEmailOtpBloc _signInOtpBloc;
 
+  late bool _isButtonEnabled, isMounted;
+  late Timer _timer;
+  late int _start;
+
   void _verifyOTP() {
     String email = widget.email;
     String otp = otpControllers.map((controller) => controller.text).join();
@@ -35,6 +44,10 @@ class _OtpScreenState extends State<OtpEmailScreen> {
     super.initState();
     _signInOtpBloc = SignInEmailOtpBloc();
     _setupFocusNodes();
+    _isButtonEnabled = false;
+    isMounted = true;
+    _start = 50;
+    _startTimer();
   }
 
   void _setupFocusNodes() {
@@ -52,6 +65,22 @@ class _OtpScreenState extends State<OtpEmailScreen> {
         _verifyOTP(); // Verify OTP when the last field is filled
       }
     });
+  }
+
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            timer.cancel();
+          } else {
+            _start = _start - 1;
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -115,10 +144,9 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      SizedBox(height: 50),
                       SizedBox(
-                          height: 50), 
-                      SizedBox(
-                        width: 250, 
+                        width: 250,
                         height: 250,
                         child: Image.asset('assets/asset/robot.png'),
                       ),
@@ -148,29 +176,39 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        '05:00',
+                        '5 Minutes',
                         style: GoogleFonts.poppins(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'Did not send OTP? ',
-                          style: GoogleFonts.poppins(
-                              fontSize: 16, color: Colors.black),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Send OTP',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16, color: Colors.blue),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // Add your resend OTP logic here
+                      Container(
+                        child: _start > 0
+                            ? Text(
+                                "Kirim Ulang dalam $_start detik",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, color: Colors.black),
+                              )
+                            : InkWell(
+                                onTap: () {
+                                  AppExt.hideKeyboard(context);
+                                  // _otpBloc.add(OtpRetry(
+                                  //     phoneNumber: widget.phoneNumber));
+                                  AuthenticationEmailRepository().authenticate(email: widget.email);
+                                  _start = 50;
+                                  _startTimer();
                                 },
-                            ),
-                          ],
-                        ),
+                                radius: 20,
+                                borderRadius: BorderRadius.circular(10),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: kIsWeb ? 15 : 10.0),
+                                  child: Text("Kirim Ulang",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16, color: Colors.blue)),
+                                ),
+                              ),
                       ),
+                   
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _verifyOTP,
@@ -184,15 +222,15 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                         child: const Text('Submit'),
                       ),
                       SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to Login screen
-                        },
-                        child: Text(
-                          'You have an account? Login',
-                          style: GoogleFonts.poppins(),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     // Navigate to Login screen
+                      //   },
+                      //   child: Text(
+                      //     'You have an account? Login',
+                      //     style: GoogleFonts.poppins(),
+                      //   ),
+                      // ),
                       SizedBox(height: 20), // Spacer to move content down
                     ],
                   ),
