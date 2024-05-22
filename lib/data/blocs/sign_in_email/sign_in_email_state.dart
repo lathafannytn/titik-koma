@@ -11,16 +11,27 @@ class SignInInitial extends SignInEmailState {}
 
 class SignInLoading extends SignInEmailState {}
 
-class SignInSuccess extends SignInEmailState {}
+class SignInSuccess extends SignInEmailState {
+  final String message;
+
+  const SignInSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
+
+  @override
+  String toString() => 'LoginSuccess { message: $message }';
+}
 
 class SignInFailure extends SignInEmailState {
   final String error;
+  final String message;
 
-  const SignInFailure({required this.error});
+  const SignInFailure({required this.error,required this.message});
 
   @override
   List<Object> get props => [error];
 
   @override
-  String toString() => 'LoginFailure { error: $error }';
+  String toString() => 'LoginFailure { error: $error , message : $message }';
 }

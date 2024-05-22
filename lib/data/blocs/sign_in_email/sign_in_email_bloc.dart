@@ -26,12 +26,12 @@ class SignInEmailBloc extends Bloc<SignInEmailEvent, SignInEmailState> {
           email: event.email,
         );
            if (signInResponse.status == 'success') {
-              emit(SignInSuccess());
+              emit(SignInSuccess(message: signInResponse.message));
         } else {
-              emit(SignInFailure(error: signInResponse.error ?? 'Unknown error'));
+              emit(SignInFailure(message: signInResponse.message,error: signInResponse.error ?? 'Unknown error'));
         }
       } catch (error) {
-        emit(SignInFailure(error: error.toString()));
+        emit(SignInFailure(message: 'Server Error ',error: error.toString()));
       }
     }
   }
