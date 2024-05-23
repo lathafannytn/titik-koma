@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_declarations
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
+import 'package:flutter/services.dart';
 
 class KodeReferralPage extends StatelessWidget {
+  // INI NYIMPEN kode referral 
+  final String referralCode = 'E9RC5G';  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +17,7 @@ class KodeReferralPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Kode Referral',
+          'Tikom Rewards',
           style: GoogleFonts.poppins(
             textStyle: TextStyle(
               color: Colors.black,
@@ -25,102 +28,125 @@ class KodeReferralPage extends StatelessWidget {
         ),
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help_outline, color: Colors.black),
+            onPressed: () {
+              // Help action
+            },
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        // Use SingleChildScrollView to avoid overflow when keyboard appears or screen size is small
-        padding: EdgeInsets.all(20.0), // Padding around the content
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .center, // Aligns all children to the center horizontally
-          children: <Widget>[
-            Text(
-              "Diskon 50% untuk kamu!",
-              style: GoogleFonts.poppins(
-                fontSize: 24, // Larger font size for importance
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Get Free Coffee!",
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Get a free coffee discount voucher every time your friend joins via your referral code.",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 30),
+                  // QrImage(
+                  //   data: referralCode, // Gunakan variabel referralCode
+                  //   version: QrVersions.auto,
+                  //   size: 200.0,
+                  // ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Copy or share the referral code below:",
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                      color: Colors.grey[200],
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          referralCode, // Gunakan variabel referralCode
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(ClipboardData(text: referralCode));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Referral code copied to clipboard!"),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.copy, size: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 100),
+                ],
               ),
-              textAlign: TextAlign.center, // Center text alignment
             ),
-            SizedBox(height: 20), // Space between elements
-            Text(
-              "Dapatkan voucher diskon 50% setiap kali temanmu bergabung melalui kode referralmu.",
-              style: GoogleFonts.poppins(
-                fontSize: 16, // Moderate font size for readability
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center, // Center text alignment
-            ),
-            SizedBox(height: 30), // Space before the image
-            Image.asset(
-              'assets/logos/logo_tikom_bulat_hijau_hitam.png', // Assuming you have a logo image in your assets
-              height: 100, // Fixed height for the image
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Image.asset(
-              'assets/logos/logo_tikom_hijau_hitam.png', // Assuming you have a logo image in your assets
-              height: 120, // Fixed height for the image
-            ),
-            SizedBox(height: 20), // Space after the image
-            Text(
-              "Bagikan kode referralmu",
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center, // Center text alignment
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            //CopyableTextWithIcon(),
-            Container(
-              width: 200.0,
-              height: 50.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
-                color: Colors.grey[200],
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'F0019B',
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold, fontSize: 24.0),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 100,
-            ),
-            ElevatedButton(
+          ),
+          Padding(
+            padding: EdgeInsets.all(20.0),
+            child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(68, 208, 145, 1.0), // Background color
-                onPrimary: Colors.white, // Text color
-                minimumSize: Size(double.infinity, 50), // Set the button's size
+                primary: Color.fromRGBO(68, 208, 145, 1.0),
+                onPrimary: Colors.white, 
+                minimumSize: Size(double.infinity, 50), 
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
+                  borderRadius: BorderRadius.circular(30), 
                 ),
               ),
               onPressed: () {
                 final String referralMessage =
-                    'Use my referral code F0019B to get 50% off when you sign up!';
+                    'Use my referral code $referralCode to get free coffee when you sign up!';  
                 Share.share(referralMessage);
               },
               child: Text(
-                'Bagikan Kode',
+                'Share Referral Code',
                 style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.bold),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
