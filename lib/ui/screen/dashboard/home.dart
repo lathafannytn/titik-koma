@@ -7,6 +7,7 @@ import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/models/user.dart';
 import 'package:tikom/ui/screen/events/event.dart';
+import 'package:tikom/ui/screen/poin/point_detail.dart';
 import 'package:tikom/ui/screen/widget/popularwidget.dart';
 import 'package:tikom/ui/screen/widget/reveralwidget.dart';
 
@@ -202,22 +203,25 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
-                          print('Icon tapped!');
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 10,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PointDetailsScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 10,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
                     ],
                   ),
                 ],
