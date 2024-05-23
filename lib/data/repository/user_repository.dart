@@ -10,16 +10,18 @@ import 'package:tikom/data/models/user.dart';
 import 'package:tikom/data/repository/auth_repository.dart';
 
 class UserRepository {
-
   final ApiProvider _provider = ApiProvider();
-  final AuthenticationRepository _authenticationRepository = AuthenticationRepository();
+  final AuthenticationRepository _authenticationRepository =
+      AuthenticationRepository();
 
   Future<UserResponse> fetchUser() async {
-    print("Fetching user...");
+    print("Fetching user... Masuk");
     final _token = await _authenticationRepository.getToken();
-    final response = await _provider.get("/my-profil", headers: {
+    final response = await _provider.get("my-profil", headers: {
       HttpHeaders.authorizationHeader: 'Bearer $_token',
     });
+    print('repo');
+    print('token');
     print(response);
     return UserResponse.fromJson(response);
   }

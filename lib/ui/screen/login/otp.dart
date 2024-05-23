@@ -193,7 +193,8 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                                   AppExt.hideKeyboard(context);
                                   // _otpBloc.add(OtpRetry(
                                   //     phoneNumber: widget.phoneNumber));
-                                  AuthenticationEmailRepository().authenticate(email: widget.email);
+                                  AuthenticationEmailRepository()
+                                      .authenticate(email: widget.email);
                                   _start = 50;
                                   _startTimer();
                                 },
@@ -208,7 +209,7 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                                 ),
                               ),
                       ),
-                   
+
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _verifyOTP,

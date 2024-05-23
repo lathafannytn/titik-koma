@@ -362,6 +362,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                             name: drink.name,
                             price: drink.price,
                             imagePath: drink.imgUrl,
+                            uuid:  drink.uuid,
                           );
                         },
                         shrinkWrap: true,

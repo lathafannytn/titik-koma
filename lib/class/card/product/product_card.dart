@@ -3,11 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 
 class ProductCard extends StatelessWidget {
+  final String uuid;
   final String name;
   final num price;
   final String imagePath;
 
   ProductCard({
+    required this.uuid,
     required this.name,
     required this.price,
     required this.imagePath,
@@ -33,7 +35,7 @@ class ProductCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +47,7 @@ class ProductCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Deskripsi produk di sini', // Ganti dengan deskripsi asli jika ada
                     style: GoogleFonts.poppins(
@@ -55,7 +57,7 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     'Rp ${price.toStringAsFixed(0)}',
                     style: GoogleFonts.poppins(
@@ -69,9 +71,10 @@ class ProductCard extends StatelessWidget {
             IconButton(
               onPressed: () {
                 print("IconButton pressed");
+                print(uuid);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddOnScreen()),
+                  MaterialPageRoute(builder: (context) => AddOnScreen(uuid: uuid,)),
                 );
               },
               icon:
