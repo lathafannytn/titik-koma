@@ -144,7 +144,6 @@ class _SignInState extends State<SignIn> {
       create: (context) => _signInBloc,
       child: BlocListener<SignInEmailBloc, SignInEmailState>(
         listener: (context, state) {
-         
           if (state is SignInSuccess) {
             AppExt.popScreen(context);
             final snackBar = SnackBar(
@@ -163,24 +162,23 @@ class _SignInState extends State<SignIn> {
             });
           } else if (state is SignInFailure) {
             AppExt.popScreen(context);
-            if(state.message == 'Email Not Found'){
-                DialogTemp().Konfirmasi(
-                        context: context,
-                        onYes: () {
-                          LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
-                          // To Regis Page
-                            Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    SignUp(email: _emailController.text,))
-                                    );
-                        },
-                        title: "Email Tidak Terdaftar?",
-                        onYesText: 'Daftar',
-                  );
-            }
-            else{
+            if (state.message == 'Email Not Found') {
+              DialogTemp().Konfirmasi(
+                context: context,
+                onYes: () {
+                  LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
+                  // To Regis Page
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SignUp(
+                                email: _emailController.text,
+                              )));
+                },
+                title: "Email Tidak Terdaftar?",
+                onYesText: 'Daftar',
+              );
+            } else {
               final snackBar = SnackBar(
                 content: Text('Login Failed: ${state.error}'),
                 backgroundColor: Colors.red,
