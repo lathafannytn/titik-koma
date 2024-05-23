@@ -18,7 +18,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'ui/screen/order/add_on.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -76,7 +75,7 @@ class _MyAppState extends State<MyApp> {
               );
             } else {
               if (snapshot.hasData && snapshot.data != null) {
-                return MyHomePage();
+                return const MyHomePage(tabIndex: 0,);
               } else {
                 return const SignIn();
               }
@@ -92,6 +91,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
+  final int tabIndex;
+  const MyHomePage({Key? key, required this.tabIndex}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -105,11 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
     OrdersPage(),
     ProfileScreen()
   ];
+  // _selectedIndex =1;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+  // widget.tabIndex
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.tabIndex;
   }
 
   @override
@@ -120,23 +129,31 @@ class _MyHomePageState extends State<MyHomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Home',
-            icon: SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/home.svg', width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset('assets/icons/home.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/home.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
             label: 'Menu',
-            icon: SvgPicture.asset('assets/icons/menu.svg', width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/menu.svg', width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset('assets/icons/menu.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/menu.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
             label: 'Order',
-            icon: SvgPicture.asset('assets/icons/transaction.svg', width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/transaction.svg', width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset('assets/icons/transaction.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/transaction.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
           BottomNavigationBarItem(
             label: 'Profile',
-            icon: SvgPicture.asset('assets/icons/profile.svg', width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/profile.svg', width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset('assets/icons/profile.svg',
+                width: 24, height: 24),
+            activeIcon: SvgPicture.asset('assets/icons/profile.svg',
+                width: 24, height: 24, color: Theme.of(context).primaryColor),
           ),
         ],
         currentIndex: _selectedIndex,

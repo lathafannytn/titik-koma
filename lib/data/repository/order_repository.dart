@@ -46,4 +46,19 @@ class OrderRepository {
     return OrderResponse.fromJson(response);
   }
 
+  Future<OrderDataResponse> showOrder() async {
+    final _token = await _authenticationRepository.getToken();
+
+    final response = await _provider.get(
+      'order/data',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print(response);
+    return OrderDataResponse.fromJson(response);
+  }
+
 }

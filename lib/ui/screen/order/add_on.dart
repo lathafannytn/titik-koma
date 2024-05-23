@@ -9,6 +9,7 @@ import 'package:tikom/data/blocs/fetch_product_detail/product_detail_cubit.dart'
 import 'package:tikom/data/blocs/fetch_product_detail/product_detail_state.dart';
 import 'package:tikom/data/blocs/order/order_bloc.dart';
 import 'package:tikom/main.dart';
+import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
@@ -148,14 +149,14 @@ class _AddOnScreenState extends State<AddOnScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              MyHomePage()));
+                            MyHomePage(tabIndex: 1,)));
                 },
                 onYesText: 'Oke',
                 title: 'Berhasil Menambahkan Keranjang');
           } else if (state is OrderFailure) {
             AppExt.popScreen(context);
             final snackBar = SnackBar(
-              content: Text('Login Failed: ${state.error}'),
+              content: Text('Failed: ${state.error}'),
               backgroundColor: Colors.red,
               duration: Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,

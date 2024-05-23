@@ -14,28 +14,29 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<OrderEvent>(onOrderEvent);
   }
 
-  final OrderRepository orderRepository =
-      OrderRepository();
+  final OrderRepository orderRepository = OrderRepository();
 
-  void onOrderEvent(
-      OrderEvent event, Emitter<OrderState> emit) async {
+  void onOrderEvent(OrderEvent event, Emitter<OrderState> emit) async {
     if (event is OrderButtonPressed) {
       emit(OrderLoading());
 
       try {
-        final OrderResponse =  await orderRepository.authenticate(
-          products:event.products,
+        final OrderResponse = await orderRepository.authenticate(
+          products: event.products,
           selected: event.selected,
           add_on: event.add_on,
           total: event.total,
         );
-           if (OrderResponse.status == 'success') {
-              emit(OrderSuccess(message: OrderResponse.message));
+        if (OrderResponse.status == 'success') {
+          emit(OrderSuccess(message: OrderResponse.message));
         } else {
-              emit(OrderFailure(message: OrderResponse.message,error: 'Not Server' ?? 'Unknown error'));
+          emit(OrderFailure(
+              message: OrderResponse.message,
+              error: 'Not Server' ?? 'Unknown error'));
         }
       } catch (error) {
-        emit(OrderFailure(message: 'Server Error ',error: error.toString()));
+        print(error);
+        emit(OrderFailure(message: 'Server Error ', error: error.toString()));
       }
     }
   }

@@ -95,7 +95,7 @@ class _SignInState extends State<SignIn> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      MyHomePage()), // Replace with your target screen
+                      MyHomePage(tabIndex: 0,)), // Replace with your target screen
             );
           });
         } else {

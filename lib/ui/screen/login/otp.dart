@@ -99,7 +99,7 @@ class _OtpScreenState extends State<OtpEmailScreen> {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Future.delayed(Duration(seconds: 2), () {
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()));
+                  MaterialPageRoute(builder: (context) => MyHomePage(tabIndex: 0,)));
             });
           } else if (state is SignInFailure) {
             final snackBar = SnackBar(
