@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +30,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 12, minute: 0);
   bool isPickup = true; // Toggle state
-  PaymentOption _selectedPaymentOption =
-      PaymentOption.fullPayment; // Default selection
+  PaymentOption _selectedPaymentOption = PaymentOption.fullPayment;
+  bool isPickupNowSelected = true;
+  DateTime selectedPickupDate = DateTime.now();
+  TimeOfDay selectedPickupTime = TimeOfDay(hour: 12, minute: 0);
 
   Future<void> _selectDateTime(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -61,6 +64,258 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final String date = dateFormatter.format(selectedDate);
     final String time = selectedTime.format(context);
     return '$time, $date';
+  }
+
+  void _showPickupTimeDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            bool isPickupNow = true;
+
+            return Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Choose pick up time',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPickupNow = true;
+                      });
+                      Navigator.pop(context);
+                      this.setState(() {
+                        isPickupNowSelected = true;
+                        selectedDate = DateTime.now();
+                        selectedTime = TimeOfDay.now();
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border:
+                            isPickupNow ? Border.all(color: customGreen) : null,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check_circle,
+                              color: customGreen, size: 30),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Pick up now',
+                                style: GoogleFonts.poppins(
+                                  textStyle:
+                                      TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Text(
+                                'Estimated ready in 15 mins.',
+                                style: GoogleFonts.poppins(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPickupNow = false;
+                      });
+                      Navigator.pop(context);
+                      _showPickUpLaterDialog(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: !isPickupNow
+                            ? Border.all(color: customGreen)
+                            : null,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.schedule, color: customGreen, size: 30),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Pick up later',
+                                  style: GoogleFonts.poppins(
+                                    textStyle:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Text(
+                                  'Set your pick up time.',
+                                  style: GoogleFonts.poppins(),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios,
+                              size: 16, color: Colors.grey),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: customGreen,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Confirm',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showPickUpLaterDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Set your pick up time',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: CupertinoTimerPicker(
+                          mode: CupertinoTimerPickerMode.hm,
+                          initialTimerDuration: Duration(
+                            hours: selectedTime.hour,
+                            minutes: selectedTime.minute,
+                          ),
+                          onTimerDurationChanged: (Duration newDuration) {
+                            setState(() {
+                              selectedTime = TimeOfDay(
+                                hour: newDuration.inHours,
+                                minute: newDuration.inMinutes % 60,
+                              );
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: customGreen,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      this.setState(() {
+                        isPickupNowSelected = false;
+                      });
+                    },
+                    child: Text(
+                      'Set Time',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -187,7 +442,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget buildPickupDetails(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _selectDateTime(context);
+        _showPickupTimeDialog(context);
       },
       child: Container(
         padding: EdgeInsets.all(16),
@@ -203,7 +458,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Pick up at ${getFormattedDateTime()}',
+                  isPickupNowSelected
+                      ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+                      : 'Pick up at ${getFormattedDateTime()}',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
