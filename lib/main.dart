@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/ui/screen/login/signup.dart';
+import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/utils/storage_service.dart';
 import 'package:tikom/ui/screen/dashboard/home.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
@@ -12,6 +13,9 @@ import 'package:tikom/ui/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'ui/screen/order/add_on.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,6 +76,9 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
+      // routes: {
+      //   '/addon': (context) => AddOnScreen(),
+      // },
     );
   }
 }

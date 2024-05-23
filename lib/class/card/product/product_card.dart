@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/ui/screen/order/add_on.dart';
 
 // class ProductCard extends StatelessWidget {
 //   final String name;
@@ -72,7 +73,6 @@ import 'package:google_fonts/google_fonts.dart';
 //   }
 // }
 
-
 class ProductCard extends StatelessWidget {
   final String name;
   final num price;
@@ -139,9 +139,14 @@ class ProductCard extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                // Tambahkan logika untuk menambah produk ke keranjang
+                print("IconButton pressed");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddOnScreen()),
+                );
               },
-              icon: Icon(Icons.add_circle, color: Color.fromARGB(255, 9, 76, 58)),
+              icon:
+                  Icon(Icons.add_circle, color: Color.fromARGB(255, 9, 76, 58)),
             ),
           ],
         ),
@@ -149,4 +154,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-
