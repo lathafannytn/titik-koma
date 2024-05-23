@@ -11,6 +11,8 @@ import 'package:tikom/ui/screen/profile/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'ui/screen/order/add_on.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,9 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
+      routes: {
+        '/addon': (context) => AddOnScreen(),
+      },
     );
   }
 }
