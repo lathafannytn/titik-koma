@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:tikom/data/blocs/fetch_product_detail/product_detail_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/ui/screen/login/signup.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
@@ -45,6 +46,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider<UserDataCubit>(
           create: (context) => userDataCubit,
+        ),
+        BlocProvider<ProductDetailDataCubit>(
+          create: (context) => ProductDetailDataCubit(),
         ),
       ],
       child: MaterialApp(

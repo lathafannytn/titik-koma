@@ -159,12 +159,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             label: 'TIKOM Poin',
                             iconPath: 'assets/icons/logo_poin.svg',
                             value: userPoints,
-                            onTap: () => Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddOnScreen(),
-                              ),
-                            ),
+                            onTap: (){
+                              
+                            }
                           ),
                           verticalDivider(),
                           buildIconColumn(
