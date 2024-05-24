@@ -6,6 +6,7 @@ import 'package:tikom/api/api.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tikom/data/models/order.dart';
+import 'package:tikom/data/models/order_product.dart';
 import 'package:tikom/data/models/sign_in.dart';
 import 'package:tikom/data/repository/auth_repository.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
@@ -15,12 +16,12 @@ const String tokenKey = 'token';
 
 class OrderRepository {
   final ApiProvider _provider = ApiProvider();
-    final AuthenticationRepository _authenticationRepository =
+  final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
 
   /// Fetch sign in response from api
   Future<OrderResponse> authenticate({
-    required List<String>  products,
+    required List<String> products,
     required String selected,
     required List<String> add_on,
     required double total,
@@ -29,7 +30,7 @@ class OrderRepository {
       'products': products,
       'add_on': add_on,
       'selected': selected,
-      'total':total,
+      'total': total,
     });
     final _token = await _authenticationRepository.getToken();
 
@@ -61,4 +62,19 @@ class OrderRepository {
     return OrderDataResponse.fromJson(response);
   }
 
+  Future<OrderProductResponse> showOrderProduct() async {
+    final _token = await _authenticationRepository.getToken();
+    print('token');
+    print(_token);
+    final response = await _provider.get(
+      'order/data-product',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print(response);
+    return OrderProductResponse.fromJson(response);
+  }
 }

@@ -10,6 +10,8 @@ import 'package:tikom/class/card/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_state.dart';
+import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_cubit.dart';
+import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.dart';
 import 'package:tikom/ui/screen/order/checkout.dart';
 import 'package:tikom/utils/storage_service.dart';
 
@@ -23,6 +25,8 @@ class DrinksMenuPage extends StatefulWidget {
 
 class _DrinksMenuPageState extends State<DrinksMenuPage> {
   late OrderDataCubit _orderDataCubit;
+  late OrderProductCubit _orderProductCubit;
+
   List<Category> categories = [];
   List<Drinks> drinks = [];
 
@@ -106,92 +110,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   void handleShowOrder() {}
 
   void handleDelete(String uuid) {}
-
-  void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.3,
-          minChildSize: 0.1,
-          maxChildSize: 0.8,
-          expand: false,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      controller: scrollController,
-                      children: [
-                        ListTile(
-                          title: Text('Spanish Aren Latte',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold)),
-                          subtitle: Text('Iced', style: GoogleFonts.poppins()),
-                          leading: Image.asset(
-                              'assets/images/kopi_aren_doppio.jpg',
-                              width: 50),
-                          trailing: Container(
-                            width: 120,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    // Decrease item quantity logic here
-                                  },
-                                  icon: Icon(Icons.remove_circle_outline,
-                                      color: Color.fromARGB(255, 9, 76, 58)),
-                                ),
-                                Text('1',
-                                    style: GoogleFonts.poppins(fontSize: 16)),
-                                IconButton(
-                                  onPressed: () {
-                                    // Increase item quantity logic here
-                                  },
-                                  icon: Icon(Icons.add_circle_outline,
-                                      color: Color.fromARGB(255, 9, 76, 58)),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text('Total: Rp 26.000',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold)),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen()),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 9, 76, 58),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child:
-                                Text("Checkout", style: GoogleFonts.poppins()),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 
   Widget _buildCategories() {
     return Container(
@@ -411,7 +329,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             }
             if (state is OrderDataSuccess) {
               print(state.categories.length);
-              
+
               if (state.categories.length > 0) {
                 return BottomAppBar(
                   color: Colors.white,
@@ -459,7 +377,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               SizedBox(width: 8),
                               Text(
                                 // ignore: prefer_interpolation_to_compose_strings
-                                "Rp. ${state.categories[0].total_price}", 
+                                "Rp. ${state.categories[0].total_price}",
                                 style: GoogleFonts.poppins(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -494,6 +412,116 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           },
         ),
       ),
+    );
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          // initialChildSize: 0.3,
+          // minChildSize: 0.1,
+          // maxChildSize: 0.8,
+          expand: false,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              color: Colors.white,
+              child: BlocBuilder<OrderProductCubit, OrderProductState>(
+                bloc: OrderProductCubit()..loadOrderProduct(),
+                builder: (context, state) {
+                  if (state is OrderProductLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is OrderProductSuccess) {
+                    print(state.order.length);
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: state.order.length,
+                            itemBuilder: (context, index) {
+                              var data = state.order[index];
+                              return ListTile(
+                                title: Text(data.product_detail.name,
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold)),
+                                subtitle:
+                                    Text('Iced', style: GoogleFonts.poppins()),
+                                leading: Image.asset(
+                                    'assets/images/kopi_aren_doppio.jpg',
+                                    width: 50),
+                                trailing: Container(
+                                  width: 120,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          // Decrease item quantity logic here
+                                        },
+                                        icon: Icon(Icons.remove_circle_outline,
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
+                                      ),
+                                      Text('1',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16)),
+                                      IconButton(
+                                        onPressed: () {
+                                          // Increase item quantity logic here
+                                        },
+                                        icon: Icon(Icons.add_circle_outline,
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          title: Text('Total: Rp 26.000',
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold)),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CheckoutScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Color.fromARGB(255, 9, 76, 58),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child:
+                                Text("Checkout", style: GoogleFonts.poppins()),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  if (state is OrderProductFailure) {
+                    print('error');
+                    print(state.message);
+                  }
+                  return SizedBox();
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
