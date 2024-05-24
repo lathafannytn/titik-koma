@@ -12,6 +12,7 @@ import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_state.dart';
 import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.dart';
+import 'package:tikom/data/repository/order_repository.dart';
 import 'package:tikom/ui/screen/order/checkout.dart';
 import 'package:tikom/utils/storage_service.dart';
 
@@ -26,7 +27,7 @@ class DrinksMenuPage extends StatefulWidget {
 class _DrinksMenuPageState extends State<DrinksMenuPage> {
   late OrderDataCubit _orderDataCubit;
   late OrderProductCubit _orderProductCubit;
-
+  int total_price = 0;
   List<Category> categories = [];
   List<Drinks> drinks = [];
 
@@ -38,7 +39,16 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   void initState() {
     super.initState();
     _orderDataCubit = OrderDataCubit()..loadOrderData();
+    _orderProductCubit = OrderProductCubit()..loadOrderProduct();
     // print(_orderDataCubit);
+
+    _orderDataCubit.stream.listen((state) {
+      if (state is OrderDataSuccess) {
+        setState(() {
+          total_price = state.categories[0].total_price;
+        });
+      }
+    });
     fetchCategories().then((data) {
       setState(() {
         categories = data as List<Category>;
@@ -110,6 +120,28 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   void handleShowOrder() {}
 
   void handleDelete(String uuid) {}
+
+  Future<void> handlePlusMinus(String uuid, String actions) async {
+    print(actions);
+    try {
+      final OrderRepository _OrderRepository = OrderRepository();
+      final response =
+          await _OrderRepository.plusMinus(uuid: uuid, action: actions);
+      print('from handle');
+      print(response);
+      _orderProductCubit.loadOrderProduct();
+      _orderDataCubit.loadOrderData();
+      _orderDataCubit.stream.listen((state) {
+        if (state is OrderDataSuccess) {
+          setState(() {
+            total_price = state.categories[0].total_price;
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Widget _buildCategories() {
     return Container(
@@ -331,6 +363,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               print(state.categories.length);
 
               if (state.categories.length > 0) {
+                ;
                 return BottomAppBar(
                   color: Colors.white,
                   child: InkWell(
@@ -429,7 +462,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             return Container(
               color: Colors.white,
               child: BlocBuilder<OrderProductCubit, OrderProductState>(
-                bloc: OrderProductCubit()..loadOrderProduct(),
+                bloc: _orderProductCubit,
                 builder: (context, state) {
                   if (state is OrderProductLoading) {
                     return const Center(
@@ -450,11 +483,17 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                 title: Text(data.product_detail.name,
                                     style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold)),
-                                subtitle:
-                                    Text('Iced', style: GoogleFonts.poppins()),
-                                leading: Image.asset(
-                                    'assets/images/kopi_aren_doppio.jpg',
-                                    width: 50),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(data.selected,
+                                        style: GoogleFonts.poppins()),
+                                    Text(data.add_on_product,
+                                        style: GoogleFonts.poppins()),
+                                  ],
+                                ),
+                                leading:
+                                    Image.network(data.product_detail.image),
                                 trailing: Container(
                                   width: 120,
                                   child: Row(
@@ -462,18 +501,18 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                     children: [
                                       IconButton(
                                         onPressed: () {
-                                          // Decrease item quantity logic here
+                                          handlePlusMinus(data.uuid, 'MINUS');
                                         },
                                         icon: Icon(Icons.remove_circle_outline,
                                             color:
                                                 Color.fromARGB(255, 9, 76, 58)),
                                       ),
-                                      Text('1',
+                                      Text('${data.total_quantity}',
                                           style: GoogleFonts.poppins(
                                               fontSize: 16)),
                                       IconButton(
                                         onPressed: () {
-                                          // Increase item quantity logic here
+                                          handlePlusMinus(data.uuid, 'PLUS');
                                         },
                                         icon: Icon(Icons.add_circle_outline,
                                             color:
@@ -487,7 +526,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                           ),
                         ),
                         ListTile(
-                          title: Text('Total: Rp 26.000',
+                          title: Text('Total: Rp $total_price',
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold)),
                           trailing: ElevatedButton(
@@ -495,7 +534,9 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen()),
+                                    builder: (context) => CheckoutScreen(
+                                          uuid: state.order[0].uuid,
+                                        )),
                               );
                             },
                             style: ElevatedButton.styleFrom(

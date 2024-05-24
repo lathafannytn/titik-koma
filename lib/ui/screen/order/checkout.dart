@@ -1,30 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
+import 'package:tikom/data/blocs/fetch_order/fetch_order_state.dart';
+import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_cubit.dart';
+import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import '../voucher/voucher_page.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CheckoutScreen(),
-    );
-  }
-}
-
 class CheckoutScreen extends StatefulWidget {
+  final String uuid;
+  const CheckoutScreen({Key? key, required this.uuid}) : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  late OrderDataCubit _orderDataCubit;
+  int total_price = 0;
+
   final Color customGreen = Color.fromARGB(255, 30, 83, 66);
   bool usePoints = true;
   DateTime selectedDate = DateTime.now();
@@ -319,6 +316,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _orderDataCubit = OrderDataCubit()..loadOrderData();
+    // print(_orderDataCubit);
+
+    _orderDataCubit.stream.listen((state) {
+      if (state is OrderDataSuccess) {
+        setState(() {
+          total_price = state.categories[0].total_price;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -345,21 +357,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildPickupDeliveryToggle(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               isPickup
                   ? buildPickupDetails(context)
                   : buildDeliveryDetails(context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               buildOrderDetails(context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               buildDiscountSection(context),
-              SizedBox(height: 16),
-              buildPaymentMethod(context),
-              SizedBox(height: 16),
+              // SizedBox(height: 16),
+              // buildPaymentMethod(context),
+              const SizedBox(height: 16),
               buildPaymentOptions(context),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               buildPaymentDetails(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               buildPlaceOrderButton(context),
             ],
           ),
@@ -653,135 +665,180 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget buildOrderDetails(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Order Details',
-                style: GoogleFonts.poppins(
-                  textStyle:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  // Navigate to DrinksMenuScreen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DrinksMenuPage()),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: customGreen),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Row(
+    return BlocBuilder<OrderProductCubit, OrderProductState>(
+      bloc: OrderProductCubit()..loadOrderProduct(),
+      builder: (context, state) {
+        if (state is OrderProductLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is OrderProductSuccess) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.add, color: customGreen),
                     Text(
-                      'Add more',
+                      'Order Details',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                            color: customGreen, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Image.asset(
-                'assets/images/kopi_aren_doppio.jpg',
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '1x Classic Brew',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // Navigate to AddOnPage
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddOnScreen(
-                                        uuid: '',
-                                      )),
-                            );
-                          },
-                          child: Icon(Icons.edit, size: 16, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Hot',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Base Price: \$3.50\nSize (Grande): +\$0.50\n1 x Skim Milk: +\$0.50\n1 x Hazelnut: +\$1.00\n1 x Crumble: +\$0.50',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Subtotal: \$6.00',
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ),
+                    OutlinedButton(
+                      onPressed: () {
+                        // Navigate to DrinksMenuScreen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrinksMenuPage()),
+                        );
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: customGreen),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.add, color: customGreen),
+                          Text(
+                            'Add more',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                  color: customGreen,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Notes',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                const SizedBox(height: 16),
+                // Data
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.order.map((item) {
+                    return Column(
+                      children: [
+                        Row(
+                          children: [
+                            Image.network(
+                              item.product_detail.image,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${item.total_quantity} x ${item.product_detail.name}',
+                                        style: GoogleFonts.poppins(
+                                          textStyle: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigate to AddOnPage
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           AddOnScreen(
+                                          //             uuid: '',
+                                          //           )),
+                                          // );
+                                        },
+                                        child: const Icon(Icons.edit,
+                                            size: 16, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    item.selected,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                          color: Colors.grey, fontSize: 14),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    item.add_on_product,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                          color: Colors.grey, fontSize: 14),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Harga Rp. ${item.total_price}',
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                          color: Colors.grey, fontSize: 14),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider()
+                      ],
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Subtotal: Rp. $total_price',
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+                // Text(
+                //   'Notes',
+                //   style: GoogleFonts.poppins(
+                //     textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                //   ),
+                // ),
+                // Text(
+                //   'Less sugar please.',
+                //   style: GoogleFonts.poppins(
+                //     textStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                //   ),
+                // ),
+              ],
             ),
-          ),
-          Text(
-            'Less sugar please.',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(color: Colors.grey, fontSize: 14),
-            ),
-          ),
-        ],
-      ),
+          );
+        }
+        if (state is OrderProductFailure) {
+          print('error');
+          print(state.message);
+        }
+        return SizedBox();
+      },
     );
   }
 
@@ -1031,146 +1088,168 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget buildPaymentDetails() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Payment Details',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(fontWeight: FontWeight.bold),
+    return BlocBuilder<OrderDataCubit, OrderDataState>(
+      bloc: _orderDataCubit,
+      builder: (context, state) {
+        if (state is OrderDataLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is OrderDataSuccess) {
+          return Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
             ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Grand Subtotal',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-              Text(
-                '\$6.00',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Service Fee',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-              Text(
-                '\$1.00',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Discount',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-              Text(
-                '-\$1.80',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          if (usePoints)
-            Column(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 8),
+                Text(
+                  'Payment Details',
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '200 Points Used',
+                      'Grand Subtotal',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(color: Colors.grey),
+                        textStyle: const TextStyle(color: Colors.grey),
                       ),
                     ),
                     Text(
-                      '-\$2.00',
+                      'Rp. ${state.categories[0].total_price}',
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(color: Colors.grey),
+                        textStyle: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Service Fee',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Text(
+                      'Rp. 10000',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Discount',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Text(
+                      '-Rp. 0',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                ),
+                if (usePoints)
+                  Column(
+                    children: [
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '200 Points Used',
+                            style: GoogleFonts.poppins(
+                              textStyle: const TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          Text(
+                            '-Rp 200',
+                            style: GoogleFonts.poppins(
+                              textStyle: const TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Total Payment',
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      'Rp. 20000', // Adjust total based on points usage
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-          SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total Payment',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Text(
-                usePoints
-                    ? '\$3.20'
-                    : '\$5.20', // Adjust total based on points usage
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+          );
+        }
+        if (state is OrderDataFailure) {
+          print('error');
+          print(state.message);
+        }
+        return const SizedBox();
+      },
     );
   }
 
   Widget buildPlaceOrderButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          // Place order action
-        },
-        style: ElevatedButton.styleFrom(
-          primary: customGreen,
-          padding: EdgeInsets.symmetric(vertical: 16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+    return BlocBuilder<OrderDataCubit, OrderDataState>(
+      bloc: _orderDataCubit,
+      builder: (context, state) {
+        return Container(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              // Place order action
+            },
+            style: ElevatedButton.styleFrom(
+              primary: customGreen,
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Place Order',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
           ),
-        ),
-        child: Text(
-          'Place Order',
-          style: GoogleFonts.poppins(
-            textStyle: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

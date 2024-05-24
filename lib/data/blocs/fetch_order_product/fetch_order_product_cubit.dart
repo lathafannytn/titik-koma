@@ -18,7 +18,7 @@ class OrderProductCubit extends Cubit<OrderProductState> {
     print('hallo');
     try {
       print('hallo');
-      final response = await await _OrderRepository.showOrderProduct();
+      final response = await _OrderRepository.showOrderProduct();
       print(response);
       print('masuk sini');
       emit(OrderProductSuccess(response.order));

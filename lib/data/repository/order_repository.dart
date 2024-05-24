@@ -77,4 +77,30 @@ class OrderRepository {
     print(response);
     return OrderProductResponse.fromJson(response);
   }
+
+  Future<String> plusMinus({
+      required String uuid,
+      required String action,
+
+    }) async {
+      final body = jsonEncode({
+        'uuid': uuid,
+        'action': uuid,
+      });
+      final _token = await _authenticationRepository.getToken();
+
+      final response = await _provider.post(
+        'order/handle-plus-minus',
+        body: body,
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $_token',
+          HttpHeaders.acceptHeader: 'application/json',
+          HttpHeaders.contentTypeHeader: 'application/json',
+        },
+      );
+      print(response);
+      return json.encode(response);
+  }
+
+
 }
