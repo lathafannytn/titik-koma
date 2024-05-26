@@ -6,9 +6,17 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 
-class KodeReferralPage extends StatelessWidget {
-  // INI NYIMPEN kode referral 
-  final String referralCode = 'E9RC5G';  
+class KodeReferralPage extends StatefulWidget {
+  final String code;
+
+  const KodeReferralPage({super.key, required this.code});
+  @override
+  State<KodeReferralPage> createState() => _KodeReferralPageState();
+}
+
+class _KodeReferralPageState extends State<KodeReferralPage> {
+  // INI NYIMPEN kode referral
+  final String referralCode = 'E9RC5G';
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +89,8 @@ class KodeReferralPage extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16.0),
                       color: Colors.grey[200],
@@ -95,7 +104,7 @@ class KodeReferralPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          referralCode, // Gunakan variabel referralCode
+                          widget.code, // Gunakan variabel referralCode
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 24.0,
@@ -104,10 +113,12 @@ class KodeReferralPage extends StatelessWidget {
                         SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(text: referralCode));
+                            Clipboard.setData(
+                                ClipboardData(text: referralCode));
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("Referral code copied to clipboard!"),
+                                content:
+                                    Text("Referral code copied to clipboard!"),
                               ),
                             );
                           },
@@ -126,15 +137,15 @@ class KodeReferralPage extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: Color.fromRGBO(68, 208, 145, 1.0),
-                onPrimary: Colors.white, 
-                minimumSize: Size(double.infinity, 50), 
+                onPrimary: Colors.white,
+                minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), 
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
               onPressed: () {
                 final String referralMessage =
-                    'Use my referral code $referralCode to get free coffee when you sign up!';  
+                    'Use my referral code $referralCode to get free coffee when you sign up!';
                 Share.share(referralMessage);
               },
               child: Text(

@@ -46,7 +46,14 @@ class _HomePageState extends State<HomePage> {
                       if (state is UserDataLoading) {
                         return Center(child: CircularProgressIndicator());
                       } else if (state is UserDataLoaded) {
-                        return _buildUserInfo(context, state.user);
+                        return Column(
+                          children: [
+                            _buildUserInfo(context, state.user),
+                            PopularWidget(),
+                            Referral().show(context, state.user.referallCode),
+                            PopularEventList(),
+                          ],
+                        );
                       } else if (state is UserDataError) {
                         return Center(child: Text(state.message));
                       }
@@ -55,9 +62,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              PopularWidget(),
-              ReveralWidget(),
-              PopularEventList(),
+            
+              
             ],
           ),
         ),

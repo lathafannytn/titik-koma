@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
 
-class ReveralWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+class Referral {
+  Widget show(BuildContext context,String code) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Card(
@@ -27,7 +26,10 @@ class ReveralWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => KodeReferralPage()),
+                    MaterialPageRoute(
+                        builder: (context) => KodeReferralPage(
+                              code: code,
+                            )),
                   );
                 },
                 child: Row(

@@ -51,7 +51,7 @@ class User {
     phonenumber: json['profil']['phone_number'],
     born: json['profil']['born'],
     point: json['profil']['point'],
-    referallCode: json['profil']['refferal_code'],
+    referallCode: json['profil']['referral_code'],
     address: json['profil']['address'],
   );
 
