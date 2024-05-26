@@ -85,7 +85,7 @@ class OrderRepository {
     }) async {
       final body = jsonEncode({
         'uuid': uuid,
-        'action': uuid,
+        'action': action,
       });
       final _token = await _authenticationRepository.getToken();
 
