@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/ui/screen/catering/catering.dart';
 import 'package:tikom/ui/screen/service/drinks_only/drinks_only.dart';
 import 'package:tikom/ui/screen/service/full_service/full_service.dart';
 
@@ -29,7 +30,7 @@ class PopularWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: serviceLink(context, "Full Service",
-                      "assets/images/icon_full.png", FullServicePage()),
+                      "assets/images/icon_full.png", CateringScreen()),
                 ),
               ],
             ),

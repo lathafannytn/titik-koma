@@ -63,7 +63,7 @@ void _showBottomSheet(BuildContext context) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen()),
+                                    builder: (context) => CheckoutScreen(uuid: '',)),
                               );
                             },
                             style: ElevatedButton.styleFrom(

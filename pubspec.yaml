@@ -142,6 +142,9 @@ flutter:
     #gambar untuk asset
     - assets/asset/robot.png
 
+    #gambar untuk bg
+    - assets/images/bg_catering.jpg
+
 
   fonts:
     - family: Karla
