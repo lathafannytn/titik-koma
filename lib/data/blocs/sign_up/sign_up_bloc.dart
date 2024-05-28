@@ -28,7 +28,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           name:event.name,
           phone:event.phone,
           bornDate:event.bornDate,
-          address: event.address          
+          address: event.address,
+          code: event.code,
         );
          if (signUpResponse.status == 'success') {
               emit(SignUpSuccess());

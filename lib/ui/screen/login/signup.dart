@@ -31,6 +31,8 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _bornController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _referralController = TextEditingController();
+
 
   get http => null;
 
@@ -52,7 +54,9 @@ class _SignUpState extends State<SignUp> {
             name: _nameController.text,
             phone: _phoneNumberController.text,
             bornDate: _bornController.text,
-            address: _addressController.text));
+            address: _addressController.text,
+            code: _referralController.text ?? '--'
+            ));
       },
       title: "Apakah Ingin Melakukan Pendaftaran?",
       onYesText: 'Ya',
@@ -171,6 +175,13 @@ class _SignUpState extends State<SignUp> {
                         });
                       }
                     },
+                  ),
+                  const SizedBox(height: 10),
+                  CustomTextfield(
+                    obscureText: false,
+                    hintText: 'Enter Referral Code',
+                    icon: Icons.money,
+                    controller: _referralController ,
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(

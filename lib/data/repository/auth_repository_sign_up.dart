@@ -17,13 +17,15 @@ class AuthenticationSignUpRepository {
     required String phone,
     required String bornDate,
     required String address,
+    required String code,
   }) async {
     final body = jsonEncode({
       'email': email,
       'name': name,
       'phone': phone,
       'bornDate': bornDate,
-      'address': address
+      'address': address,
+      'referral_code': code
     });
 
     final response = await _provider.post(

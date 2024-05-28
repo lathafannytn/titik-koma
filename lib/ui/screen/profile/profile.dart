@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (state is UserDataLoaded) {
                 final user = state.user;
                 return buildProfileContent(
-                    context, user.name, user.point.toString());
+                    context, user.name, user.point.toString(),user.referallCode);
               } else if (state is UserDataError) {
                 return Center(child: Text('Error: ${state.message}'));
               } else {
@@ -61,8 +61,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildProfileContent(
-      BuildContext context, String userName, String userPoints) {
+  Widget buildProfileContent(BuildContext context, String userName,
+      String userPoints, String referral_code) {
     return Column(
       children: [
         Stack(
@@ -154,15 +154,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildIconColumn(
-                            context,
-                            label: 'TIKOM Poin',
-                            iconPath: 'assets/icons/logo_poin.svg',
-                            value: userPoints,
-                            onTap: (){
-                              
-                            }
-                          ),
+                          buildIconColumn(context,
+                              label: 'TIKOM Poin',
+                              iconPath: 'assets/icons/logo_poin.svg',
+                              value: userPoints,
+                              onTap: () {}),
                           verticalDivider(),
                           buildIconColumn(
                             context,
@@ -181,9 +177,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             iconPath: 'assets/icons/qr.svg',
                             value: '',
                             onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => KodeReferralPage())),
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          KodeReferralPage(code: referral_code)))
                           ),
                         ],
                       ),

@@ -99,19 +99,12 @@ class _AddOnScreenState extends State<AddOnScreen> {
 
     try {
       AppExt.hideKeyboard(context);
-      DialogTemp().Konfirmasi(
-        context: context,
-        onYes: () {
-          LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
-          _orderBloc.add(OrderButtonPressed(
+      LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
+      _orderBloc.add(OrderButtonPressed(
               products: product,
               selected: selected,
               add_on: add_on,
               total: total));
-        },
-        title: "Apakah Ingin Menambahkan Keranjang?",
-        onYesText: 'Ya',
-      );
     } catch (e) {
       throw Exception('Error : $e');
     }
@@ -148,8 +141,9 @@ class _AddOnScreenState extends State<AddOnScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                            MyHomePage(tabIndex: 1,)));
+                          builder: (context) => MyHomePage(
+                                tabIndex: 1,
+                              )));
                 },
                 onYesText: 'Oke',
                 title: 'Berhasil Menambahkan Keranjang');

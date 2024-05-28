@@ -13,6 +13,7 @@ class SignUpButtonPressed extends SignUpEvent {
   final String phone;
   final String bornDate;
   final String address;
+  final String code;
 
 
 
@@ -23,11 +24,12 @@ class SignUpButtonPressed extends SignUpEvent {
     required this.phone,
     required this.bornDate,
     required this.address,
+    required this.code,
 
   });
 
   @override
-  List<Object> get props => [email,name,phone,bornDate,address];
+  List<Object> get props => [email,name,phone,bornDate,address,code];
 
   @override
   String toString() => 'SignUpButtonPressed { email: $email, }';

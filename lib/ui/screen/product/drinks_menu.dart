@@ -28,6 +28,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   late OrderDataCubit _orderDataCubit;
   late OrderProductCubit _orderProductCubit;
   int total_price = 0;
+  int total_quantity = 0;
   List<Category> categories = [];
   List<Drinks> drinks = [];
 
@@ -46,6 +47,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       if (state is OrderDataSuccess) {
         setState(() {
           total_price = state.categories[0].total_price;
+          total_quantity = state.categories[0].total_quantity;
         });
       }
     });
@@ -135,6 +137,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
         if (state is OrderDataSuccess) {
           setState(() {
             total_price = state.categories[0].total_price;
+            total_quantity = state.categories[0].total_quantity;
           });
         }
       });
@@ -363,7 +366,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               print(state.categories.length);
 
               if (state.categories.length > 0) {
-                ;
+                
                 return BottomAppBar(
                   color: Colors.white,
                   child: InkWell(
@@ -530,7 +533,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold)),
                           trailing: ElevatedButton(
-                            onPressed: () {
+                            onPressed: total_quantity < 10 ? null : () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
