@@ -46,4 +46,24 @@ class TransactionRepository {
     print(response);
     return TransactionStoreResponse.fromJson(response);
   }
+
+
+  Future<TransactionResponse> dataStatus({
+    required String filter,
+  }) async {
+    final _token = await _authenticationRepository.getToken();
+    final response = await _provider.get(
+      'transaction/data-by-status/$filter',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('Form Repositor');
+    print(response);
+
+    return TransactionResponse.fromJson(response);
+  }
+
 }

@@ -332,8 +332,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -362,7 +360,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
   }
 
-    void handlePlaceOrder() {
+  void handlePlaceOrder() {
     try {
       var data_voucher = voucher.length > 0 ? voucher[0][0] : '-';
       var data_payment_type = 'Virtual BCA';
