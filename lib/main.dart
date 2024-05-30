@@ -6,6 +6,7 @@ import 'package:tikom/data/blocs/fetch_product_detail/product_detail_cubit.dart'
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/ui/screen/login/signup.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
+import 'package:tikom/ui/screen/order/history.dart';
 import 'package:tikom/utils/storage_service.dart';
 import 'package:tikom/ui/screen/dashboard/home.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
@@ -103,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
-    OrdersPage(),
+    // OrdersPage(),
+    RiwayatPemesananScreen(),
     ProfileScreen()
   ];
   // _selectedIndex =1;

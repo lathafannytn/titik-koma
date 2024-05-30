@@ -68,4 +68,50 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       ));
     }
   }
+
+
+
+  Future<void> data() async {
+    emit(TransactionLoading());
+    print('From Cubit');
+    try {
+      final response = await transactionRepository.data();
+      print('From Cubit');
+      print(response);
+      if (response != null && response.data != null) {
+        print('hm');
+        print(response.data!);
+        emit(TransactionSuccessData(response.data!));
+      } else {
+        emit(TransactionFailure(error: response.message));
+      }
+    } catch (error) {
+      print(error.toString());
+      emit(TransactionFailure(
+        error: error.toString(),
+      ));
+    }
+  }
+
+  Future<void> dataDetail(String uuid) async {
+    emit(TransactionLoading());
+    print('From Cubit');
+    try {
+      final response = await transactionRepository.dataDetail(uuid: uuid);
+      print('From Cubit');
+      print(response);
+      if (response != null && response.data != null) {
+        print('hm');
+        print(response.data!);
+        emit(TransactionSuccessData(response.data!));
+      } else {
+        emit(TransactionFailure(error: response.message));
+      }
+    } catch (error) {
+      print(error.toString());
+      emit(TransactionFailure(
+        error: error.toString(),
+      ));
+    }
+  }
 }
