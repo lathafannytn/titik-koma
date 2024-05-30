@@ -94,6 +94,11 @@ flutter:
 
     #logo iconnya
     - assets/logos/logo_google.png
+    - assets/logos/dana.png
+    - assets/logos/shopee.png
+    - assets/logos/gopay.png
+    - assets/logos/linkaja.png
+    - assets/logos/ovo.png
 
     #gambar promo widget
     - assets/images/promo.png
