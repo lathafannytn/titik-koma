@@ -7,9 +7,17 @@ import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_state.dart';
 import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.dart';
+import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
+import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
+import 'package:tikom/data/blocs/user_data/user_data_state.dart';
+import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
 import '../voucher/voucher_page.dart';
+
+import 'package:tikom/utils/extentions.dart' as AppExt;
+import 'package:tikom/ui/widgets/loading_dialog.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
@@ -20,10 +28,19 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   late OrderDataCubit _orderDataCubit;
+  late UserDataCubit _userDataCubit;
+  late TransactionBloc _transactionBloc;
+
   int total_price = 0;
+  int default_price = 0;
+  int payment_option = 0;
+  int price_discount = 0;
+
+  String point = '';
+  late List voucher = [];
 
   final Color customGreen = Color.fromARGB(255, 30, 83, 66);
-  bool usePoints = true;
+  bool usePoints = false;
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 12, minute: 0);
   bool isPickup = true; // Toggle state
@@ -315,19 +332,61 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
+
+
   @override
   void initState() {
     super.initState();
+    _transactionBloc = TransactionBloc();
     _orderDataCubit = OrderDataCubit()..loadOrderData();
+    _userDataCubit = UserDataCubit()..loadUserData();
     // print(_orderDataCubit);
 
     _orderDataCubit.stream.listen((state) {
       if (state is OrderDataSuccess) {
         setState(() {
           total_price = state.categories[0].total_price;
+          default_price = state.categories[0].total_price;
+          payment_option = state.categories[0].total_price;
         });
       }
     });
+
+    _userDataCubit.stream.listen((state) {
+      print('masuk');
+      if (state is UserDataLoaded) {
+        setState(() {
+          point = state.user.point;
+        });
+      }
+    });
+  }
+
+    void handlePlaceOrder() {
+    try {
+      var data_voucher = voucher.length > 0 ? voucher[0][0] : '-';
+      var data_payment_type = 'Virtual BCA';
+
+      var data_use_point = usePoints ? 'yes' : '-';
+      var data_price = total_price;
+      AppExt.hideKeyboard(context);
+      DialogTemp().Konfirmasi(
+        context: context,
+        onYes: () {
+          LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
+          print('Handle Place Order Runn');
+          _transactionBloc.add(TransactionButtonPressed(
+              price: default_price,
+              payment_type: data_payment_type,
+              voucher: data_voucher,
+              use_point: data_use_point));
+        },
+        title: "Apakah Ingin Checkout?",
+        onYesText: 'Ya',
+      );
+    } catch (e) {
+      throw Exception('Error : $e');
+    }
   }
 
   @override
@@ -368,7 +427,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               // SizedBox(height: 16),
               // buildPaymentMethod(context),
               const SizedBox(height: 16),
-              buildPaymentOptions(context),
+              buildPaymentOptions(),
               const SizedBox(height: 16),
               buildPaymentDetails(),
               const SizedBox(height: 16),
@@ -809,7 +868,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Subtotal: Rp. $total_price',
+                  'Subtotal: Rp. $default_price',
                   style: GoogleFonts.poppins(
                     textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 16),
@@ -859,56 +918,143 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               textStyle: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.local_offer, color: customGreen),
-                  SizedBox(width: 8),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: customGreen,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'XGZ9V2',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        GestureDetector(
-                          onTap: () {
-                            // Add your remove discount logic here
-                          },
-                          child:
-                              Icon(Icons.close, color: Colors.white, size: 16),
-                        ),
-                      ],
-                    ),
+          const SizedBox(height: 16),
+          InkWell(
+            onTap: () async {
+              List<String> data = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VoucherPage()),
+              );
+              print(data);
+              if (data != null) {
+                setState(() {
+                  // voucher.clear();
+                  voucher.add(data);
+                  var percentage = double.parse(voucher[0][2]) / 100;
+
+                  double price_discountData = total_price * percentage;
+
+                  double discounted_price = total_price - price_discountData;
+                  int discounted_price2 = discounted_price.round();
+
+                  price_discount = price_discountData.round();
+                  // print("Final Price: $finalPrice");
+                  total_price -= price_discount;
+                  payment_option -= price_discount;
+                });
+
+                print(voucher);
+              }
+            },
+            child: Row(
+              children: [
+                Icon(Icons.local_offer, color: customGreen),
+                const SizedBox(width: 8),
+                Text(
+                  'My Voucher',
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Navigate to voucher page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => VoucherPage()),
-                  );
-                },
-                child:
-                    Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
+          if (voucher.isNotEmpty) ...[
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: customGreen,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        voucher[0][1],
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            voucher.clear();
+                            total_price += price_discount;
+                            payment_option += price_discount;
+                            price_discount = 0;
+                          });
+                        },
+                        child: const Icon(Icons.close,
+                            color: Colors.white, size: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+          // const Divider(color: Colors.grey, height: 32),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Row(
+          //       children: [
+          //         Icon(Icons.local_offer, color: customGreen),
+          //         const SizedBox(width: 8),
+          //         Container(
+          //           padding:
+          //               const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          //           decoration: BoxDecoration(
+          //             color: customGreen,
+          //             borderRadius: BorderRadius.circular(16),
+          //           ),
+          //           child: Row(
+          //             children: [
+          //               Text(
+          //                 'XGZ9V2',
+          //                 style: GoogleFonts.poppins(
+          //                   textStyle: const TextStyle(
+          //                       color: Colors.white,
+          //                       fontWeight: FontWeight.bold),
+          //                 ),
+          //               ),
+          //               const SizedBox(width: 4),
+          //               GestureDetector(
+          //                 onTap: () {
+          //                   // Add your remove discount logic here
+          //                 },
+          //                 child: const Icon(Icons.close,
+          //                     color: Colors.white, size: 16),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //     // GestureDetector(
+          //     //   onTap: () async {
+          //     //     List<String> data = await Navigator.push(
+          //     //       context,
+          //     //       MaterialPageRoute(builder: (context) => VoucherPage()),
+          //     //     );
+          //     //     if (data != null) {
+          //     //       setState(() {
+          //     //         voucher.add(data);
+          //     //       });
+
+          //     //       print(voucher);
+          //     //     }
+          //     //   },
+          //     //   child: const Icon(Icons.arrow_forward_ios,
+          //     //       size: 16, color: Colors.grey),
+          //     // ),
+          //   ],
+          // ),
           Divider(color: Colors.grey, height: 32),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -921,17 +1067,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '200 Points',
+                        '$point Points',
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(
-                        '100 points equals \$1.00',
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(color: Colors.grey),
-                        ),
-                      ),
+                      // Text(
+                      //   '100 points equals \$1.00',
+                      //   style: GoogleFonts.poppins(
+                      //     textStyle: TextStyle(color: Colors.grey),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
@@ -941,6 +1087,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 onChanged: (bool value) {
                   setState(() {
                     usePoints = value;
+                    if (value) {
+                      total_price -= int.parse(point);
+                      payment_option -= int.parse(point);
+                    } else {
+                      total_price += int.parse(point);
+                      payment_option += int.parse(point);
+                    }
                   });
                 },
                 activeColor: customGreen,
@@ -1000,7 +1153,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget buildPaymentOptions(BuildContext context) {
+  Widget buildPaymentOptions() {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1017,7 +1170,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Column(
             children: [
               ListTile(
@@ -1031,6 +1184,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onChanged: (PaymentOption? value) {
                     setState(() {
                       _selectedPaymentOption = value!;
+                      payment_option = (total_price / 2).round();
                     });
                   },
                 ),
@@ -1046,6 +1200,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onChanged: (PaymentOption? value) {
                     setState(() {
                       _selectedPaymentOption = value!;
+                      payment_option = total_price;
                     });
                   },
                 ),
@@ -1056,13 +1211,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(color: Colors.grey),
-                SizedBox(height: 8),
+                const Divider(color: Colors.grey),
+                const SizedBox(height: 8),
                 Text(
-                  'Down Payment Amount: \$3.00',
+                  'Down Payment Amount:  Rp. $payment_option',
                   style: GoogleFonts.poppins(
-                    textStyle:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ],
@@ -1071,13 +1226,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(color: Colors.grey),
-                SizedBox(height: 8),
+                const Divider(color: Colors.grey),
+                const SizedBox(height: 8),
                 Text(
-                  'Full Payment Amount: \$6.00',
+                  'Full Payment Amount: Rp. $payment_option',
                   style: GoogleFonts.poppins(
-                    textStyle:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ],
@@ -1132,23 +1287,23 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Service Fee',
-                      style: GoogleFonts.poppins(
-                        textStyle: const TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                    Text(
-                      'Rp. 10000',
-                      style: GoogleFonts.poppins(
-                        textStyle: const TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'Service Fee',
+                //       style: GoogleFonts.poppins(
+                //         textStyle: const TextStyle(color: Colors.grey),
+                //       ),
+                //     ),
+                //     Text(
+                //       'Rp. 10000',
+                //       style: GoogleFonts.poppins(
+                //         textStyle: const TextStyle(color: Colors.grey),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1160,7 +1315,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                     Text(
-                      '-Rp. 0',
+                      '-Rp. $price_discount',
                       style: GoogleFonts.poppins(
                         textStyle: const TextStyle(color: Colors.grey),
                       ),
@@ -1170,18 +1325,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 if (usePoints)
                   Column(
                     children: [
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '200 Points Used',
+                            '$point Points Used',
                             style: GoogleFonts.poppins(
                               textStyle: const TextStyle(color: Colors.grey),
                             ),
                           ),
                           Text(
-                            '-Rp 200',
+                            '-Rp $point',
                             style: GoogleFonts.poppins(
                               textStyle: const TextStyle(color: Colors.grey),
                             ),
@@ -1201,7 +1356,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                     Text(
-                      'Rp. 20000', // Adjust total based on points usage
+                      'Rp. ${usePoints ? total_price : payment_option}', // Adjust total based on points usage
                       style: GoogleFonts.poppins(
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -1222,34 +1377,60 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget buildPlaceOrderButton(BuildContext context) {
-    return BlocBuilder<OrderDataCubit, OrderDataState>(
-      bloc: _orderDataCubit,
-      builder: (context, state) {
-        return Container(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Place order action
-            },
-            style: ElevatedButton.styleFrom(
-              primary: customGreen,
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+    return BlocProvider(
+      create: (context) => _transactionBloc,
+      child: BlocListener<TransactionBloc, TransactionState>(
+          listener: (context, state) {
+            if (state is TransactionSuccess) {
+              AppExt.popScreen(context);
+              DialogTemp().Informasi(
+                  context: context,
+                  onYes: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyHomePage(
+                                  tabIndex: 2,
+                                )));
+                  },
+                  onYesText: 'Oke',
+                  title: 'Berhasil Melakukan Order');
+            } else if (state is TransactionFailure) {
+              AppExt.popScreen(context);
+              DialogTemp().Informasi(
+                  context: context,
+                  onYes: () {
+                    Navigator.pop(context);
+                  },
+                  onYesText: 'Oke',
+                  title: 'Gagal Melakukan Order');
+            }
+          },
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                // Place order action
+                handlePlaceOrder();
+              },
+              style: ElevatedButton.styleFrom(
+                primary: customGreen,
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Place Order',
+                style: GoogleFonts.poppins(
+                  textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
               ),
             ),
-            child: Text(
-              'Place Order',
-              style: GoogleFonts.poppins(
-                textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-          ),
-        );
-      },
+          )),
     );
   }
 }

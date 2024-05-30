@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                   alignment: Alignment.topRight,
-                  child: Icon(
+                  child: const Icon(
                     Icons.notifications_active,
                     color: Colors.white,
                     size: 25,
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        SizedBox(height: 60,),
+        const SizedBox(height: 60,),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                             height: 20,
                             fit: BoxFit.cover,
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           RichText(
                             text: TextSpan(
                               style: GoogleFonts.poppins(
@@ -176,15 +176,15 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 50),
-                          Icon(
+                          const SizedBox(width: 50),
+                          const Icon(
                             Icons.discount,
                             color: Color.fromRGBO(68, 208, 145, 1.0),
                             size: 20,
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text(
-                            '10',
+                            "${user.countVoucher}",
                             style: GoogleFonts.poppins(
                                 fontSize: 15, color: Colors.black),
                           ),

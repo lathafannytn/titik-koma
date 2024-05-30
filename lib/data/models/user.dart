@@ -31,7 +31,8 @@ class User {
       required this.address,
       required this.born,
       required this.referallCode,
-      required this.point
+      required this.point,
+      required this.countVoucher
       });
 
   int id;
@@ -42,18 +43,25 @@ class User {
   dynamic born;
   dynamic referallCode;
   dynamic point;
+  dynamic countVoucher;
 
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"] ?? 0,
-    name: json["name"],
-    email: json["email"],
-    phonenumber: json['profil']['phone_number'],
-    born: json['profil']['born'],
-    point: json['profil']['point'],
-    referallCode: json['profil']['referral_code'],
-    address: json['profil']['address'],
-  );
+   factory User.fromJson(Map<String, dynamic> json) {
+    var profil = json['profil'];
+    var voucher = json['voucher'];
+    
+    return User(
+      id: json["id"] ?? 0,
+      name: json["name"],
+      email: json["email"],
+      phonenumber: profil != null ? profil['phone_number'] : null,
+      born: profil != null ? profil['born'] : null,
+      point: profil != null ? profil['point'] : null,
+      referallCode: profil != null ? profil['referral_code'] : null,
+      address: profil != null ? profil['address'] : null,
+      countVoucher: voucher != null && voucher is List ? voucher.length : 0,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
       "id": id,
@@ -64,6 +72,7 @@ class User {
       "born":born,
       "referallCode": referallCode,
       "point": point,
+      "countVoucher": countVoucher,
   };
 }
 

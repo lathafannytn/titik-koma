@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (state is UserDataLoaded) {
                 final user = state.user;
                 return buildProfileContent(
-                    context, user.name, user.point.toString(),user.referallCode);
+                    context, user.name, user.point.toString(),user.referallCode, user.countVoucher.toString());
               } else if (state is UserDataError) {
                 return Center(child: Text('Error: ${state.message}'));
               } else {
@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget buildProfileContent(BuildContext context, String userName,
-      String userPoints, String referral_code) {
+      String userPoints, String referral_code, String userVoucher) {
     return Column(
       children: [
         Stack(
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             label: 'Vouchers',
                             iconPath: 'assets/icons/discount.svg',
-                            value: '8',
+                            value:  userVoucher,
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(

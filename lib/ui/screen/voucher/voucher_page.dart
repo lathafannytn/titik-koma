@@ -1,11 +1,28 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_cubit.dart';
+import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_state.dart';
+import 'package:tikom/data/models/my_voucher.dart';
 import 'package:tikom/ui/screen/voucher/redeem.dart';
 import 'package:tikom/ui/screen/voucher/voucher_card.dart';
 
-class VoucherPage extends StatelessWidget {
+class VoucherPage extends StatefulWidget {
   const VoucherPage({Key? key}) : super(key: key);
+
+  @override
+  State<VoucherPage> createState() => _VoucherPageState();
+}
+
+class _VoucherPageState extends State<VoucherPage> {
+  late MyVoucherCubit _MyVoucherDataCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _MyVoucherDataCubit = MyVoucherCubit()..loadMyVoucher();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,42 +36,41 @@ class VoucherPage extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            VoucherCard(
-              title: "Exclusive Benefits Diskon 30%",
-              description: "S&K",
-              expiryDate: "19/05/2024",
-              discount: "30% OFF",
-            ),
-            VoucherCard(
-              title: "Weekly | 1 Cup Disc 1K",
-              description: "Min 1 produk",
-              expiryDate: "15/05/2024",
-              discount: "Disc 1k",
-            ),
-            VoucherCard(
-              title: "Weekly | 2 Cups Disc 5K",
-              description: "Min 2 produk",
-              expiryDate: "15/05/2024",
-              discount: "Disc 5k",
-            ),
-            VoucherCard(
-              title: "Weekly | 3 Cups Disc 15K",
-              description: "Min 3 produk",
-              expiryDate: "15/05/2024",
-              discount: "Disc 15k",
-            ),
-            VoucherCard(
-              title: "RAIH DISKON ONGKIR!!!",
-              description: "Min 2 produk",
-              expiryDate: "17/05/2024",
-              discount: "GRATIS ONGKIR",
-            ),
-          ],
-        ),
+      body: BlocBuilder<MyVoucherCubit, MyVoucherState>(
+        bloc: _MyVoucherDataCubit,
+        builder: (context, state) {
+          if (state is MyVoucherLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is MyVoucherSuccess) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: state.voucher.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var data = state.voucher[index];
+                  return VoucherCard(
+                    title: data.name,
+                    description: data.desc,
+                    expiryDate: data.end_date,
+                    discount: "${data.percentage}% OFF",
+                    onclick: () {
+                      Navigator.pop(context, [data.uuid,data.name,'${data.percentage}']);
+                    },
+                  );
+                },
+              ),
+            );
+          }
+
+          if (state is MyVoucherFailure) {
+            print('error');
+            print(state.message);
+          }
+          return const SizedBox();
+        },
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),

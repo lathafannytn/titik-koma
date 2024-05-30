@@ -101,10 +101,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
       AppExt.hideKeyboard(context);
       LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
       _orderBloc.add(OrderButtonPressed(
-              products: product,
-              selected: selected,
-              add_on: add_on,
-              total: total));
+          products: product, selected: selected, add_on: add_on, total: total));
     } catch (e) {
       throw Exception('Error : $e');
     }

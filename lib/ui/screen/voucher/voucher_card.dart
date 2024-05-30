@@ -5,12 +5,14 @@ class VoucherCard extends StatelessWidget {
   final String description;
   final String expiryDate;
   final String discount;
+  final Function()? onclick;
 
   const VoucherCard({
     required this.title,
     required this.description,
     required this.expiryDate,
     required this.discount,
+     this.onclick,
     Key? key,
   }) : super(key: key);
 
@@ -72,11 +74,9 @@ class VoucherCard extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: () {
-                    // Handle 'Pakai' action
-                  },
+                  onPressed: onclick,
                   style: ElevatedButton.styleFrom(
-                    primary:Color.fromARGB(255, 62, 169, 126),
+                    primary: Color.fromARGB(255, 62, 169, 126),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
