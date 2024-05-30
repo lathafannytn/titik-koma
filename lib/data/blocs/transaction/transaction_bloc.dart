@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tikom/data/models/transaction.dart';
 import 'package:tikom/data/repository/auth_repository_sign_up.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 
@@ -43,6 +44,28 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         print(error);
         emit(TransactionFailure(error: error.toString()));
       }
+    }
+  }
+
+  Future<void> dataFilter(String filter) async {
+    emit(TransactionLoading());
+    print('From Cubit');
+    try {
+      final response = await transactionRepository.dataStatus(filter: filter);
+      print('From Cubit');
+      print(response);
+      if (response != null && response.data != null) {
+        print('hm');
+        print(response.data!);
+        emit(TransactionSuccessData(response.data!));
+      } else {
+        emit(TransactionFailure(error: response.message));
+      }
+    } catch (error) {
+      print(error.toString());
+      emit(TransactionFailure(
+        error: error.toString(),
+      ));
     }
   }
 }

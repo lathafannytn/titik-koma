@@ -11,8 +11,16 @@ class TransactionInitial extends TransactionState {}
 
 class TransactionLoading extends TransactionState {}
 
-
 class TransactionSuccess extends TransactionState {}
+
+class TransactionSuccessData extends TransactionState {
+  TransactionSuccessData(this.transactions);
+
+  List<Transaction> transactions;
+
+  @override
+  List<Object> get props => [transactions];
+}
 
 class TransactionFailure extends TransactionState {
   final String error;
