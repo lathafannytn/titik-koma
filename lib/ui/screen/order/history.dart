@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 
 import 'history_detail.dart';
@@ -123,7 +124,7 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
                 ],
               ),
               const SizedBox(height: 4.0),
-              Text(date),
+              Text(DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date))),
               const SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
