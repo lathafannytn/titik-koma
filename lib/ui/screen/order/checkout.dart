@@ -19,6 +19,8 @@ import '../voucher/voucher_page.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
 
+import 'payment.dart';
+
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
   const CheckoutScreen({Key? key, required this.uuid}) : super(key: key);
@@ -332,8 +334,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-
-
   @override
   void initState() {
     super.initState();
@@ -362,7 +362,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
   }
 
-    void handlePlaceOrder() {
+  void navigateToPaymentScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentMethodScreen(totalAmount: total_price),
+      ),
+    );
+  }
+
+  void handlePlaceOrder(BuildContext context) {
     try {
       var data_voucher = voucher.length > 0 ? voucher[0][0] : '-';
       var data_payment_type = 'Virtual BCA';
@@ -1389,8 +1398,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const MyHomePage(
-                                  tabIndex: 2,
+                            builder: (context) => PaymentMethodScreen(
+                                  totalAmount: total_price,
                                 )));
                   },
                   onYesText: 'Oke',
@@ -1411,7 +1420,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Place order action
-                handlePlaceOrder();
+                handlePlaceOrder(context);
               },
               style: ElevatedButton.styleFrom(
                 primary: customGreen,
