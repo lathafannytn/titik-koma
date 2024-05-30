@@ -1389,9 +1389,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PaymentMethodScreen(
-                                  totalAmount: total_price,
+                            builder: (context) => MyHomePage(
+                                  tabIndex: 2,
                                 )));
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => PaymentMethodScreen(
+                    //               totalAmount: total_price,
+                    //             )));
                   },
                   onYesText: 'Oke',
                   title: 'Berhasil Melakukan Order');
