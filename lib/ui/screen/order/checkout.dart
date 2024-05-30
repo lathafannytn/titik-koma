@@ -1383,24 +1383,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           listener: (context, state) {
             if (state is TransactionSuccess) {
               AppExt.popScreen(context);
-              DialogTemp().Informasi(
-                  context: context,
-                  onYes: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyHomePage(
-                                  tabIndex: 2,
-                                )));
-                    // Navigator.pushReplacement(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => PaymentMethodScreen(
-                    //               totalAmount: total_price,
-                    //             )));
-                  },
-                  onYesText: 'Oke',
-                  title: 'Berhasil Melakukan Order');
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage(
+                            tabIndex: 2,
+                          )));
+              // DialogTemp().Informasi(
+              //     context: context,
+              //     onYes: () {
+              //       // Navigator.pushReplacement(
+              //       //     context,
+              //       //     MaterialPageRoute(
+              //       //         builder: (context) => MyHomePage(
+              //       //               tabIndex: 2,
+              //       //             )));
+              //       // Navigator.pushReplacement(
+              //       //     context,
+              //       //     MaterialPageRoute(
+              //       //         builder: (context) => PaymentMethodScreen(
+              //       //               totalAmount: total_price,
+              //       //             )));
+              //     },
+              //     onYesText: 'Oke',
+              //     title: 'Berhasil Melakukan Order');
             } else if (state is TransactionFailure) {
               AppExt.popScreen(context);
               DialogTemp().Informasi(
