@@ -66,4 +66,38 @@ class TransactionRepository {
     return TransactionResponse.fromJson(response);
   }
 
+   Future<TransactionResponse> data() async {
+    final _token = await _authenticationRepository.getToken();
+    final response = await _provider.get(
+      'transaction/data',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('Form Repositor');
+    print(response);
+
+    return TransactionResponse.fromJson(response);
+  }
+
+  Future<TransactionResponse> dataDetail({
+    required String uuid,
+  }) async {
+    final _token = await _authenticationRepository.getToken();
+    final response = await _provider.get(
+      'transaction/data/$uuid',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('Form Repositor');
+    print(response);
+
+    return TransactionResponse.fromJson(response);
+  }
+
 }

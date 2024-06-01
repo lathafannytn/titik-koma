@@ -1,144 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 
 import 'history_detail.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class RiwayatPemesananScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RiwayatPemesananScreen(),
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(),
-      ),
-    );
-  }
+  State<RiwayatPemesananScreen> createState() => _RiwayatPemesananScreenState();
 }
 
-class RiwayatPemesananScreen extends StatelessWidget {
+class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Riwayat Pemesanan',
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.poppins(
+            textStyle: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
+          ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.search, color: Colors.black),
             onPressed: () {
-              // Implementasikan fungsi pengaturan
+              // Search action
             },
           ),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.all(8.0),
-        children: [
-          buildOrderCard(
-            context,
-            status: 'Dibatalkan',
-            date: '30/05/2024',
-            time: '14:49',
-            location: 'Ruko Kayoon',
-            items: ['Matcha Oat Latte'],
-            totalItems: 1,
-            totalPrice: 28000,
-            orderId: 'TO2024042818265914295',
-            orderTime: '28/04/2024 18:26',
-            orderChannel: 'APP',
-            paymentMethod: 'ShopeePay',
-            voucher: 16000,
-            points: 18,
-          ),
-          buildOrderCard(
-            context,
-            status: 'Berhasil',
-            date: 'Jumat, 15 Des 2023',
-            time: '18:14',
-            location: 'Tunjungan Plaza 6',
-            items: ['1 Iced Light Buttercream Latte'],
-            totalItems: 1,
-            totalPrice: 29000,
-            orderId: 'TO2023121518145914295',
-            orderTime: '15/12/2023 18:14',
-            orderChannel: 'APP',
-            paymentMethod: 'GoPay',
-            voucher: 0,
-            points: 10,
-          ),
-          buildOrderCard(
-            context,
-            status: 'Berhasil',
-            date: 'Kamis, 09 Feb 2023',
-            time: '18:24',
-            location: 'Tunjungan Plaza 6',
-            items: ['1 Iced Banana Butter Latte', '1 Hibiscus Berry Yakult'],
-            totalItems: 2,
-            totalPrice: 38000,
-            orderId: 'TO2023020918245914295',
-            orderTime: '09/02/2023 18:24',
-            orderChannel: 'APP',
-            paymentMethod: 'OVO',
-            voucher: 5000,
-            points: 20,
-          ),
-        ],
+      body: BlocBuilder<TransactionBloc, TransactionState>(
+        bloc: TransactionBloc()..data(),
+        builder: (context, state) {
+          if (state is TransactionLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is TransactionSuccessData) {
+            if (state.transactions.length > 0) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: ListView.builder(
+                  itemCount: state.transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = state.transactions[index];
+                    return buildOrderCard(context,
+                        uuid: transaction.uuid,
+                        status: transaction.status,
+                        date: transaction.service_date,
+                        totalItems: transaction.product_count,
+                        totalPrice: transaction.price,
+                        code: transaction.transaction_code);
+                  },
+                ),
+              );
+            } else {
+              return const Center(child: Text('Data Kosong'));
+            }
+          }
+          if (state is TransactionFailure) {
+            print('error');
+            print(state.error);
+            return Center(child: Text(state.error));
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
 
   Widget buildOrderCard(
     BuildContext context, {
+    required String code,
+    required String uuid,
     required String status,
     required String date,
-    required String time,
-    required String location,
-    required List<String> items,
     required int totalItems,
     required int totalPrice,
-    required String orderId,
-    required String orderTime,
-    required String orderChannel,
-    required String paymentMethod,
-    required int voucher,
-    required int points,
   }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailHistoryOrderScreen(
-              status: status,
-              date: date,
-              time: time,
-              location: location,
-              items: items,
-              totalItems: totalItems,
-              totalPrice: totalPrice,
-              orderId: orderId,
-              orderTime: orderTime,
-              orderChannel: orderChannel,
-              paymentMethod: paymentMethod,
-              voucher: voucher,
-              points: points,
-            ),
+            builder: (context) => DetailHistoryOrderScreen(uuid: uuid,),
           ),
         );
       },
       child: Card(
-        margin: EdgeInsets.symmetric(vertical: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -146,24 +110,22 @@ class RiwayatPemesananScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    location,
-                    style: TextStyle(
+                    'Code : $code',
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     status,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.grey,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 4.0),
-              Text('$date $time'),
-              SizedBox(height: 8.0),
-              ...items.map((item) => Text(item)).toList(),
-              SizedBox(height: 8.0),
+              const SizedBox(height: 4.0),
+              Text(DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date))),
+              const SizedBox(height: 8.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -175,13 +137,13 @@ class RiwayatPemesananScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
                       onPrimary: Colors.black,
-                      side: BorderSide(color: Colors.grey),
+                      side: const BorderSide(color: Colors.grey),
                       elevation: 0, // Hilangkan bayangan
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: Text('Pesan Lagi'),
+                    child: const Text('Pesan Lagi'),
                   ),
                 ],
               ),
@@ -192,5 +154,3 @@ class RiwayatPemesananScreen extends StatelessWidget {
     );
   }
 }
-
-

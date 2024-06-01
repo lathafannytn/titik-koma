@@ -135,22 +135,24 @@ class DialogTemp {
                     const SizedBox(
                       height: 20,
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        onYes();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        primary: Color.fromARGB(255, 9, 76, 58),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          onYes();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          primary: Color.fromARGB(255, 9, 76, 58),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        onYesText,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 18.0,
+                        child: Text(
+                          onYesText,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
                     ),

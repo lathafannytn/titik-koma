@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
@@ -12,6 +13,11 @@ import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
+import 'package:tikom/ui/screen/order/maps.dart';
+import 'package:tikom/ui/screen/order/maps2.dart';
+import 'package:tikom/ui/screen/order/maps3.dart';
+import 'package:tikom/ui/screen/order/maps4.dart';
+import 'package:tikom/ui/screen/order/maps5.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import '../voucher/voucher_page.dart';
@@ -37,9 +43,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   int default_price = 0;
   int payment_option = 0;
   int price_discount = 0;
+  int delivery_price = 0;
 
   String point = '';
   late List voucher = [];
+  List delivered = [];
 
   final Color customGreen = Color.fromARGB(255, 30, 83, 66);
   bool usePoints = false;
@@ -452,6 +460,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               onTap: () {
                 setState(() {
                   isPickup = true;
+                  if (delivered.isNotEmpty) {
+                    delivered.clear();
+                  }
+                  total_price -= delivery_price;
+                  payment_option -= delivery_price;
                 });
               },
               child: Container(
@@ -583,7 +596,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -595,36 +608,36 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               Text(
                 'Your order is delivered from:',
                 style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
+                  textStyle: const TextStyle(color: Colors.grey),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(Icons.store, color: customGreen),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Caffely Astoria Aromas',
+                          'Titik Koma Adijasa',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
-                          '350 5th Ave, New York, NY 10118, USA',
+                          'Jl. Demak No. 90-92, Gundih, Kec. Bubutan, Kota Surabaya, Jawa Timur, 60172, Surabaya, Indonesia ',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(color: Colors.grey),
                           ),
                         ),
-                        Text(
-                          '1.2 km from your location',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(color: Colors.grey),
-                          ),
-                        ),
+                        // Text(
+                        //   '1.2 km from your location',
+                        //   style: GoogleFonts.poppins(
+                        //     textStyle: TextStyle(color: Colors.grey),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -632,43 +645,97 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               Divider(color: Colors.grey),
               SizedBox(height: 8),
-              Text(
-                'To your address:',
-                style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.grey),
+              InkWell(
+                onTap: () async {
+                  // var data_back = await Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => SearchLokasiKolam()),
+                  // );
+                },
+                child: Text(
+                  'To your address:',
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(Icons.home, color: customGreen),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
+                      child: InkWell(
+                    onTap: () async {
+                      var data_back = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchLokasiKolam()),
+                      );
+                      if (data_back != null) {
+                        setState(() {
+                          print('data back');
+                          print(data_back);
+                          if (delivered.isNotEmpty) {
+                            delivered.clear();
+                          }
+                          delivered.add(data_back);
+
+                          print('sini data');
+
+                          print(delivered[0][0].toStringAsFixed(0));
+                          delivery_price =
+                              int.parse(delivered[0][0].toStringAsFixed(0)) *
+                                  10000;
+                          print(delivery_price);
+                          total_price += delivery_price;
+                          payment_option += delivery_price;
+                        });
+                      }
+                      print(delivered);
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Home',
+                          'Pilih Alamat',
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Text(
-                          '701 7th Ave, New York, NY 10036, USA',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(color: Colors.grey),
+                        if (delivered.length > 0) ...[
+                          Text(
+                            delivered[0][1],
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(color: Colors.grey),
+                            ),
                           ),
-                        ),
-                        Text(
-                          '5 minutes estimate arrived',
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(color: Colors.grey),
+                          Text(
+                            '${delivered[0][0].toStringAsFixed(2)} KM',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(color: Colors.grey),
+                            ),
                           ),
-                        ),
+                        ]
+
+                        // Text(
+                        //   '701 7th Ave, New York, NY 10036, USA',
+                        //   style: GoogleFonts.poppins(
+                        //     textStyle: TextStyle(color: Colors.grey),
+                        //   ),
+                        // ),
+                        // Text(
+                        //   '5 minutes estimate arrived',
+                        //   style: GoogleFonts.poppins(
+                        //     textStyle: TextStyle(color: Colors.grey),
+                        //   ),
+                        // ),
                       ],
                     ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                  )),
+                  const Icon(Icons.arrow_forward_ios,
+                      size: 16, color: Colors.grey),
                 ],
               ),
             ],
@@ -1287,23 +1354,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Text(
-                //       'Service Fee',
-                //       style: GoogleFonts.poppins(
-                //         textStyle: const TextStyle(color: Colors.grey),
-                //       ),
-                //     ),
-                //     Text(
-                //       'Rp. 10000',
-                //       style: GoogleFonts.poppins(
-                //         textStyle: const TextStyle(color: Colors.grey),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                if (delivered.length > 0) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Delivery Price',
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                      Text(
+                        'Rp. ${delivery_price}',
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1383,18 +1452,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           listener: (context, state) {
             if (state is TransactionSuccess) {
               AppExt.popScreen(context);
-              DialogTemp().Informasi(
-                  context: context,
-                  onYes: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PaymentMethodScreen(
-                                  totalAmount: total_price,
-                                )));
-                  },
-                  onYesText: 'Oke',
-                  title: 'Berhasil Melakukan Order');
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage(
+                            tabIndex: 2,
+                          )));
+              // DialogTemp().Informasi(
+              //     context: context,
+              //     onYes: () {
+              //       // Navigator.pushReplacement(
+              //       //     context,
+              //       //     MaterialPageRoute(
+              //       //         builder: (context) => MyHomePage(
+              //       //               tabIndex: 2,
+              //       //             )));
+              //       // Navigator.pushReplacement(
+              //       //     context,
+              //       //     MaterialPageRoute(
+              //       //         builder: (context) => PaymentMethodScreen(
+              //       //               totalAmount: total_price,
+              //       //             )));
+              //     },
+              //     onYesText: 'Oke',
+              //     title: 'Berhasil Melakukan Order');
             } else if (state is TransactionFailure) {
               AppExt.popScreen(context);
               DialogTemp().Informasi(

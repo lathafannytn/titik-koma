@@ -99,7 +99,7 @@ class _OrdersPageState extends State<OrdersPage>
           );
         }
         if (state is TransactionSuccessData) {
-          if (state.transactions.length > 0) {
+          if (state.transactions.isNotEmpty) {
             return Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -112,13 +112,12 @@ class _OrdersPageState extends State<OrdersPage>
                 itemBuilder: (context, index) {
                   final transaction = state.transactions[index];
                   return buildOrderItem(
-                    context,
-                    "Code : ${transaction.transaction_code}",
-                    "Rp. ${transaction.price}",
-                    transaction.status,
-                    'assets/images/kopi_aren_doppio.jpg',
-                    transaction.service_date
-                  );
+                      context,
+                      "Code : ${transaction.transaction_code}",
+                      "Rp. ${transaction.price}",
+                      transaction.status,
+                      'assets/images/kopi_aren_doppio.jpg',
+                      transaction.service_date);
                 },
               ),
             );
@@ -137,7 +136,7 @@ class _OrdersPageState extends State<OrdersPage>
   }
 
   Widget buildOrderItem(BuildContext context, String title, String subtitle,
-      String status, String imagePath,String date) {
+      String status, String imagePath, String date) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
       padding: EdgeInsets.all(16.0),
@@ -170,10 +169,9 @@ class _OrdersPageState extends State<OrdersPage>
                         style: GoogleFonts.poppins(color: Colors.grey)),
                   ],
                 ),
-                 Row(
+                Row(
                   children: [
-                    Text(date,
-                        style: GoogleFonts.poppins(color: Colors.grey)),
+                    Text(date, style: GoogleFonts.poppins(color: Colors.grey)),
                   ],
                 ),
                 SizedBox(height: 8.0),
