@@ -523,7 +523,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CheckoutScreen(
-                                          uuid: state.order[0].uuid,
+                                          uuid: state.order[0].uuid, count: total_quantity,
                                         )),
                               );
                             },

@@ -31,7 +31,9 @@ import 'payment.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
-  const CheckoutScreen({Key? key, required this.uuid}) : super(key: key);
+  final int count;
+  const CheckoutScreen({Key? key, required this.uuid, required this.count})
+      : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
@@ -91,9 +93,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       print(response);
       if (response.status == 'success') {
         setState(() {
-          price_discount = int.parse(response.data.total_price.toString());
-          total_price = total_price - price_discount;
-          payment_option = payment_option - price_discount;
+          if (widget.count >= response.data.total_quantity) {
+            price_discount = int.parse(response.data.total_price.toString());
+            total_price = total_price - price_discount;
+            payment_option = payment_option - price_discount;
+          }
         });
       } else {}
     } catch (error) {
@@ -319,7 +323,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
-    
     super.initState();
     _transactionBloc = TransactionBloc();
     _orderDataCubit = OrderDataCubit()..loadOrderData();
