@@ -11,6 +11,7 @@ import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.d
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
+import 'package:tikom/data/repository/order_repository.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/ui/screen/order/maps.dart';
@@ -79,6 +80,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final String date = dateFormatter.format(selectedDate);
     final String time = selectedTime.format(context);
     return '$time, $date';
+  }
+
+  void handlePotonganDefault() async {
+    print('panggil handler potongan');
+    try {
+      final OrderRepository orderRepository = OrderRepository();
+      final response = await orderRepository.showPotongan();
+      print('form potongan');
+      print(response);
+      if (response.status == 'success') {
+        setState(() {
+          price_discount = int.parse(response.data.total_price.toString());
+          total_price = total_price - price_discount;
+          payment_option = payment_option - price_discount;
+        });
+      } else {}
+    } catch (error) {
+      print('error handrel');
+      print(error.toString());
+    }
   }
 
   void _showPickupTimeDialog(BuildContext context) {
@@ -298,6 +319,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   void initState() {
+    
     super.initState();
     _transactionBloc = TransactionBloc();
     _orderDataCubit = OrderDataCubit()..loadOrderData();
@@ -322,6 +344,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         });
       }
     });
+    handlePotonganDefault();
   }
 
   void handlePlaceOrder(BuildContext context) {

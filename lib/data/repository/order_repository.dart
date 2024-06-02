@@ -79,28 +79,40 @@ class OrderRepository {
   }
 
   Future<String> plusMinus({
-      required String uuid,
-      required String action,
+    required String uuid,
+    required String action,
+  }) async {
+    final body = jsonEncode({
+      'uuid': uuid,
+      'action': action,
+    });
+    final _token = await _authenticationRepository.getToken();
 
-    }) async {
-      final body = jsonEncode({
-        'uuid': uuid,
-        'action': action,
-      });
-      final _token = await _authenticationRepository.getToken();
-
-      final response = await _provider.post(
-        'order/handle-plus-minus',
-        body: body,
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $_token',
-          HttpHeaders.acceptHeader: 'application/json',
-          HttpHeaders.contentTypeHeader: 'application/json',
-        },
-      );
-      print(response);
-      return json.encode(response);
+    final response = await _provider.post(
+      'order/handle-plus-minus',
+      body: body,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print(response);
+    return json.encode(response);
   }
 
+  Future<PotonganDataResponse> showPotongan() async {
+    final _token = await _authenticationRepository.getToken();
 
+    final response = await _provider.get(
+      'order/default-potongan',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+
+    return PotonganDataResponse.fromJson(response);
+  }
 }
