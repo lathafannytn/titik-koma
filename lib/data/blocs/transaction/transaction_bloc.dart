@@ -14,6 +14,7 @@ part 'transaction_state.dart';
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionBloc() : super(TransactionInitial()) {
     on<TransactionEvent>(onTransactionEvent);
+
   }
 
   final TransactionRepository transactionRepository = TransactionRepository();
@@ -29,12 +30,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           voucher: event.voucher,
           payment_method: event.payment_type,
           use_point: event.use_point,
+          service_date: event.service_date,
         );
         print('masuk sini');
         print(transactionResponse);
         print(event.price);
         if (transactionResponse.status == 'success') {
-          emit(TransactionSuccess());
+          emit(TransactionSuccess( message: transactionResponse.message));
         } else {
           print('lagi error else');
           print(transactionResponse.error);
@@ -116,4 +118,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       ));
     }
   }
+
+
+
 }

@@ -1,3 +1,4 @@
+import 'package:tikom/data/models/media.dart';
 import 'package:tikom/data/models/product.dart';
 
 class TransactionStoreResponse {
@@ -29,8 +30,9 @@ class Transaction {
   final int price_amount;
   final int down_payment;
   final String payment_type;
+  final List<Media>? media;
 
-  Transaction( {
+  Transaction({
     required this.id,
     required this.uuid,
     required this.status,
@@ -43,7 +45,7 @@ class Transaction {
     required this.price_discount,
     required this.payment_type,
     required this.down_payment,
-
+    this.media,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -51,20 +53,27 @@ class Transaction {
     List<ProductDetail> productDetails =
         productsJson.map((i) => ProductDetail.fromJson(i)).toList();
 
+    // Check if 'media' is null and handle accordingly
+    var mediaJson = json['media'] as List<dynamic>?;
+    List<Media> mediaDetails = mediaJson != null
+        ? mediaJson.map((i) => Media.fromJson(i)).toList()
+        : [];
+
     return Transaction(
-        id: json['id'].toString(),
-        uuid: json['uuid'],
-        status: json['status'],
-        price: json['price'],
-        product_count: json['product_count'],
-        transaction_code: json['transaction_code'],
-        product_detail: productDetails,
-        price_amount: json['price_amount'],
-        price_discount: json['price_discount'],
-        payment_type: json['payment_type'],
-        down_payment: json['down_payment'] ?? 0,
-        service_date: json['service_date']
-      );
+      id: json['id'].toString(),
+      uuid: json['uuid'],
+      status: json['status'],
+      price: json['price'],
+      product_count: json['product_count'],
+      transaction_code: json['transaction_code'],
+      product_detail: productDetails,
+      price_amount: json['price_amount'],
+      price_discount: json['price_discount'],
+      payment_type: json['payment_type'],
+      down_payment: json['down_payment'] ?? 0,
+      service_date: json['service_date'],
+      media: mediaDetails.isNotEmpty ? mediaDetails : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -75,7 +84,14 @@ class Transaction {
       'price': price,
       'transaction_code': transaction_code,
       'service_date': service_date,
-      'product_count': product_count
+      'product_count': product_count,
+      'product_detail':
+          product_detail.map((product) => product.toJson()).toList(),
+      'price_amount': price_amount,
+      'price_discount': price_discount,
+      'payment_type': payment_type,
+      'down_payment': down_payment,
+      'media': media?.map((m) => m.toJson()).toList(),
     };
   }
 }

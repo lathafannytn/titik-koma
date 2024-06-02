@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tikom/api/api.dart';
 import 'package:meta/meta.dart';
@@ -10,13 +13,17 @@ import 'package:tikom/data/models/transaction.dart';
 import 'package:tikom/data/repository/auth_repository.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/utils/storage_service.dart';
+import 'package:tikom/utils/constant.dart' as AppConst;
 
 const String tokenKey = 'token';
 
 class TransactionRepository {
   final ApiProvider _provider = ApiProvider();
+  final String _baseUrl = AppConst.Constants.baseURL;
+
   final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
+  final Dio dio = new Dio();
 
   /// Fetch sign in response from api
   Future<TransactionStoreResponse> store({
@@ -24,12 +31,14 @@ class TransactionRepository {
     required String voucher,
     required String payment_method,
     required String use_point,
+    required String service_date,
   }) async {
     final body = jsonEncode({
       'price': price,
       'voucher': voucher,
       'payment_type': payment_method,
       'use_point': use_point,
+      'service_date':service_date
     });
     final _token = await _authenticationRepository.getToken();
 
@@ -46,7 +55,6 @@ class TransactionRepository {
     print(response);
     return TransactionStoreResponse.fromJson(response);
   }
-
 
   Future<TransactionResponse> dataStatus({
     required String filter,
@@ -66,7 +74,7 @@ class TransactionRepository {
     return TransactionResponse.fromJson(response);
   }
 
-   Future<TransactionResponse> data() async {
+  Future<TransactionResponse> data() async {
     final _token = await _authenticationRepository.getToken();
     final response = await _provider.get(
       'transaction/data',
@@ -100,4 +108,29 @@ class TransactionRepository {
     return TransactionResponse.fromJson(response);
   }
 
+  /// Fetch sign in response from api
+  Future<TransactionStoreResponse> payment({
+    required String uuidOrder,
+    required String imagePayment,
+  }) async {
+    final _token = await _authenticationRepository.getToken();
+    FormData formDataGeneral;
+    formDataGeneral = FormData.fromMap({
+      "order_uuid": uuidOrder,
+      "image_payment":
+          await MultipartFile.fromFile(imagePayment, filename: "payment"),
+    });
+
+    final response = await dio.post(
+      "${_baseUrl}transaction/payment/store",
+      data: formDataGeneral,
+      options: Options(headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      }, validateStatus: (status) => true),
+    );
+    print('disini store trans');
+    print(response.data);
+    return TransactionStoreResponse.fromJson(response.data);
+  }
 }

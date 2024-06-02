@@ -18,6 +18,7 @@ import 'package:tikom/ui/screen/order/maps2.dart';
 import 'package:tikom/ui/screen/order/maps3.dart';
 import 'package:tikom/ui/screen/order/maps4.dart';
 import 'package:tikom/ui/screen/order/maps5.dart';
+import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import '../voucher/voucher_page.dart';
@@ -331,6 +332,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       var data_use_point = usePoints ? 'yes' : '-';
       var data_price = total_price;
       AppExt.hideKeyboard(context);
+      print('test pickup date');
+      // ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+      //           : 'Pick up at ${getFormattedDateTime()}',
+      var dateSelected = selectedDate.toString().split(" ")[0];
+      var timeSeleted = selectedTime;
+      print(dateSelected);
+      print(timeSeleted.hour);
+      var dateTimeSelected =
+          '$dateSelected ${timeSeleted.hour}:${timeSeleted.minute}';
+      print(dateTimeSelected);
       DialogTemp().Konfirmasi(
         context: context,
         onYes: () {
@@ -340,7 +351,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               price: default_price,
               payment_type: data_payment_type,
               voucher: data_voucher,
-              use_point: data_use_point));
+              use_point: data_use_point,
+              service_date: dateTimeSelected));
         },
         title: "Apakah Ingin Checkout?",
         onYesText: 'Ya',
@@ -1374,12 +1386,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           listener: (context, state) {
             if (state is TransactionSuccess) {
               AppExt.popScreen(context);
+              var responseM = state.message;
+              List<String> dataRes = responseM.split("//");
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyHomePage(
-                            tabIndex: 2,
-                          )));
+                    builder: (context) =>
+                        PaymentPage(uuid: dataRes[1].toString()),
+                  ));
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => MyHomePage(
+              //               tabIndex: 2,
+              //             )));
               // DialogTemp().Informasi(
               //     context: context,
               //     onYes: () {
