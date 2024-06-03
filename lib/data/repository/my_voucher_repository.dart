@@ -20,7 +20,6 @@ class MyVoucherRepository {
   final AuthenticationRepository _authenticationRepository =
       AuthenticationRepository();
 
-
   Future<MyVoucherResponse> fetchVoucher() async {
     print("Fetching voucher... Masuk");
     final _token = await _authenticationRepository.getToken();
@@ -33,5 +32,24 @@ class MyVoucherRepository {
     return MyVoucherResponse.fromJson(response);
   }
 
-
+  Future<MyVoucherResponse> claimVoucher({required String code}) async {
+    print("claim voucher... Masuk");
+    final body = jsonEncode({
+      'code': code,
+    });
+    final _token = await _authenticationRepository.getToken();
+    final response = await _provider.post(
+      'voucher/claim',
+      body: body,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('repo');
+    print('token');
+    print(response);
+    return MyVoucherResponse.fromJson(response);
+  }
 }

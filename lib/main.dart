@@ -7,6 +7,7 @@ import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/ui/screen/login/signup.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/ui/screen/order/history.dart';
+import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/utils/storage_service.dart';
 import 'package:tikom/ui/screen/dashboard/home.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
@@ -76,7 +77,12 @@ class _MyAppState extends State<MyApp> {
               );
             } else {
               if (snapshot.hasData && snapshot.data != null) {
+<<<<<<< HEAD
                 return const MyHomePage(tabIndex: 0);
+=======
+                return const MyHomePage(tabIndex: 0,);
+                // return PaymentPage();
+>>>>>>> 84621c7f31068846c4830b0c7c9e50afbdc5c07e
               } else {
                 return const SignIn();
               }

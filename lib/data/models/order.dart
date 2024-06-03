@@ -35,75 +35,21 @@ class OrderResponse {
   final String message;
   final List<Order> data;
 
-  OrderResponse({required this.data,required this.status, required this.message});
+  OrderResponse(
+      {required this.data, required this.status, required this.message});
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) {
-    var orderJson = json['data'] as Map<String, dynamic>; // Access the data object as a map
-    Order order = Order.fromJson(orderJson); // Convert the data object directly to an Order
+    var orderJson =
+        json['data'] as Map<String, dynamic>; // Access the data object as a map
+    Order order = Order.fromJson(
+        orderJson); // Convert the data object directly to an Order
 
     return OrderResponse(
-      data: [order], // Wrap the Order object in a list
-      message: json['msg'],
-      status: json['status']
-    );
+        data: [order], // Wrap the Order object in a list
+        message: json['msg'],
+        status: json['status']);
   }
 }
-
-// class OrderData {
-//   final String id;
-//   final String uuid;
-//   final dynamic total_price;
-//   final dynamic total_quantity;
-
-//   OrderData({
-//     required this.id,
-//     required this.uuid,
-//     required this.total_price,
-//     required this.total_quantity,
-//   });
-
-//   factory OrderData.fromJson(Map<String, dynamic> json) {
-//     return OrderData(
-//       id: json['id'].toString(),
-//       uuid: json['uuid'],
-//       total_price: json['total_price'],
-//       total_quantity: json['total_quantity'],
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'id': id,
-//       'uuid': uuid,
-//       'total_price': total_price,
-//       'total_quantity': total_quantity,
-//     };
-//   }
-// }
-
-// class OrderDataResponse {
-//   final List<OrderData>? data;
-
-//   OrderDataResponse({this.data});
-
-//   factory OrderDataResponse.fromJson(dynamic json) {
-//     if (json is List) {
-//       List<OrderData> data = json.map((item) => OrderData.fromJson(item)).toList();
-//       return OrderDataResponse(data: data);
-//     } else if (json is Map<String, dynamic> && json['data'] is List) {
-//       List<OrderData> data = (json['data'] as List).map((item) => OrderData.fromJson(item)).toList();
-//       return OrderDataResponse(data: data);
-//     } else {
-//       return OrderDataResponse(data: null);
-//     }
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'data': data?.map((item) => item.toJson()).toList(),
-//     };
-//   }
-// }
 
 class OrderData {
   final String id;
@@ -120,7 +66,7 @@ class OrderData {
 
   factory OrderData.fromJson(Map<String, dynamic> json) {
     return OrderData(
-       id: json['id'].toString(),
+      id: json['id'].toString(),
       uuid: json['uuid'],
       total_price: json['total_price'],
       total_quantity: json['total_quantity'],
@@ -129,7 +75,7 @@ class OrderData {
 
   Map<String, dynamic> toJson() {
     return {
-     'id': id,
+      'id': id,
       'uuid': uuid,
       'total_price': total_price,
       'total_quantity': total_quantity,
@@ -151,4 +97,46 @@ class OrderDataResponse {
   }
 }
 
+class PotonganData {
+  final String id;
+  final dynamic total_price;
+  final dynamic total_quantity;
 
+  PotonganData({
+    required this.id,
+    required this.total_price,
+    required this.total_quantity,
+  });
+
+  factory PotonganData.fromJson(Map<String, dynamic> json) {
+    return PotonganData(
+      id: json['id'].toString(),
+      total_price: json['price'],
+      total_quantity: json['quantity'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'total_price': total_price,
+      'total_quantity': total_quantity,
+    };
+  }
+}
+
+class PotonganDataResponse {
+  final String status;
+  final PotonganData data;
+
+  PotonganDataResponse({required this.data, required this.status});
+
+  factory PotonganDataResponse.fromJson(Map<String, dynamic> json) {
+    // var dataList = json['data'] as List;
+    // List<PotonganData> products =
+    //     dataList.map((item) => PotonganData.fromJson(item)).toList();
+
+    return PotonganDataResponse(
+        data: PotonganData.fromJson(json["data"]), status: json['status']);
+  }
+}

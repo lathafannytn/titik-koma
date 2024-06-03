@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
+import 'package:tikom/ui/screen/order/payment_qris.dart';
 
 class DetailHistoryOrderScreen extends StatefulWidget {
   // final String status;
@@ -63,7 +64,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       SizedBox(height: 8.0),
                       Row(
                         children: [
-                          Icon(Icons.check_circle_outline_outlined, color: Colors.green),
+                          Icon(Icons.check_circle_outline_outlined,
+                              color: Colors.green),
                           SizedBox(width: 8.0),
                           Text(
                             state.transactions[0].status,
@@ -97,8 +99,11 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           SizedBox(height: 12.0),
                           Text('Product'),
                           SizedBox(height: 3.0),
-                          for( var i = 0; i < state.transactions[0].product_detail.length; i++ )...[
-                            Text("${i+1}. ${state.transactions[0].product_detail[i].name}"),
+                          for (var i = 0;
+                              i < state.transactions[0].product_detail.length;
+                              i++) ...[
+                            Text(
+                                "${i + 1}. ${state.transactions[0].product_detail[i].name}"),
                           ],
                           // ...items.map((item) => Text(item)).toList(),
                           Divider(thickness: 1),
@@ -113,7 +118,9 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Voucher'),
-                              Text('- Rp ${state.transactions[0].price_discount}', style: TextStyle(color: Colors.red)),
+                              Text(
+                                  '- Rp ${state.transactions[0].price_discount}',
+                                  style: TextStyle(color: Colors.red)),
                             ],
                           ),
                           Divider(thickness: 1),
@@ -162,7 +169,52 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       ),
                     ),
                   ),
-                
+                  const SizedBox(height: 20),
+                  if (state.transactions[0].media != null) ...[
+                    for (var i = 0;
+                        i < state.transactions[0].media!.length;
+                        i++) ...[
+                      Card(
+                        child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Text(state
+                                    .transactions[0].media![i].description),
+                                const SizedBox(height: 5),
+                                Image.network(
+                                  state
+                                    .transactions[0].media![i].url,
+                                  // height: 200,
+                                  // width: 100,
+                                )
+                              ],
+                            )),
+                      ),
+                      const SizedBox(height: 10),
+                    ]
+                  ],
+                  const SizedBox(height: 20),
+                  if (state.transactions[0].status == 'WAITING PAYMENT') ...[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PaymentPage(uuid: state.transactions[0].uuid),
+                            ));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text('Payment'),
+                    ),
+                    const SizedBox(height: 20),
+                  ]
                 ],
               );
             }

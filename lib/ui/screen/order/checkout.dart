@@ -11,6 +11,7 @@ import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.d
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
+import 'package:tikom/data/repository/order_repository.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
 import 'package:tikom/ui/screen/order/maps.dart';
@@ -18,6 +19,7 @@ import 'package:tikom/ui/screen/order/maps2.dart';
 import 'package:tikom/ui/screen/order/maps3.dart';
 import 'package:tikom/ui/screen/order/maps4.dart';
 import 'package:tikom/ui/screen/order/maps5.dart';
+import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import '../voucher/voucher_page.dart';
@@ -29,7 +31,9 @@ import 'payment.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
-  const CheckoutScreen({Key? key, required this.uuid}) : super(key: key);
+  final int count;
+  const CheckoutScreen({Key? key, required this.uuid, required this.count})
+      : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
@@ -78,6 +82,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final String date = dateFormatter.format(selectedDate);
     final String time = selectedTime.format(context);
     return '$time, $date';
+  }
+
+  void handlePotonganDefault() async {
+    print('panggil handler potongan');
+    try {
+      final OrderRepository orderRepository = OrderRepository();
+      final response = await orderRepository.showPotongan();
+      print('form potongan');
+      print(response);
+      if (response.status == 'success') {
+        setState(() {
+          if (widget.count >= response.data.total_quantity) {
+            price_discount = int.parse(response.data.total_price.toString());
+            total_price = total_price - price_discount;
+            payment_option = payment_option - price_discount;
+          }
+        });
+      } else {}
+    } catch (error) {
+      print('error handrel');
+      print(error.toString());
+    }
   }
 
   void _showPickupTimeDialog(BuildContext context) {
@@ -321,6 +347,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         });
       }
     });
+    handlePotonganDefault();
   }
 
   void handlePlaceOrder(BuildContext context) {
@@ -331,6 +358,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       var data_use_point = usePoints ? 'yes' : '-';
       var data_price = total_price;
       AppExt.hideKeyboard(context);
+      print('test pickup date');
+      // ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+      //           : 'Pick up at ${getFormattedDateTime()}',
+      var dateSelected = selectedDate.toString().split(" ")[0];
+      var timeSeleted = selectedTime;
+      print(dateSelected);
+      print(timeSeleted.hour);
+      var dateTimeSelected =
+          '$dateSelected ${timeSeleted.hour}:${timeSeleted.minute}';
+      print(dateTimeSelected);
       DialogTemp().Konfirmasi(
         context: context,
         onYes: () {
@@ -340,7 +377,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               price: default_price,
               payment_type: data_payment_type,
               voucher: data_voucher,
-              use_point: data_use_point));
+              use_point: data_use_point,
+              service_date: dateTimeSelected));
         },
         title: "Apakah Ingin Checkout?",
         onYesText: 'Ya',
@@ -1374,12 +1412,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           listener: (context, state) {
             if (state is TransactionSuccess) {
               AppExt.popScreen(context);
+              var responseM = state.message;
+              List<String> dataRes = responseM.split("//");
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyHomePage(
-                            tabIndex: 2,
-                          )));
+                    builder: (context) =>
+                        PaymentPage(uuid: dataRes[1].toString()),
+                  ));
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => MyHomePage(
+              //               tabIndex: 2,
+              //             )));
               // DialogTemp().Informasi(
               //     context: context,
               //     onYes: () {
