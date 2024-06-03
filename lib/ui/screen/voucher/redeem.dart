@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:tikom/data/repository/my_voucher_repository.dart';
+import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/voucher/qr_scan.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/ui/widgets/loading_dialog.dart';
 
 class RedeemVoucherPage extends StatefulWidget {
   @override
@@ -16,16 +20,66 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
     super.dispose();
   }
 
+  void handlerClaimVoucher() async {
+    LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
+    try {
+      final MyVoucherRepository myVoucherRepository = MyVoucherRepository();
+      final response = await myVoucherRepository.claimVoucher(
+          code: _voucherCodeController.text);
+      print(response);
+      if (response.status == 'success') {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        DialogTemp().Informasi(
+            context: context,
+            onYes: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MyHomePage(
+                            tabIndex: 3,
+                          )));
+            },
+            onYesText: 'Lanjut',
+            title: response.message);
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        DialogTemp().Informasi(
+            context: context,
+            onYes: () {
+              Navigator.pop(context);
+            },
+            onYesText: 'Oke',
+            title: response.message);
+      }
+    } catch (error) {
+      print(error.toString());
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+      // ignore: use_build_context_synchronously
+      DialogTemp().Informasi(
+          context: context,
+          onYes: () {
+            Navigator.pop(context);
+          },
+          onYesText: 'Oke',
+          title: 'Claim Gagal');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Tukar Voucher',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
       body: Padding(
@@ -34,7 +88,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
           children: [
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(10.0),
@@ -45,7 +99,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                     'https://www.clipartmax.com/png/middle/245-2456783_gift-voucher-png.png', // Ganti dengan URL gambar yang sesuai
                     height: 150,
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     controller: _voucherCodeController,
                     decoration: InputDecoration(
@@ -54,23 +108,25 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => QRViewExample()),
+                            MaterialPageRoute(
+                                builder: (context) => QRViewExample()),
                           );
                           if (result != null) {
                             setState(() {
                               _voucherCodeController.text = result;
+                              handlerClaimVoucher();
                             });
                           }
                         },
-                        child: Icon(Icons.qr_code_scanner),
+                        child: const Icon(Icons.qr_code_scanner),
                       ),
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Tambahkan logika penukaran voucher di sini
+                      handlerClaimVoucher();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.grey,
@@ -80,17 +136,17 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                       ),
                       minimumSize: Size(double.infinity, 50),
                     ),
-                    child: Text('Gunakan'),
+                    child: const Text('Gunakan'),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16.0),
-            Text(
+            const SizedBox(height: 16.0),
+            const Text(
               'S&K',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               '1. Kode voucher hanya dapat ditukarkan dengan voucher TOMORO, tidak dapat ditukarkan dengan uang tunai.\n'
               '2. Kode penukaran hanya dapat digunakan satu kali saja. Setelah penukaran berhasil, kode akan langsung menjadi tidak valid dan tidak dapat ditukarkan lagi.',
@@ -102,4 +158,3 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
     );
   }
 }
-
