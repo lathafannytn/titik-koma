@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
               );
             } else {
               if (snapshot.hasData && snapshot.data != null) {
-                return const MyHomePage(tabIndex: 0,);
+                return const MyHomePage(tabIndex: 0);
               } else {
                 return const SignIn();
               }
@@ -104,18 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
-    // OrdersPage(),
     RiwayatPemesananScreen(),
     ProfileScreen()
   ];
-  // _selectedIndex =1;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  // widget.tabIndex
 
   @override
   void initState() {
@@ -128,39 +125,48 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Home',
-            icon: SvgPicture.asset('assets/icons/home.svg',
-                width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/home.svg',
-                width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset(
+              'assets/icons/home.svg',
+              width: 24,
+              height: 24,
+              color: _selectedIndex == 0 ? Colors.green : Colors.grey,
+            ),
           ),
           BottomNavigationBarItem(
             label: 'Menu',
-            icon: SvgPicture.asset('assets/icons/menu.svg',
-                width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/menu.svg',
-                width: 24, height: 24, color: Theme.of(context).primaryColor),
+            icon: SvgPicture.asset(
+              'assets/icons/menu.svg',
+              width: 24,
+              height: 24,
+              color: _selectedIndex == 1 ? Colors.green : Colors.grey,
+            ),
           ),
           BottomNavigationBarItem(
-            label: 'Order',
-            icon: SvgPicture.asset('assets/icons/transaction.svg',
-                width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/transaction.svg',
-                width: 24, height: 24, color: Theme.of(context).primaryColor),
+            label: 'My Order',
+            icon: SvgPicture.asset(
+              'assets/icons/transaction.svg',
+              width: 24,
+              height: 24,
+              color: _selectedIndex == 2 ? Colors.green : Colors.grey,
+            ),
           ),
           BottomNavigationBarItem(
-            label: 'Profile',
-            icon: SvgPicture.asset('assets/icons/profile.svg',
-                width: 24, height: 24),
-            activeIcon: SvgPicture.asset('assets/icons/profile.svg',
-                width: 24, height: 24, color: Theme.of(context).primaryColor),
+            label: 'Saya',
+            icon: SvgPicture.asset(
+              'assets/icons/profile.svg',
+              width: 24,
+              height: 24,
+              color: _selectedIndex == 3 ? Colors.green : Colors.grey,
+            ),
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.grey[800],
-        unselectedItemColor: Colors.grey[500],
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );
