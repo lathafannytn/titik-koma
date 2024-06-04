@@ -62,12 +62,7 @@ dependencies:
   file_picker: ^5.0.1
   # dio: ^4.0.6
   # image_downloader: ^0.21.1
-<<<<<<< HEAD
-
-  
-=======
   # image_downloader: any
->>>>>>> 84621c7f31068846c4830b0c7c9e50afbdc5c07e
   # google_maps_flutter: ^2.2.1
   # google_maps_place_picker_mb: ^3.1.2
   # flutter_google_places: any

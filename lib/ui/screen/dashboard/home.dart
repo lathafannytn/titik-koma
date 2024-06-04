@@ -11,6 +11,8 @@ import 'package:tikom/ui/screen/poin/point_detail.dart';
 import 'package:tikom/ui/screen/widget/popularwidget.dart';
 import 'package:tikom/ui/screen/widget/reveralwidget.dart';
 
+import 'list_notif.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -125,13 +127,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              Container(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ListNotif()),
+                  );
+                },
+                child: Container(
                   alignment: Alignment.topRight,
                   child: const Icon(
                     Icons.notifications_active,
                     color: Colors.white,
                     size: 25,
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

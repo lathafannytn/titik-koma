@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
+import 'package:tikom/ui/screen/events/myticket.dart';
 import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
 import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
@@ -48,7 +49,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } else if (state is UserDataLoaded) {
                 final user = state.user;
                 return buildProfileContent(
-                    context, user.name, user.point.toString(),user.referallCode, user.countVoucher.toString());
+                    context,
+                    user.name,
+                    user.point.toString(),
+                    user.referallCode,
+                    user.countVoucher.toString());
               } else if (state is UserDataError) {
                 return Center(child: Text('Error: ${state.message}'));
               } else {
@@ -164,24 +169,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             label: 'Vouchers',
                             iconPath: 'assets/icons/discount.svg',
-                            value:  userVoucher,
+                            value: userVoucher,
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => VoucherPage())),
                           ),
                           verticalDivider(),
-                          buildIconColumn(
-                            context,
-                            label: 'Kode Referral',
-                            iconPath: 'assets/icons/qr.svg',
-                            value: '',
-                            onTap: () => Navigator.push(
+                          buildIconColumn(context,
+                              label: 'Kode Referral',
+                              iconPath: 'assets/icons/qr.svg',
+                              value: '',
+                              onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          KodeReferralPage(code: referral_code)))
-                          ),
+                                      builder: (context) => KodeReferralPage(
+                                          code: referral_code)))),
                         ],
                       ),
                     ),
@@ -194,6 +197,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => EditProfilePage())),
+                ),
+                ProfileMenu(
+                  text: "My Ticket",
+                  icon: "assets/icons/user.svg",
+                  press: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TicketsScreen())),
                 ),
                 ProfileMenu(
                   text: "Terms & Conditions",

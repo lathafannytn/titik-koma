@@ -77,12 +77,8 @@ class _MyAppState extends State<MyApp> {
               );
             } else {
               if (snapshot.hasData && snapshot.data != null) {
-<<<<<<< HEAD
-                return const MyHomePage(tabIndex: 0);
-=======
                 return const MyHomePage(tabIndex: 0,);
                 // return PaymentPage();
->>>>>>> 84621c7f31068846c4830b0c7c9e50afbdc5c07e
               } else {
                 return const SignIn();
               }
