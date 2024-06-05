@@ -229,12 +229,21 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         child: Container(
+<<<<<<< HEAD
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             color: Colors.black,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
+=======
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+>>>>>>> bd8616969f0c388742c7d724c25f2d0f569a3782
                             Icons.arrow_forward_ios,
                             size: 10,
                             color: Colors.white,

@@ -1,68 +1,68 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/event_data/event_data_bloc.dart';
+import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_cubit.dart';
+import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_state.dart';
 import 'package:tikom/ui/screen/events/view_ticket.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class TicketsScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: TicketsScreen(),
-    );
-  }
+  State<TicketsScreen> createState() => _TicketsScreenState();
 }
 
-class TicketsScreen extends StatelessWidget {
+class _TicketsScreenState extends State<TicketsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'All Tickets',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+        appBar: AppBar(
+          title: Text(
+            'All Tickets',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
           ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 1,
+          iconTheme: IconThemeData(color: Colors.black),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      body: ListView(
-        children: [
-          TicketCard(
-            event: 'Dance party at the top of the town - 2022',
-            location: 'New York',
-            imageUrl: 'https://via.placeholder.com/150',
-            status: 'Paid',
-          ),
-          TicketCard(
-            event: 'Festival event at kudasan - 2022',
-            location: 'California',
-            imageUrl: 'https://via.placeholder.com/150',
-            status: 'Paid',
-          ),
-          TicketCard(
-            event: 'Party with friends at night - 2022',
-            location: 'Miami',
-            imageUrl: 'https://via.placeholder.com/150',
-            status: 'Paid',
-          ),
-          TicketCard(
-            event: 'Dance party at the top of the town - 2022',
-            location: 'New York',
-            imageUrl: 'https://via.placeholder.com/150',
-            status: 'Paid',
-          ),
-        ],
-      ),
-    );
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: BlocBuilder<EventDataCubit, EventDataState>(
+                  bloc: EventDataCubit()..loadMyEventData(),
+                  builder: (context, state) {
+                    if (state is EventDataLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state is EventDataSuccess) {
+                      if (state.eventData.isNotEmpty) {
+                        return Column(
+                          children: [
+                            for(var i = 0 ; i< state.eventData.length ; i++)...[
+                              TicketCard(
+                                event: state.eventData[i].name,
+                                location: state.eventData[i].location,
+                                imageUrl: state.eventData[i].imgUrl,
+                                status: 'Paid',
+                                uuid: state.eventData[i].uuid,
+
+                              ),
+                            ]
+                          ],
+                        );
+                      } else {
+                        return Text('Belum Ada Event');
+                      }
+                    } else if (state is EventDataFailure) {
+                      return Center(child: Text(state.message));
+                    }
+                    return Container();
+                  },
+                ))));
   }
 }
 
@@ -71,12 +71,13 @@ class TicketCard extends StatelessWidget {
   final String location;
   final String imageUrl;
   final String status;
-
+  final String uuid;
   TicketCard({
     required this.event,
     required this.location,
     required this.imageUrl,
     required this.status,
+    required this.uuid
   });
 
   @override
@@ -132,7 +133,9 @@ class TicketCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ViewTicketPage(),
+                        builder: (context) => ViewTicketPage(
+                          uuid: uuid,
+                        ),
                       ),
                     );
                   },
