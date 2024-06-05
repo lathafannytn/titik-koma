@@ -30,7 +30,7 @@ class PopularWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: serviceLink(context, "Full Service",
-                      "assets/images/icon_full.png", CateringScreen()),
+                      "assets/images/icon_full.png", PackageScreen()),
                 ),
               ],
             ),

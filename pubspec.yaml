@@ -142,6 +142,8 @@ flutter:
     - assets/images/icon_kode.png
     - assets/images/background.png
 
+    - assets/images/glass_custom.jpg
+
     #gambar untuk menu
     - assets/images/latte.png
     - assets/images/kopi_aren_doppio.jpg
@@ -175,6 +177,8 @@ flutter:
     - assets/icons/about.svg
     - assets/icons/qr.svg
     - assets/icons/logo_poin.svg
+
+    - assets/icons/star.svg
 
     #gambar untuk asset
     - assets/asset/robot.png

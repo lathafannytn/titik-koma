@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/ui/screen/catering/customizable_cup.dart';
+
+class AdditionalExtrasScreen extends StatefulWidget {
+  @override
+  _AdditionalExtrasScreenState createState() => _AdditionalExtrasScreenState();
+}
+
+class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
+  int baristaCount = 0;
+  int serviceCount = 0;
+
+  double get totalCost {
+    return (baristaCount * 250000) + (serviceCount * 100000);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Additional Extras',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _buildCounterRow(
+              'Barista',
+              'Rp 250.000 / 6 hours',
+              baristaCount,
+              () => setState(() => baristaCount++),
+              () => setState(() => baristaCount > 0 ? baristaCount-- : 0),
+            ),
+            _buildCounterRow(
+              'Service',
+              'Rp 100.000 / hour',
+              serviceCount,
+              () => setState(() => serviceCount++),
+              () => setState(() => serviceCount > 0 ? serviceCount-- : 0),
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CustomizableCupScreen(totalCost: totalCost)));
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  child: Text(
+                    'Add - Rp ${totalCost.toStringAsFixed(0)}',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCounterRow(
+    String title,
+    String price,
+    int count,
+    VoidCallback onIncrement,
+    VoidCallback onDecrement,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                TextSpan(
+                  text: '  (+ $price)',
+                  style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.remove_circle_outline),
+                onPressed: onDecrement,
+              ),
+              Text(
+                '$count',
+                style: GoogleFonts.poppins(fontSize: 16),
+              ),
+              IconButton(
+                icon: Icon(Icons.add_circle_outline),
+                onPressed: onIncrement,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
