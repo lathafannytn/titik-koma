@@ -1,18 +1,81 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_cubit.dart';
+import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_state.dart';
 
 import 'event_detail.dart';
 
-class PopularEventCard extends StatelessWidget {
+
+
+class PopularEventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Popular Now',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'See All',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Colors.pink,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          BlocBuilder<EventDataCubit, EventDataState>(
+            bloc: EventDataCubit()..loadEventDataLimit(),
+            builder: (context, state) {
+              if (state is EventDataLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is EventDataSuccess) {
+                if (state.eventData.isNotEmpty) {
+                  return SizedBox(
+                    height: 300,
+                    child: ListView.builder(
+                      itemCount : state.eventData.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        var data = state.eventData[index];
+                        return PopularEventCard(context,data);
+                      },
+                    ),
+                  );
+                } else {
+                  return Text('Belum Ada Event');
+                }
+              } else if (state is EventDataFailure) {
+                return Center(child: Text(state.message));
+              }
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget PopularEventCard(BuildContext context,dynamic data) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EventDetailsPage()),
+          MaterialPageRoute(builder: (context) => EventDetailsPage(uuid: data.uuid,)),
         );
       },
       child: Container(
@@ -53,13 +116,13 @@ class PopularEventCard extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
-                      'Dance',
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // child: Text(
+                    //   'Dance',
+                    //   style: GoogleFonts.poppins(
+                    //     color: Colors.black,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                   ),
                 ),
                 Positioned(
@@ -74,19 +137,19 @@ class PopularEventCard extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    'Altanito Salami',
-                    style: GoogleFonts.poppins(),
-                  ),
-                ],
-              ),
+              // child: Row(
+              //   children: [
+              //     Text(
+              //       'Altanito Salami',
+              //       style: GoogleFonts.poppins(),
+              //     ),
+              //   ],
+              // ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
-                'Going to a Rock Concert',
+                data.name,
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -96,7 +159,7 @@ class PopularEventCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
-                'THU 26 May, 09:00 - FRI 27 May, 10:00',
+                '${data.start_date} - ${data.end_date}',
                 style: GoogleFonts.poppins(
                   color: Colors.grey,
                 ),
@@ -154,72 +217,4 @@ class PopularEventCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class PopularEventList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Popular Now',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'See All',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.pink,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Container(
-            height: 350, 
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                PopularEventCard(),
-                PopularEventCard(),
-                PopularEventCard(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home', style: GoogleFonts.poppins()),
-      ),
-      body: ListView(
-        children: [
-          PopularEventList(),
-          // Tambahkan widget lain sesuai kebutuhan
-        ],
-      ),
-    );
-  }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: HomePage(),
-  ));
 }

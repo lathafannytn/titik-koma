@@ -64,8 +64,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            
-              
             ],
           ),
         ),
@@ -146,7 +144,9 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        const SizedBox(height: 60,),
+        const SizedBox(
+          height: 60,
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
@@ -173,8 +173,7 @@ class _HomePageState extends State<HomePage> {
                           RichText(
                             text: TextSpan(
                               style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  color: Colors.black),
+                                  fontSize: 15, color: Colors.black),
                               children: <TextSpan>[
                                 TextSpan(text: '${user.point} '),
                                 TextSpan(
@@ -220,25 +219,26 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PointDetailsScreen()),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 10,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PointDetailsScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 10,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
