@@ -32,7 +32,8 @@ import 'payment.dart';
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
   final int count;
-  const CheckoutScreen({Key? key, required this.uuid, required this.count})
+  final bool isPickupSelected;
+  const CheckoutScreen({Key? key, required this.uuid, required this.count,required this.isPickupSelected})
       : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -414,9 +415,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildPickupDeliveryToggle(),
-              const SizedBox(height: 16),
-              isPickup
+              // buildPickupDeliveryToggle(),
+              // const SizedBox(height: 16),
+              widget.isPickupSelected
                   ? buildPickupDetails(context)
                   : buildDeliveryDetails(context),
               const SizedBox(height: 16),
