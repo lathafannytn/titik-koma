@@ -32,13 +32,21 @@ class TransactionRepository {
     required String payment_method,
     required String use_point,
     required String service_date,
+    required dynamic base_delivery,
+    required dynamic is_delivery,
+    required dynamic delivery_address,
+    required dynamic delivery_price
   }) async {
     final body = jsonEncode({
       'price': price,
       'voucher': voucher,
       'payment_type': payment_method,
       'use_point': use_point,
-      'service_date':service_date
+      'service_date':service_date,
+      'base_delivery' : base_delivery,
+      'is_delivery': is_delivery,
+      'delivery_address' : delivery_address,
+      'delivery_price' : delivery_price
     });
     final _token = await _authenticationRepository.getToken();
 
@@ -132,5 +140,22 @@ class TransactionRepository {
     print('disini store trans');
     print(response.data);
     return TransactionStoreResponse.fromJson(response.data);
+  }
+
+  Future<BaseDeliveryResponse> showDeliveryBase({
+    required String type
+  }) async {
+    final _token = await _authenticationRepository.getToken();
+
+    final response = await _provider.get(
+      'transaction/get-base-delivery/$type',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+
+    return BaseDeliveryResponse.fromJson(response);
   }
 }

@@ -31,6 +31,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           payment_method: event.payment_type,
           use_point: event.use_point,
           service_date: event.service_date,
+          is_delivery: event.is_delivery,
+          base_delivery: event.base_delivery, 
+          delivery_address: event.delivery_address, 
+          delivery_price:event.delivery_price,
+    
         );
         print('masuk sini');
         print(transactionResponse);

@@ -1,254 +1,415 @@
-// import 'package:flutter/material.dart';
-// import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
+import 'dart:ffi';
+import 'dart:math';
 
-// // ignore: implementation_imports, unused_import
-// import 'package:google_maps_place_picker_mb/src/google_map_place_picker.dart'; // do not import this yourself
-// import 'dart:io' show Platform;
+import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+// import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_api_headers/google_api_headers.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
 
-// // Your api key storage.
+class MapsScreen extends StatefulWidget {
+  final String long;
+  final String lat;
 
-// // Only to control hybrid composition and the renderer in Android
-// import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
-// import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+  const MapsScreen({Key? key, required this.long, required this.lat})
+      : super(key: key);
+  @override
+  State<MapsScreen> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MapsScreen> {
+  bool seledtedsama = false;
+  bool seledtedBeda = false;
+  String googleApikey = "AIzaSyASGjI8zNA5NtrhDIc17Eur2HLP3RHi5Ns";
+  GoogleMapController? mapController; //contrller for Google map
+  CameraPosition? cameraPosition;
+  LatLng startLocation = LatLng(27.6602292, 85.308027);
+  String _currentAddress = "";
+  Position? _currentPosition;
+  String location = "Masukan Lokasi";
+  late BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
 
-// class MapsPage extends StatefulWidget {
-//   MapsPage({Key? key}) : super(key: key);
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-//   static final kInitialPosition = LatLng(-33.8567844, 151.213108);
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
 
-//   final GoogleMapsFlutterPlatform mapsImplementation =
-//       GoogleMapsFlutterPlatform.instance;
+  double calculateDistance(LatLng place1, LatLng place2) {
+    const double earthRadius = 6371.0; // Earth's radius in kilometers
 
-//   @override
-//   _MapsPageState createState() => _MapsPageState();
-// }
+    double lat1 = place1.latitude;
+    double lon1 = place1.longitude;
+    double lat2 = place2.latitude;
+    double lon2 = place2.longitude;
 
-// class _MapsPageState extends State<MapsPage> {
-//   PickResult? selectedPlace;
-//   bool _showPlacePickerInContainer = false;
-//   bool _showGoogleMapInContainer = false;
+    double dLat = (lat2 - lat1) * pi / 180.0;
+    double dLon = (lon2 - lon1) * pi / 180.0;
 
-//   bool _mapsInitialized = false;
-//   String _mapsRenderer = "latest";
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * pi / 180.0) *
+            cos(lat2 * pi / 180.0) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
 
-//   void initRenderer() {
-//     if (_mapsInitialized) return;
-//     if (widget.mapsImplementation is GoogleMapsFlutterAndroid) {
-//       switch (_mapsRenderer) {
-//         case "legacy":
-//           (widget.mapsImplementation as GoogleMapsFlutterAndroid)
-//               .initializeWithRenderer(AndroidMapRenderer.legacy);
-//           break;
-//         case "latest":
-//           (widget.mapsImplementation as GoogleMapsFlutterAndroid)
-//               .initializeWithRenderer(AndroidMapRenderer.latest);
-//           break;
-//       }
-//     }
-//     setState(() {
-//       _mapsInitialized = true;
-//     });
-//   }
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text("Google Map Place Picker Demo"),
-//         ),
-//         body: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: <Widget>[
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   if (!_mapsInitialized &&
-//                       widget.mapsImplementation
-//                           is GoogleMapsFlutterAndroid) ...[
-//                     Switch(
-//                         value: (widget.mapsImplementation
-//                                 as GoogleMapsFlutterAndroid)
-//                             .useAndroidViewSurface,
-//                         onChanged: (value) {
-//                           setState(() {
-//                             (widget.mapsImplementation
-//                                     as GoogleMapsFlutterAndroid)
-//                                 .useAndroidViewSurface = value;
-//                           });
-//                         }),
-//                     Text("Hybrid Composition"),
-//                   ]
-//                 ],
-//               ),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   if (!_mapsInitialized &&
-//                       widget.mapsImplementation
-//                           is GoogleMapsFlutterAndroid) ...[
-//                     Text("Renderer: "),
-//                     Radio(
-//                         groupValue: _mapsRenderer,
-//                         value: "auto",
-//                         onChanged: (value) {
-//                           setState(() {
-//                             _mapsRenderer = "auto";
-//                           });
-//                         }),
-//                     Text("Auto"),
-//                     Radio(
-//                         groupValue: _mapsRenderer,
-//                         value: "legacy",
-//                         onChanged: (value) {
-//                           setState(() {
-//                             _mapsRenderer = "legacy";
-//                           });
-//                         }),
-//                     Text("Legacy"),
-//                     Radio(
-//                         groupValue: _mapsRenderer,
-//                         value: "latest",
-//                         onChanged: (value) {
-//                           setState(() {
-//                             _mapsRenderer = "latest";
-//                           });
-//                         }),
-//                     Text("Latest"),
-//                   ]
-//                 ],
-//               ),
-//               !_showPlacePickerInContainer
-//                   ? ElevatedButton(
-//                       child: Text("Load Place Picker"),
-//                       onPressed: () {
-//                         initRenderer();
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) {
-//                               return PlacePicker(
-//                                 resizeToAvoidBottomInset:
-//                                     false, // only works in page mode, less flickery
-//                                 apiKey: 'AIzaSyASGjI8zNA5NtrhDIc17Eur2HLP3RHi5Ns',
-//                                 hintText: "Find a place ...",
-//                                 searchingText: "Please wait ...",
-//                                 selectText: "Select place",
-//                                 outsideOfPickAreaText: "Place not in area",
-//                                 initialPosition: MapsPage.kInitialPosition,
-//                                 useCurrentLocation: true,
-//                                 selectInitialPosition: true,
-//                                 usePinPointingSearch: true,
-//                                 usePlaceDetailSearch: true,
-//                                 zoomGesturesEnabled: true,
-//                                 zoomControlsEnabled: true,
-//                                 ignoreLocationPermissionErrors: true,
-//                                 onMapCreated: (GoogleMapController controller) {
-//                                   print("Map created");
-//                                 },
-//                                 onPlacePicked: (PickResult result) {
-//                                   print(
-//                                       "Place picked: ${result.formattedAddress}");
-//                                   setState(() {
-//                                     selectedPlace = result;
-//                                     Navigator.of(context).pop();
-//                                   });
-//                                 },
-//                                 onMapTypeChanged: (MapType mapType) {
-//                                   print(
-//                                       "Map type changed to ${mapType.toString()}");
-//                                 }
-//                               );
-//                             },
-//                           ),
-//                         );
-//                       },
-//                     )
-//                   : Container(),
-//               !_showPlacePickerInContainer
-//                   ? ElevatedButton(
-//                       child: Text("Load Place Picker in Container"),
-//                       onPressed: () {
-//                         initRenderer();
-//                         setState(() {
-//                           _showPlacePickerInContainer = true;
-//                         });
-//                       },
-//                     )
-//                   : Container(
-//                       width: MediaQuery.of(context).size.width * 0.75,
-//                       height: MediaQuery.of(context).size.height * 0.35,
-//                       child: PlacePicker(
-//                           apiKey: 'AIzaSyASGjI8zNA5NtrhDIc17Eur2HLP3RHi5Ns',
-//                           hintText: "Find a place ...",
-//                           searchingText: "Please wait ...",
-//                           selectText: "Select place",
-//                           initialPosition: MapsPage.kInitialPosition,
-//                           useCurrentLocation: true,
-//                           selectInitialPosition: true,
-//                           usePinPointingSearch: true,
-//                           usePlaceDetailSearch: true,
-//                           zoomGesturesEnabled: true,
-//                           zoomControlsEnabled: true,
-//                           ignoreLocationPermissionErrors: true,
-//                           onPlacePicked: (PickResult result) {
-//                             setState(() {
-//                               selectedPlace = result;
-//                               _showPlacePickerInContainer = false;
-//                             });
-//                           },
-//                           onTapBack: () {
-//                             setState(() {
-//                               _showPlacePickerInContainer = false;
-//                             });
-//                           })),
-//               if (selectedPlace != null) ...[
-//                 Text(selectedPlace!.formattedAddress!),
-//                 Text("(lat: " +
-//                     selectedPlace!.geometry!.location.lat.toString() +
-//                     ", lng: " +
-//                     selectedPlace!.geometry!.location.lng.toString() +
-//                     ")"),
-//               ],
-//               // #region Google Map Example without provider
-//               _showPlacePickerInContainer
-//                   ? Container()
-//                   : ElevatedButton(
-//                       child: Text("Toggle Google Map w/o Provider"),
-//                       onPressed: () {
-//                         initRenderer();
-//                         setState(() {
-//                           _showGoogleMapInContainer =
-//                               !_showGoogleMapInContainer;
-//                         });
-//                       },
-//                     ),
-//               !_showGoogleMapInContainer
-//                   ? Container()
-//                   : Container(
-//                       width: MediaQuery.of(context).size.width * 0.75,
-//                       height: MediaQuery.of(context).size.height * 0.25,
-//                       child: GoogleMap(
-//                         zoomGesturesEnabled: false,
-//                         zoomControlsEnabled: false,
-//                         myLocationButtonEnabled: false,
-//                         mapToolbarEnabled: false,
-//                         initialCameraPosition: new CameraPosition(
-//                             target: MapsPage.kInitialPosition, zoom: 15),
-//                         mapType: MapType.normal,
-//                         myLocationEnabled: true,
-//                         onMapCreated: (GoogleMapController controller) {},
-//                         onCameraIdle: () {},
-//                         onCameraMoveStarted: () {},
-//                         onCameraMove: (CameraPosition position) {},
-//                       )),
-//               !_showGoogleMapInContainer ? Container() : TextField(),
-//               // #endregion
-//             ],
-//           ),
-//         ));
-//   }
-// }
+    double distance = earthRadius * c;
+
+    return distance;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    // Position position = await Geolocator.getCurrentPosition();
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition().then((Position position) {
+      setState(() => _currentPosition = position);
+      // setState(() => );
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    // _getCurrentPosition();
+
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _getCurrentPosition());
+    // yourfunction();
+    setState(() {
+      print("aa");
+
+      // startLocation =
+      //     LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
+      // print(newlatlang);
+      // _markers.add(Marker(
+      //   markerId: MarkerId('mylocation'),
+      //   position: newlatlang,
+      //   //  icon: const Icon(Icons.location_on)
+      // ));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // _getCurrentPosition();
+    // Double latNow = Dou
+    var latnow;
+    var longnow;
+    if (_currentPosition?.latitude != null &&
+        _currentPosition?.longitude != null) {
+      latnow = _currentPosition?.latitude;
+      longnow = _currentPosition?.longitude;
+    }
+
+    return Scaffold(
+        bottomSheet: location != "Masukan Lokasi"
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                        ),
+                        Padding(padding: EdgeInsets.all(3)),
+                        Expanded(
+                            child: Text(
+                          // location,
+                          _currentAddress!,
+                          softWrap: true,
+                        ))
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    height: 70,
+                    color: Colors.white,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF1687A7),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100)),
+                          ),
+                          onPressed: () {
+                            print('langlot');
+                            // var tikom_adijasa = LatLng(-7.2517293, 112.7188558);
+                            var tikom = LatLng(double.parse(widget.lat),
+                                double.parse(widget.long));
+                            var current = LatLng(latnow, longnow);
+                            var home = LatLng(-7.2657222,112.763689);
+                            var jarak =
+                                calculateDistance(tikom, home);
+                            // var jarak =
+                            //     calculateDistance(tikom, current);
+                            if (jarak > 25) {
+                              DialogTemp().Informasi(
+                                  context: context,
+                                  onYes: () {
+                                    Navigator.pop(context);
+                                  },
+                                  onYesText: 'Oke',
+                                  title: 'Jarak Anda Melibihi 25 KM');
+                            } else {
+                              Navigator.pop(context, [jarak, _currentAddress]);
+                            }
+                            // print(data.latitude);
+                            print('langlot');
+                            print(jarak.round());
+                            print(latnow);
+                            print(longnow);
+                          },
+                          child: Text('Selanjutnya'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // buttonBottomSheet(
+                  //   context,
+                  //   AppColor.primaryPerikanan50,
+                  //   "Selanjutnya",
+                  //   (location == "Masukan Lokasi"
+                  //       ? null
+                  //       : () {
+                  //           AlertDialogPilihKomuditas(
+                  //               context,
+                  //               seledtedsama,
+                  //               () {
+                  //                 setState(() {
+                  //                   seledtedsama = true;
+                  //                   seledtedBeda = false;
+                  //                 });
+                  //               },
+                  //               seledtedBeda,
+                  //               () {
+                  //                 seledtedsama = false;
+                  //                 seledtedBeda = true;
+                  //               });
+                  //         }),
+                  // ),
+                ],
+              )
+            : null,
+        appBar: AppBar(
+          title: Text(
+            'Lokasi Anda',
+            style: GoogleFonts.poppins(
+              textStyle: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ),
+          backgroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Colors.black),
+          elevation: 0,
+        ),
+        body: Stack(children: [
+          if (latnow != null) ...[
+            GoogleMap(
+              //Map widget from google_maps_flutter package
+              zoomGesturesEnabled: true, //enable Zoom in, out on map
+              initialCameraPosition: CameraPosition(
+                //innital position in map
+                target: LatLng(latnow, longnow), //initial position
+                zoom: 14.0, //initial zoom level
+              ),
+              mapType: MapType.normal, //map type
+              markers: _markers,
+
+              onMapCreated: (controller) {
+                //method called when map is created
+                setState(() {
+                  _markers.add(Marker(
+                    markerId: MarkerId('Search'),
+                    position: LatLng(latnow, longnow), //initial position
+                    //  icon: const Icon(Icons.location_on)
+                  ));
+                  mapController = controller;
+                });
+              },
+            ),
+          ],
+
+          //search autoconplete input
+          Positioned(
+              //search input bar
+              top: 10,
+              right: 10,
+              left: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Padding(
+                  //   padding: EdgeInsets.all(0),
+                  //   child: Card(
+                  //     child: IconButton(
+                  //       onPressed: () => Navigator.of(context).pop(),
+                  //       padding: EdgeInsets.zero,
+                  //       icon: Icon(Icons.my_location),
+                  //     ),
+                  //   ),
+                  // ),
+                  InkWell(
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Card(
+                          child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: Icon(
+                                Icons.arrow_back_rounded,
+                              )),
+                        ),
+                      )),
+                  InkWell(
+                      onTap: () async {
+                        _getCurrentPosition();
+                        setState(() {
+                          var newlatlang = LatLng(_currentPosition!.latitude,
+                              _currentPosition!.longitude);
+                          // var newlatlang = LatLng(-6.2255226, 106.8301644);
+                          print(newlatlang);
+                          _markers.add(Marker(
+                            markerId: MarkerId('mylocation'),
+                            position: newlatlang,
+                            //  icon: const Icon(Icons.location_on)
+                          ));
+
+                          mapController?.animateCamera(
+                              CameraUpdate.newCameraPosition(CameraPosition(
+                                  target: newlatlang, zoom: 17)));
+                        });
+                        if (_currentPosition!.latitude != null) {
+                          await placemarkFromCoordinates(
+                                  _currentPosition!.latitude,
+                                  _currentPosition!.longitude)
+                              .then((List<Placemark> placemarks) {
+                            Placemark place = placemarks[0];
+                            setState(() {
+                              _currentAddress =
+                                  '${place.street}, ${place.subLocality},${place.subAdministrativeArea}, ${place.postalCode}';
+                              location = _currentAddress;
+                            });
+                          }).catchError((e) {
+                            debugPrint(e);
+                          });
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Card(
+                          child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: Icon(
+                                Icons.my_location,
+                              )),
+                        ),
+                      )),
+                ],
+              ))
+        ]));
+  }
+  // late GoogleMapController mapController;
+
+  // final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  // void _onMapCreated(GoogleMapController controller) {
+  //   mapController = controller;
+  // }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     home: Scaffold(
+  //       appBar: AppBar(
+  //         automaticallyImplyLeading: false,
+  //         title: Container(
+  //           margin: EdgeInsets.only(top: 20, bottom: 20),
+  //           height: 40,
+  //           child: TextField(
+  //             onSubmitted: (String _) {
+  //               // widget.delegate.showResults(context);
+  //             },
+  //             decoration: InputDecoration(
+  //               hintText: "Masukan Lokasi",
+  //               suffixIcon: Container(
+  //                 padding: EdgeInsets.all(10),
+  //                 // width:25,
+  //                 child: AppIcon.search,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         backgroundColor: Colors.white,
+  //       ),
+  //       body: GoogleMap(
+  //         myLocationEnabled: true,
+  //         myLocationButtonEnabled: false,
+  //         onMapCreated: _onMapCreated,
+  //         initialCameraPosition: CameraPosition(
+  //           target: _center,
+  //           zoom: 11.0,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+}
