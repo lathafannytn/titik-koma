@@ -116,3 +116,59 @@ class TransactionResponse {
     );
   }
 }
+
+class BaseDelivery {
+  final int id;
+  final String name;
+  final dynamic price;
+  final String type;
+  final String address;
+  final String long;
+  final String lat;
+
+  BaseDelivery({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.type,
+    required this.address,
+    required this.long,
+    required this.lat,
+  });
+
+  factory BaseDelivery.fromJson(Map<String, dynamic> json) {
+    return BaseDelivery(
+      id: json['id'],
+      name: json['name'],
+      price: json['price'],
+      type: json['type'],
+      address: json['address'],
+      long: json['long'],
+      lat: json['lat'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name':name,
+      'price':price,
+      'type': type,
+      'address': address,
+      'long':long,
+      'lat':lat,
+    };
+  }
+}
+
+class BaseDeliveryResponse {
+  final String status;
+  final BaseDelivery data;
+
+  BaseDeliveryResponse({required this.data, required this.status});
+
+  factory BaseDeliveryResponse.fromJson(Map<String, dynamic> json) {
+    return BaseDeliveryResponse(
+        data: BaseDelivery.fromJson(json["data"]), status: json['status']);
+  }
+}

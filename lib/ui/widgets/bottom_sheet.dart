@@ -63,7 +63,7 @@ void _showBottomSheet(BuildContext context) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen(uuid: '', count: 0)),
+                                    builder: (context) => CheckoutScreen(uuid: '', count: 0, isPickupSelected:true,)),
                               );
                             },
                             style: ElevatedButton.styleFrom(

@@ -12,12 +12,13 @@ import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/repository/order_repository.dart';
+import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
-import 'package:tikom/ui/screen/order/maps.dart';
+import 'package:tikom/ui/screen/order/maps_6.dart';
 import 'package:tikom/ui/screen/order/maps2.dart';
 import 'package:tikom/ui/screen/order/maps3.dart';
-import 'package:tikom/ui/screen/order/maps4.dart';
+import 'package:tikom/ui/screen/order/maps.dart';
 import 'package:tikom/ui/screen/order/maps5.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
@@ -32,7 +33,12 @@ import 'payment.dart';
 class CheckoutScreen extends StatefulWidget {
   final String uuid;
   final int count;
-  const CheckoutScreen({Key? key, required this.uuid, required this.count})
+  final bool isPickupSelected;
+  const CheckoutScreen(
+      {Key? key,
+      required this.uuid,
+      required this.count,
+      required this.isPickupSelected})
       : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -47,7 +53,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   int default_price = 0;
   int payment_option = 0;
   int price_discount = 0;
+  String delivery_name = '';
   int delivery_price = 0;
+
+  int base_delivery_id = 0;
+  String base_delivery_name = '';
+  String base_delivery_address = '';
+  String base_delivery_price = '';
+  String base_delivery_long = '';
+  String base_delivery_lat = '';
 
   String point = '';
   late List voucher = [];
@@ -84,19 +98,44 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return '$time, $date';
   }
 
+  void handleBaseDelivery() async {
+    print('panggil handler Base Delivery');
+    try {
+      final TransactionRepository transRepository = TransactionRepository();
+      final response =
+          await transRepository.showDeliveryBase(type: 'drink_only');
+      print('form base delivery');
+      print(response);
+      if (response.status == 'success') {
+        setState(() {
+          base_delivery_id = response.data.id;
+          base_delivery_name = response.data.name;
+          base_delivery_price = response.data.price.toString();
+          base_delivery_address = response.data.address;
+          base_delivery_long = response.data.long;
+          base_delivery_lat = response.data.lat;
+        });
+      } else {}
+    } catch (error) {
+      print('error handrel base deliver');
+      print(error.toString());
+    }
+  }
+
   void handlePotonganDefault() async {
     print('panggil handler potongan');
     try {
       final OrderRepository orderRepository = OrderRepository();
-      final response = await orderRepository.showPotongan();
+      final response = await orderRepository.showPotongan(type: 'transaksi');
       print('form potongan');
       print(response);
       if (response.status == 'success') {
         setState(() {
           if (widget.count >= response.data.total_quantity) {
             price_discount = int.parse(response.data.total_price.toString());
-            total_price = total_price - price_discount;
-            payment_option = payment_option - price_discount;
+            print('Potongan Handle :' + price_discount.toString());
+            total_price -= price_discount;
+            payment_option -= price_discount;
           }
         });
       } else {}
@@ -348,6 +387,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       }
     });
     handlePotonganDefault();
+    handleBaseDelivery();
   }
 
   void handlePlaceOrder(BuildContext context) {
@@ -374,11 +414,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
           print('Handle Place Order Runn');
           _transactionBloc.add(TransactionButtonPressed(
-              price: default_price,
-              payment_type: data_payment_type,
-              voucher: data_voucher,
-              use_point: data_use_point,
-              service_date: dateTimeSelected));
+            price: default_price,
+            payment_type: data_payment_type,
+            voucher: data_voucher,
+            use_point: data_use_point,
+            service_date: dateTimeSelected,
+            base_delivery: base_delivery_id,
+            is_delivery: widget.isPickupSelected,
+            delivery_address: delivery_name,
+            delivery_price: delivery_price,
+          ));
         },
         title: "Apakah Ingin Checkout?",
         onYesText: 'Ya',
@@ -414,9 +459,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildPickupDeliveryToggle(),
-              const SizedBox(height: 16),
-              isPickup
+              // buildPickupDeliveryToggle(),
+              // const SizedBox(height: 16),
+              widget.isPickupSelected
                   ? buildPickupDetails(context)
                   : buildDeliveryDetails(context),
               const SizedBox(height: 16),
@@ -561,13 +606,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Titikkoma Adijasa',
+                        base_delivery_name,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                       Text(
-                        '3.8 km from your location',
+                        base_delivery_address,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(color: Colors.grey),
                         ),
@@ -612,13 +657,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Titik Koma Adijasa',
+                          base_delivery_name,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                         Text(
-                          'Jl. Demak No. 90-92, Gundih, Kec. Bubutan, Kota Surabaya, Jawa Timur, 60172, Surabaya, Indonesia ',
+                          base_delivery_address,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(color: Colors.grey),
                           ),
@@ -662,7 +707,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       var data_back = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => SearchLokasiKolam()),
+                            builder: (context) => MapsScreen(
+                                  long: base_delivery_long,
+                                  lat: base_delivery_lat,
+                                )),
                       );
                       if (data_back != null) {
                         setState(() {
@@ -678,10 +726,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           print(delivered[0][0].toStringAsFixed(0));
                           delivery_price =
                               int.parse(delivered[0][0].toStringAsFixed(0)) *
-                                  10000;
+                                  int.parse(base_delivery_price);
+
                           print(delivery_price);
                           total_price += delivery_price;
                           payment_option += delivery_price;
+                          delivery_name = delivered[0][1];
                         });
                       }
                       print(delivered);

@@ -13,23 +13,29 @@ class TransactionButtonPressed extends TransactionEvent {
   final String voucher;
   final String use_point;
   final String service_date;
+  final dynamic base_delivery;
+  final dynamic is_delivery;
+  final dynamic delivery_address;
+  final dynamic delivery_price;
 
-
-  const TransactionButtonPressed({
-    required this.price,
-    required this.payment_type,
-    required this.voucher,
-    required this.use_point,
-    required this.service_date
-  });
+  const TransactionButtonPressed(
+      {required this.price,
+      required this.payment_type,
+      required this.voucher,
+      required this.use_point,
+      required this.service_date,
+      required this.base_delivery,
+      required this.is_delivery,
+      required this.delivery_address,
+      required this.delivery_price
+    });
 
   @override
-  List<Object> get props => [price,payment_type,voucher,use_point];
+  List<Object> get props => [price, payment_type, voucher, use_point];
 
   @override
   String toString() => 'TransactionButtonPressed { price: $price, }';
 }
-
 
 abstract class TransactionPaymentEvent extends Equatable {
   const TransactionPaymentEvent();
@@ -38,11 +44,9 @@ abstract class TransactionPaymentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
 class TransactionPaymentButtonPressed extends TransactionPaymentEvent {
   final String uuid;
   final String image;
-
 
   const TransactionPaymentButtonPressed({
     required this.uuid,
@@ -50,11 +54,8 @@ class TransactionPaymentButtonPressed extends TransactionPaymentEvent {
   });
 
   @override
-  List<Object> get props => [uuid,image];
+  List<Object> get props => [uuid, image];
 
   @override
   String toString() => 'TransactionPaymentButtonPressed { UUID: $uuid, }';
 }
-
-
-

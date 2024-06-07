@@ -69,7 +69,7 @@ class _ViewTicketPageState extends State<ViewTicketPage> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
+                          ),    
                           const SizedBox(height: 8),
                           Text(
                             'Point this QR to the scan place',

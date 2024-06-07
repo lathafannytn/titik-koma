@@ -101,11 +101,13 @@ class OrderRepository {
     return json.encode(response);
   }
 
-  Future<PotonganDataResponse> showPotongan() async {
+  Future<PotonganDataResponse> showPotongan({
+    required String type
+  }) async {
     final _token = await _authenticationRepository.getToken();
 
     final response = await _provider.get(
-      'order/default-potongan',
+      'order/default-potongan/$type',
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer $_token',
         HttpHeaders.acceptHeader: 'application/json',
