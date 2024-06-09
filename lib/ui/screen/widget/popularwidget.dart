@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tikom/ui/screen/catering/package.dart';
-
 import 'package:tikom/ui/screen/service/drinks_only/drinks_only.dart';
 import 'package:tikom/ui/screen/service/full_service/full_service.dart';
+
+import '../catering/package.dart';
 
 class PopularWidget extends StatelessWidget {
   @override
