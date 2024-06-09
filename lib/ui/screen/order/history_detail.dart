@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
 
@@ -150,19 +151,19 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
-                              // Text('TIKOM Points'),
+                              Text('TIKOM Points'),
                               Text('Waktu Pemesanan'),
-                              // Text('Saluran Pesanan'),
-                              Text('Metode Pembayaran'),
+                              Text('Saluran Pesanan'),
+                              // Text('Metode Pembayaran'),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              // Text('+$points pts'),
-                              Text('${state.transactions[0].service_date}'),
-                              // Text(orderChannel),
-                              Text('${state.transactions[0].payment_type}'),
+                              Text('+${state.transactions[0].point}'),
+                              Text(DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(state.transactions[0].service_date))),
+                              Text(state.transactions[0].base_delivery.name),
+                              // Text(state.transactions[0].payment_type),
                             ],
                           ),
                         ],
@@ -183,8 +184,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                     .transactions[0].media![i].description),
                                 const SizedBox(height: 5),
                                 Image.network(
-                                  state
-                                    .transactions[0].media![i].url,
+                                  state.transactions[0].media![i].url,
                                   // height: 200,
                                   // width: 100,
                                 )
