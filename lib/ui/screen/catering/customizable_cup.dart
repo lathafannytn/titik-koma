@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/catering/checkout.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CustomizableCupScreen(
-          totalCost: 5250000), // Nilai totalCost diambil dari screen sebelumnya
-    );
-  }
-}
 
 class CustomizableCupScreen extends StatefulWidget {
   final double totalCost;
-
-  CustomizableCupScreen({required this.totalCost});
+  final NewTransactionFullService newTransactionFullService;
+  CustomizableCupScreen({required this.totalCost, required this.newTransactionFullService});
 
   @override
   _CustomizableCupScreenState createState() => _CustomizableCupScreenState();
@@ -121,10 +109,18 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                   NewTransactionFullService newTransFullService =
+                      NewTransactionFullService(
+                    full_service: widget.newTransactionFullService.full_service,
+                    product: widget.newTransactionFullService.product,
+                    add_on: widget.newTransactionFullService.add_on,
+                    custom_cup_name: selectedCup,
+                    custom_cup_notes: customTextController.text,
+                  );
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CheckoutServiceScreen()));
+                          builder: (context) => CheckoutServiceScreen(newTransactionFullService: newTransFullService,)));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,

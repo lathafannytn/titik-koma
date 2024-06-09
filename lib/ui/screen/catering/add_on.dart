@@ -1,18 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_add_on_catering/add_on_catering_cubit.dart';
+import 'package:tikom/data/blocs/fetch_add_on_catering/add_on_catering_state.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/ui/screen/catering/customizable_cup.dart';
 
 class AdditionalExtrasScreen extends StatefulWidget {
+  const AdditionalExtrasScreen({required this.newTransactionFullService});
+  final NewTransactionFullService newTransactionFullService;
   @override
   _AdditionalExtrasScreenState createState() => _AdditionalExtrasScreenState();
 }
 
 class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
+  String baristaUUID = '';
   int baristaCount = 0;
+  int baristaPrice = 0;
+
+  String serviceUUID = '';
   int serviceCount = 0;
+  int servicePrice = 0;
+
+  late AddOnCateringDataCubit _addOnCateringDataCubit;
 
   double get totalCost {
-    return (baristaCount * 250000) + (serviceCount * 100000);
+    return (baristaCount * baristaPrice.toDouble()) +
+        (serviceCount * servicePrice.toDouble());
+  }
+
+  @override
+  void initState() {
+    _addOnCateringDataCubit = AddOnCateringDataCubit()..loadAddOnCatering();
+    _addOnCateringDataCubit.stream.listen((state) {
+      if (state is AddOnCateringDataSuccess) {
+        setState(() {
+          baristaUUID = state.data[0].uuid;
+          baristaPrice = state.data[0].extraPrice;
+
+          serviceUUID = state.data[0].uuid;
+          servicePrice = state.data[1].extraPrice;
+        });
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -20,7 +50,7 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Additional Extras',
+          'Additional Extras ',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -43,14 +73,14 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
           children: [
             _buildCounterRow(
               'Barista',
-              'Rp 250.000 / 6 hours',
+              'Rp $baristaPrice / 6 hours',
               baristaCount,
               () => setState(() => baristaCount++),
               () => setState(() => baristaCount > 0 ? baristaCount-- : 0),
             ),
             _buildCounterRow(
               'Service',
-              'Rp 100.000 / hour',
+              'Rp $servicePrice / hour',
               serviceCount,
               () => setState(() => serviceCount++),
               () => setState(() => serviceCount > 0 ? serviceCount-- : 0),
@@ -60,11 +90,22 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
+                  Map<String, List<String>> addOn = {
+                    'barista': [baristaUUID.toString(),baristaCount.toString()],
+                    'service': [serviceUUID.toString(),serviceCount.toString()],
+                  };
+
+                  NewTransactionFullService newTransFullService =
+                      NewTransactionFullService(
+                    full_service: widget.newTransactionFullService.full_service,
+                    product: widget.newTransactionFullService.product,
+                    add_on: addOn,
+                  );
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              CustomizableCupScreen(totalCost: totalCost)));
+                              CustomizableCupScreen(totalCost: totalCost, newTransactionFullService:newTransFullService)));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,

@@ -13,17 +13,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 
-class MapsScreen extends StatefulWidget {
+class MapScreenCatering extends StatefulWidget {
   final String long;
   final String lat;
 
-  const MapsScreen({Key? key, required this.long, required this.lat})
+  const MapScreenCatering({Key? key, required this.long, required this.lat})
       : super(key: key);
   @override
-  State<MapsScreen> createState() => _MyAppState();
+  State<MapScreenCatering> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MapsScreen> {
+class _MyAppState extends State<MapScreenCatering> {
   bool seledtedsama = false;
   bool seledtedBeda = false;
   String googleApikey = "AIzaSyASGjI8zNA5NtrhDIc17Eur2HLP3RHi5Ns";
