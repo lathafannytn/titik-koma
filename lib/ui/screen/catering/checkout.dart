@@ -7,6 +7,7 @@ import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/ui/screen/catering/map.dart';
+import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 
 class CheckoutServiceScreen extends StatefulWidget {
   final NewTransactionFullService newTransactionFullService;
@@ -27,6 +28,8 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   int point = 0;
   bool usePoints = false;
 
+  int payment_option = 0;
+
   int base_delivery_id = 0;
   String base_delivery_name = '';
   String base_delivery_address = '';
@@ -34,9 +37,12 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   String base_delivery_long = '';
   String base_delivery_lat = '';
 
+  PaymentOption _selectedPaymentOption = PaymentOption.fullPayment;
+
   int totalPrice = 0;
 
   List delivered = [];
+  late List voucher = [];
 
   late FullServiceCubit _fullServiceCubit;
   late UserDataCubit _userDataCubit;
@@ -77,6 +83,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           default_price = state.full_service[0].price;
           default_price = default_price + widget.totalCost.toInt();
           totalPrice = default_price;
+          payment_option = default_price;
         });
       }
     });
@@ -533,22 +540,89 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              const Icon(Icons.card_giftcard, color: Colors.green),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'my voucher',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+          InkWell(
+            onTap: () async {
+              List<String> data = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VoucherPage()),
+              );
+              print(data);
+              if (data != null) {
+                setState(() {
+                  // voucher.clear();
+                  voucher.add(data);
+                  var percentage = double.parse(voucher[0][2]) / 100;
+
+                  double price_discountData = totalPrice * percentage;
+
+                  double discounted_price = totalPrice - price_discountData;
+                  int discounted_price2 = discounted_price.round();
+
+                  disccount += price_discountData.round();
+                  // print("Final Price: $finalPrice");
+                  totalPrice -= disccount;
+                  payment_option = totalPrice;
+                });
+
+                print(voucher);
+              }
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.card_giftcard, color: Colors.green),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'My Voucher',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 16),
-            ],
+                const Icon(Icons.arrow_forward_ios, size: 16),
+              ],
+            ),
           ),
+          if (voucher.isNotEmpty) ...[
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        voucher[0][1],
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            voucher.clear();
+                            totalPrice += disccount;
+                            payment_option += disccount;
+                            disccount = 0;
+                          });
+                        },
+                        child: const Icon(Icons.close,
+                            color: Colors.white, size: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
           const Divider(height: 32, color: Colors.grey),
           Row(
             children: [
@@ -578,10 +652,11 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                     if (value) {
                       disccount += point;
                       totalPrice -= point;
+                      payment_option -= point;
                     } else {
                       disccount -= point;
                       totalPrice += point;
-
+                      payment_option -= point;
                     }
                   });
 
@@ -625,10 +700,13 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           Row(
             children: [
               Radio(
-                value: 0,
-                groupValue: 0, // Sesuaikan dengan nilai grup yang dipilih
+                value: PaymentOption.downPayment,
+                groupValue: _selectedPaymentOption,
                 onChanged: (value) {
-                  // Aksi ketika opsi pembayaran dipilih
+                  setState(() {
+                    _selectedPaymentOption = value!;
+                    payment_option = (totalPrice / 2).round();
+                  });
                 },
                 activeColor: Colors.green,
               ),
@@ -641,10 +719,13 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           Row(
             children: [
               Radio(
-                value: 1,
-                groupValue: 0, // Sesuaikan dengan nilai grup yang dipilih
+                value: PaymentOption.fullPayment,
+                groupValue: _selectedPaymentOption,
                 onChanged: (value) {
-                  // Aksi ketika opsi pembayaran dipilih
+                  setState(() {
+                    _selectedPaymentOption = value!;
+                    payment_option = totalPrice;
+                  });
                 },
                 activeColor: Colors.green,
               ),
@@ -656,7 +737,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Down Payment (DP) Amount : Rp 3.125.000',
+            'Down Payment (DP) Amount : Rp $payment_option',
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -745,7 +826,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 ),
               ),
               Text(
-                'Rp $totalPrice',
+                'Rp ${payment_option !=  totalPrice ? payment_option : totalPrice}',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -758,3 +839,5 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
     );
   }
 }
+
+enum PaymentOption { downPayment, fullPayment }
