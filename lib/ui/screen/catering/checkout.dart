@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_full_service/full_service_cubit.dart';
+import 'package:tikom/data/blocs/fetch_full_service/full_service_state.dart';
+import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
+import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/ui/screen/catering/map.dart';
 
 class CheckoutServiceScreen extends StatefulWidget {
   final NewTransactionFullService newTransactionFullService;
-  CheckoutServiceScreen({required this.newTransactionFullService});
+  final double totalCost;
+
+  CheckoutServiceScreen(
+      {required this.newTransactionFullService, required this.totalCost});
   @override
   State<CheckoutServiceScreen> createState() => _CheckoutServiceScreenState();
 }
@@ -15,12 +22,24 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   String delivery_place = 'Pilih Alamat';
   String delivery_price = '';
 
+  int disccount = 0;
+  int default_price = 0;
+  int point = 0;
+  bool usePoints = false;
+
   int base_delivery_id = 0;
   String base_delivery_name = '';
   String base_delivery_address = '';
   String base_delivery_price = '';
   String base_delivery_long = '';
   String base_delivery_lat = '';
+
+  int totalPrice = 0;
+
+  List delivered = [];
+
+  late FullServiceCubit _fullServiceCubit;
+  late UserDataCubit _userDataCubit;
 
   void handleBaseDelivery() async {
     print('panggil handler Base Delivery');
@@ -48,8 +67,31 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
 
   @override
   void initState() {
-    super.initState();
     handleBaseDelivery();
+    // Default Price
+    _fullServiceCubit = FullServiceCubit()..loadFullService();
+    _fullServiceCubit.stream.listen((state) {
+      print('masuk');
+      if (state is FullServiceSuccess) {
+        setState(() {
+          default_price = state.full_service[0].price;
+          default_price = default_price + widget.totalCost.toInt();
+          totalPrice = default_price;
+        });
+      }
+    });
+    // Point
+    _userDataCubit = UserDataCubit()..loadUserData();
+    _userDataCubit.stream.listen((state) {
+      print('masuk');
+      if (state is UserDataLoaded) {
+        setState(() {
+          point = int.parse(state.user.point);
+        });
+      }
+    });
+    super.initState();
+    //
   }
 
   @override
@@ -218,7 +260,16 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                         )),
               );
               if (data_back != null) {
-                setState(() {});
+                setState(() {
+                  if (delivered.isNotEmpty) {
+                    delivered.clear();
+                  }
+                  delivered.add(data_back);
+                  delivery_place = delivered[0][1];
+                  delivery_price = (int.parse(base_delivery_price) *
+                          int.parse(delivered[0][0].toStringAsFixed(0)))
+                      .toString();
+                });
               }
               // print(delivered);/
             },
@@ -423,7 +474,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rp 6.250.000',
+                default_price.toString(),
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -443,7 +494,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 ),
               ),
               Text(
-                'Rp 6.250.000',
+                'Rp $default_price',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -512,7 +563,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '10000 poin',
+                  '$point poin',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -520,8 +571,20 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 ),
               ),
               Switch(
-                value: true,
+                value: usePoints,
                 onChanged: (value) {
+                  setState(() {
+                    usePoints = value;
+                    if (value) {
+                      disccount += point;
+                      totalPrice -= point;
+                    } else {
+                      disccount -= point;
+                      totalPrice += point;
+
+                    }
+                  });
+
                   // Aksi ketika switch diubah
                 },
                 activeColor: Colors.green,
@@ -638,7 +701,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                'Rp 3.125.000',
+                'Rp $default_price',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
@@ -651,7 +714,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                '- Rp 10.000',
+                '- Rp $disccount',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
@@ -664,7 +727,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                'Rp 200.000',
+                'Rp $delivery_price',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
@@ -682,7 +745,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 ),
               ),
               Text(
-                'Rp 3.315.000',
+                'Rp $totalPrice',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

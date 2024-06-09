@@ -194,11 +194,11 @@ class _MyAppState extends State<MapScreenCatering> {
                             var tikom = LatLng(double.parse(widget.lat),
                                 double.parse(widget.long));
                             var current = LatLng(latnow, longnow);
-                            // var home = LatLng(-7.2657222,112.763689);
                             // var jarak =
-                            //     calculateDistance(tikom, home);
+                            //     calculateDistance(tikom, current);
+                            var home = LatLng(-7.2657222,112.763689);
                             var jarak =
-                                calculateDistance(tikom, current);
+                                calculateDistance(tikom, home);
                             if (jarak > 25) {
                               DialogTemp().Informasi(
                                   context: context,

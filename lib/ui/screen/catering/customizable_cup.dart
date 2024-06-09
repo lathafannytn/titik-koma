@@ -120,7 +120,7 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CheckoutServiceScreen(newTransactionFullService: newTransFullService,)));
+                          builder: (context) => CheckoutServiceScreen(newTransactionFullService: newTransFullService, totalCost: widget.totalCost,)));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
