@@ -16,7 +16,7 @@ class KodeReferralPage extends StatefulWidget {
 
 class _KodeReferralPageState extends State<KodeReferralPage> {
   // INI NYIMPEN kode referral
-  final String referralCode = 'E9RC5G';
+  // final String referralCode = widget.code;
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +113,8 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                         SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Clipboard.setData(
-                                ClipboardData(text: referralCode));
+                            Clipboard.setData(ClipboardData(
+                                text: widget.code)); // Perubahan di sini
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content:
@@ -123,7 +123,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                             );
                           },
                           child: Icon(Icons.copy, size: 20),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -145,7 +145,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
               ),
               onPressed: () {
                 final String referralMessage =
-                    'Use my referral code $referralCode to get free coffee when you sign up!';
+                    'Use my referral code ${widget.code} to get free coffee when you sign up!';
                 Share.share(referralMessage);
               },
               child: Text(

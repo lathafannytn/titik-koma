@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
+
 import 'package:tikom/class/card/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
@@ -13,6 +15,7 @@ import 'package:tikom/data/blocs/fetch_order_product/fetch_order_product_state.d
 import 'package:tikom/data/repository/order_repository.dart';
 import 'package:tikom/ui/screen/order/checkout.dart';
 import 'package:tikom/utils/storage_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../data/models/drinks.dart';
 import 'category.dart';
@@ -163,33 +166,27 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               child: Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 8),
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                color: currentSelected == index ? Colors.white : Colors.transparent,
-                child: Column(
-                  children: [
-                    if (currentSelected == index) ...[
-                      Icon(Icons.local_cafe, color: Colors.orange),
-                      SizedBox(height: 4),
-                      Text(
-                        categories[index].name,
-                        style: GoogleFonts.poppins(
-                          color: Colors.orange,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ] else
-                      Text(
-                        categories[index].name,
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                  ],
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: currentSelected == index
+                      ? Color.fromARGB(255, 3, 115, 76)
+                      : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(30),
+                  border: currentSelected != index
+                      ? Border.all(color: Colors.grey)
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    categories[index].name.replaceAll(' ', '\n'),
+                    style: GoogleFonts.poppins(
+                      color:
+                          currentSelected == index ? Colors.white : Colors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -212,7 +209,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           children: [
             Container(
               color: Colors.white,
-              padding: EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 8),
+              padding: EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 15),
               child: Column(
                 children: [
                   Container(
@@ -222,46 +219,67 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPickupSelected = true;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: isPickupSelected ? Colors.white : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Pickup',
-                              style: TextStyle(
-                                fontWeight: isPickupSelected ? FontWeight.bold : FontWeight.normal,
-                                color: isPickupSelected ? Colors.black : Colors.grey,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPickupSelected = true;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: isPickupSelected
+                                    ? Colors.white
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Pickup',
+                                  style: TextStyle(
+                                    fontWeight: isPickupSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: isPickupSelected
+                                        ? Colors.black
+                                        : Colors.grey,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPickupSelected = false;
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: !isPickupSelected ? Colors.white : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Delivery',
-                              style: TextStyle(
-                                fontWeight: !isPickupSelected ? FontWeight.bold : FontWeight.normal,
-                                color: !isPickupSelected ? Colors.black : Colors.grey,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isPickupSelected = false;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: !isPickupSelected
+                                    ? Colors.white
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Delivery',
+                                  style: TextStyle(
+                                    fontWeight: !isPickupSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: !isPickupSelected
+                                        ? Colors.black
+                                        : Colors.grey,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -269,16 +287,16 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    color: Colors.orange[100],
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      '[NEW] - DISKON ONGKIR MAX 100% SETIAP HARI',
-                      style: GoogleFonts.poppins(color: Colors.orange),
-                    ),
-                  ),
+                  // SizedBox(height: 8),
+                  // Container(
+                  //   width: double.infinity,
+                  //   color: Colors.orange[100],
+                  //   padding: EdgeInsets.all(8),
+                  //   child: Text(
+                  //     '[NEW] - DISKON ONGKIR MAX 100% SETIAP HARI',
+                  //     style: GoogleFonts.poppins(color: Colors.orange),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -287,7 +305,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                 children: [
                   // Sidebar Kategori
                   Container(
-                    width: 70,
+                    width: 85,
                     color: Colors.grey[200],
                     child: Column(
                       children: [
@@ -305,8 +323,10 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               return FutureBuilder<List<Drinks>>(
                                 future: fetchDrinksByCategory(uuidCategory),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
                                     return Center(
                                       child: Text(
@@ -378,9 +398,11 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                             children: [
                               Stack(
                                 children: [
-                                  Icon(Icons.shopping_bag,
-                                      color: Color.fromARGB(255, 9, 76, 58),
-                                      size: 30),
+                                  SvgPicture.asset(
+                                    'assets/icons/cart.svg',
+                                    height: 40,
+                                    width: 40,
+                                  ),
                                   Positioned(
                                     right: 0,
                                     child: Container(
@@ -390,14 +412,15 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       constraints: BoxConstraints(
-                                        minWidth: 12,
-                                        minHeight: 12,
+                                        minWidth: 15,
+                                        minHeight: 15,
                                       ),
+                                      // menghitung total-quantity untuk dimasukkan keranjang
                                       child: Text(
                                         "${state.categories[0].total_quantity}",
                                         style: GoogleFonts.poppins(
                                           color: Colors.white,
-                                          fontSize: 8,
+                                          fontSize: 10,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -414,17 +437,30 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               ),
                             ],
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _showBottomSheet(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 9, 76, 58),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     _showBottomSheet(context);
+                          //   },
+                          //   style: ElevatedButton.styleFrom(
+                          //     primary: Color.fromARGB(255, 9, 76, 58),
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8),
+                          //     ),
+                          //   ),
+                          //   child:
+                          //       Text("Checkout", style: GoogleFonts.poppins()),
+                          // ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 3, 115, 76),
+                              shape: BoxShape.circle,
                             ),
-                            child: Text("Checkout", style: GoogleFonts.poppins()),
+                            child: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 10,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -484,7 +520,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         style: GoogleFonts.poppins()),
                                   ],
                                 ),
-                                leading: Image.network(data.product_detail.image),
+                                leading:
+                                    Image.network(data.product_detail.image),
                                 trailing: Container(
                                   width: 120,
                                   child: Row(
@@ -495,16 +532,19 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                           handlePlusMinus(data.uuid, 'MINUS');
                                         },
                                         icon: Icon(Icons.remove_circle_outline,
-                                            color: Color.fromARGB(255, 9, 76, 58)),
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
                                       ),
                                       Text('${data.total_quantity}',
-                                          style: GoogleFonts.poppins(fontSize: 16)),
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16)),
                                       IconButton(
                                         onPressed: () {
                                           handlePlusMinus(data.uuid, 'PLUS');
                                         },
                                         icon: Icon(Icons.add_circle_outline,
-                                            color: Color.fromARGB(255, 9, 76, 58)),
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
                                       ),
                                     ],
                                   ),
@@ -518,22 +558,28 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold)),
                           trailing: ElevatedButton(
-                            onPressed: total_quantity < 10 ? null : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen(
-                                          uuid: state.order[0].uuid, count: total_quantity, isPickupSelected: isPickupSelected,
-                                        )),
-                              );
-                            },
+                            onPressed: total_quantity < 10
+                                ? null
+                                : () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CheckoutScreen(
+                                                uuid: state.order[0].uuid,
+                                                count: total_quantity,
+                                                isPickupSelected:
+                                                    isPickupSelected,
+                                              )),
+                                    );
+                                  },
                             style: ElevatedButton.styleFrom(
                               primary: Color.fromARGB(255, 9, 76, 58),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: Text("Checkout", style: GoogleFonts.poppins()),
+                            child:
+                                Text("Checkout", style: GoogleFonts.poppins()),
                           ),
                         ),
                       ],
