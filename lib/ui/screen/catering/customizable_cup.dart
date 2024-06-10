@@ -63,7 +63,7 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                 mainAxisSpacing: 16.0,
                 children: [
                   CupCard(
-                    imageUrl: 'assets/images/glass_custom.jpg',
+                    imageUrl: 'assets/images/custom1.jpg',
                     title: 'Event',
                     isSelected: selectedCup == 'Event',
                     onSelect: () {
@@ -73,7 +73,27 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                     },
                   ),
                   CupCard(
-                    imageUrl: 'assets/images/glass_custom.jpg',
+                    imageUrl: 'assets/images/custom2.jpg',
+                    title: 'Event',
+                    isSelected: selectedCup == 'Event',
+                    onSelect: () {
+                      setState(() {
+                        selectedCup = 'Event';
+                      });
+                    },
+                  ),
+                  CupCard(
+                    imageUrl: 'assets/images/custom3.jpg',
+                    title: 'Christmas',
+                    isSelected: selectedCup == 'Christmas',
+                    onSelect: () {
+                      setState(() {
+                        selectedCup = 'Christmas';
+                      });
+                    },
+                  ),
+                  CupCard(
+                    imageUrl: 'assets/images/custom4.jpg',
                     title: 'Wedding',
                     isSelected: selectedCup == 'Wedding',
                     onSelect: () {
@@ -83,25 +103,16 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                     },
                   ),
                   CupCard(
-                    imageUrl: 'assets/images/glass_custom.jpg',
-                    title: 'Couple',
-                    isSelected: selectedCup == 'Couple',
+                    imageUrl: 'assets/images/custom5.jpg',
+                    title: 'Wedding',
+                    isSelected: selectedCup == 'Wedding',
                     onSelect: () {
                       setState(() {
-                        selectedCup = 'Couple';
+                        selectedCup = 'Wedding';
                       });
                     },
                   ),
-                  CupCard(
-                    imageUrl: 'assets/images/glass_custom.jpg',
-                    title: 'Religion',
-                    isSelected: selectedCup == 'Religion',
-                    onSelect: () {
-                      setState(() {
-                        selectedCup = 'Religion';
-                      });
-                    },
-                  ),
+                  
                 ],
               ),
             ),
