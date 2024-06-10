@@ -123,7 +123,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void handlePotonganDefault() async {
-    print('panggil handler potongan');
+    print('panggil handler potongan checkout');
     try {
       final OrderRepository orderRepository = OrderRepository();
       final response = await orderRepository.showPotongan(type: 'transaksi');
