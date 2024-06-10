@@ -187,6 +187,14 @@ flutter:
     #gambar untuk bg
     - assets/images/bg_catering.jpg
 
+    #gambar untuk custom cup
+    - assets/images/custom1.jpg
+    - assets/images/custom2.jpg
+    - assets/images/custom3.jpg
+    - assets/images/custom4.jpg
+    - assets/images/custom5.jpg
+    - assets/images/custom6.jpg
+
 
   fonts:
     - family: Karla
