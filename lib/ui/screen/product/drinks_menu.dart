@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
+
 
 import 'package:tikom/class/card/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
@@ -636,7 +636,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                             ),
                           ),
                           trailing: ElevatedButton(
-                            onPressed: total_quantity < 10
+                            onPressed: full_quantity < 10
                                 ? null
                                 : () {
                                     Navigator.push(
