@@ -454,7 +454,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                       ),
                                       // menghitung total-quantity untuk dimasukkan keranjang
                                       child: Text(
-                                        "${total_quantity}",
+                                        "${full_quantity}",
                                         style: GoogleFonts.poppins(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -539,7 +539,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                   if (state is OrderProductSuccess) {
                     return Column(
                       children: [
-                        if (total_quantity < 10) ...[
+                        if (full_quantity < 10) ...[
                           const SizedBox(height: 10),
                           Text(
                             "Minimum Purchase 10 Item",
