@@ -6,12 +6,14 @@ class ProductCard extends StatelessWidget {
   final String uuid;
   final String name;
   final num price;
+  final String description;
   final String imagePath;
 
   ProductCard({
     required this.uuid,
     required this.name,
     required this.price,
+    required this.description,
     required this.imagePath,
   });
 
@@ -49,7 +51,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    'Deskripsi produk di sini', // Ganti dengan deskripsi asli jika ada
+                    description,
                     style: GoogleFonts.poppins(
                       fontSize: 12,
                       color: Colors.grey,
@@ -74,11 +76,16 @@ class ProductCard extends StatelessWidget {
                 print(uuid);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AddOnScreen(uuid: uuid,)),
+                  MaterialPageRoute(
+                      builder: (context) => AddOnScreen(
+                            uuid: uuid,
+                          )),
                 );
               },
-              icon:
-                  Icon(Icons.add_circle, color: Color.fromARGB(255, 9, 76, 58)),
+              icon: Icon(
+                Icons.add_circle_outline_outlined,
+                color: Color.fromARGB(255, 3, 115, 76),
+              ),
             ),
           ],
         ),

@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_declarations
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 
@@ -15,9 +13,6 @@ class KodeReferralPage extends StatefulWidget {
 }
 
 class _KodeReferralPageState extends State<KodeReferralPage> {
-  // INI NYIMPEN kode referral
-  // final String referralCode = widget.code;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,32 +49,21 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Get Free Coffee!",
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
                     "Get a free coffee discount voucher every time your friend joins via your referral code.",
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 30),
-                  // QrImage(
-                  //   data: referralCode, // Gunakan variabel referralCode
-                  //   version: QrVersions.auto,
-                  //   size: 200.0,
-                  // ),
-                  SizedBox(height: 20),
+                  SvgPicture.asset(
+                    'assets/icons/kode_ref.svg',
+                    height: 250,
+                    width: 250,
+                  ),
+                  SizedBox(height: 5),
                   Text(
-                    "Copy or share the referral code below:",
+                    "Kode referral SAYA",
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -87,10 +71,9 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16.0),
                       color: Colors.grey[200],
@@ -104,21 +87,19 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.code, // Gunakan variabel referralCode
+                          widget.code, 
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24.0,
+                            fontSize: 20.0,
                           ),
                         ),
                         SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(
-                                text: widget.code)); // Perubahan di sini
+                            Clipboard.setData(ClipboardData(text: widget.code)); // Perubahan di sini
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text("Referral code copied to clipboard!"),
+                                content: Text("Referral code copied to clipboard!"),
                               ),
                             );
                           },
@@ -127,7 +108,130 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 100),
+                  SizedBox(height: 10),
+                  Text(
+                    "Hanya 3 langkah semua serba MURAH",
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    height: 200,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Container(
+                            width: 150, 
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.orange[100],
+                                  child: Text(
+                                    '1',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Bagikan kode referral ke teman kamu",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Container(
+                            width: 200, // Adjust width as needed
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.orange[100],
+                                  child: Text(
+                                    '2',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Ajak teman kamu untuk daftar APP dan masukkan kode referral kamu",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Container(
+                            width: 200, // Adjust width as needed
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.orange[100],
+                                  child: Text(
+                                    '3',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Selesai! Kamu mendapatkan voucher diskon kopi gratis.",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 40),
                 ],
               ),
             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,7 +101,6 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     pax: '200 pax',
                     onTap: () {
                       print('Package A clicked');
-                      // Add your onTap functionality here
                     },
                   ),
                 ),
@@ -110,7 +111,6 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     pax: '250 pax',
                     onTap: () {
                       print('Package B clicked');
-                      // Add your onTap functionality here
                     },
                   ),
                 ),
@@ -121,7 +121,6 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     pax: '300 pax',
                     onTap: () {
                       print('Package C clicked');
-                      // Add your onTap functionality here
                     },
                   ),
                 ),
@@ -150,7 +149,7 @@ class PackageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300, // Set the desired width for the card
+      width: 300,
       child: InkWell(
         onTap: onTap,
         child: Card(
@@ -169,7 +168,7 @@ class PackageItem extends StatelessWidget {
                     CircleAvatar(
                       backgroundColor: Colors.grey[100],
                       child: Image.asset(
-                        'assets/logos/logo_tikom_bulat_hijau_hitam.png', // Ensure you have this asset in your project
+                        'assets/logos/logo_tikom_bulat_hijau_hitam.png',
                         width: 32,
                         height: 32,
                       ),
@@ -210,7 +209,7 @@ class PackageItem extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             SvgPicture.asset(
-                              'assets/icons/star.svg', // Ensure you have this asset in your project
+                              'assets/icons/star.svg', 
                               color: Color.fromARGB(255, 12, 190, 124),
                               width: 65,
                               height: 65,

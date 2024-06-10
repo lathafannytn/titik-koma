@@ -207,10 +207,10 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                 decoration: BoxDecoration(
                   color: currentSelected == index
                       ? Color.fromARGB(255, 155, 195, 181)
-                      : Colors.grey,
+                      : Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
                   border: currentSelected != index
-                      ? Border.all(color: Colors.black)
+                      ? Border.all(color: Colors.grey)
                       : null,
                 ),
                 child: Center(
@@ -219,7 +219,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                     style: GoogleFonts.poppins(
                       color: currentSelected == index
                           ? Colors.white
-                          : Colors.black,
+                          : Colors.grey,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -374,6 +374,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         return ProductCard(
                                           name: drink.name,
                                           price: drink.price,
+                                          description: drink.desc,
                                           imagePath: drink.imgUrl,
                                           uuid: drink.uuid,
                                         );

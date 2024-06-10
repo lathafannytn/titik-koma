@@ -10,7 +10,7 @@ import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/models/user.dart';
 import 'package:tikom/ui/screen/events/event.dart';
 import 'package:tikom/ui/screen/poin/point_detail.dart';
-import 'package:tikom/ui/screen/widget/popularwidget.dart';
+import 'package:tikom/ui/screen/widget/catering_widget.dart';
 import 'package:tikom/ui/screen/widget/reveralwidget.dart';
 
 import 'list_notif.dart';
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                         return Column(
                           children: [
                             _buildUserInfo(context, state.user),
-                            PopularWidget(),
+                            CateringWidget(),
                             Referral().show(context, state.user.referallCode),
                             PopularEventList(),
                           ],
