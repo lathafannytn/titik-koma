@@ -50,7 +50,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       print(response);
       if (response.status == 'success') {
         setState(() {
-          if ( full_quantity >= response.data.total_quantity) {
+          if (full_quantity >= response.data.total_quantity) {
             price_discount = int.parse(response.data.total_price.toString());
             total_price_discount = total_price - price_discount;
           }
@@ -175,7 +175,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
         if (state is OrderDataSuccess) {
           setState(() {
             total_price = state.categories[0].total_price;
-            full_quantity  = state.categories[0].total_quantity;
+            full_quantity = state.categories[0].total_quantity;
           });
         }
       });
@@ -204,34 +204,27 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                 width: double.infinity,
                 margin: EdgeInsets.only(bottom: 8),
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                color: currentSelected == index
-                    ? Colors.white
-                    : Colors.transparent,
-                child: Column(
-                  children: [
-                    if (currentSelected == index) ...[
-                      Icon(Icons.local_cafe, color: Colors.orange),
-                      SizedBox(height: 4),
-                      Text(
-                        categories[index].name,
-                        style: GoogleFonts.poppins(
-                          color: Colors.orange,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ] else
-                      Text(
-                        categories[index].name,
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                  ],
+                decoration: BoxDecoration(
+                  color: currentSelected == index
+                      ? Color.fromARGB(255, 155, 195, 181)
+                      : Colors.grey,
+                  borderRadius: BorderRadius.circular(20),
+                  border: currentSelected != index
+                      ? Border.all(color: Colors.black)
+                      : null,
+                ),
+                child: Center(
+                  child: Text(
+                    categories[index].name.replaceAll(' ', '\n'),
+                    style: GoogleFonts.poppins(
+                      color: currentSelected == index
+                          ? Colors.white
+                          : Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),
@@ -254,7 +247,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           children: [
             Container(
               color: Colors.white,
-              padding: EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 15),
+              padding:
+                  EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 15),
               child: Column(
                 children: [
                   Container(
@@ -498,7 +492,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               size: 10,
                               color: Colors.white,
                             ),
-                            
                           ),
                         ],
                       ),
