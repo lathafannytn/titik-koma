@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
+
 
 import 'package:tikom/class/card/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
@@ -448,7 +448,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                       ),
                                       // menghitung total-quantity untuk dimasukkan keranjang
                                       child: Text(
-                                        "${total_quantity}",
+                                        "${full_quantity}",
                                         style: GoogleFonts.poppins(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -532,7 +532,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                   if (state is OrderProductSuccess) {
                     return Column(
                       children: [
-                        if (total_quantity < 10) ...[
+                        if (full_quantity < 10) ...[
                           const SizedBox(height: 10),
                           Text(
                             "Minimum Purchase 10 Item",
@@ -629,7 +629,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                             ),
                           ),
                           trailing: ElevatedButton(
-                            onPressed: total_quantity < 10
+                            onPressed: full_quantity < 10
                                 ? null
                                 : () {
                                     Navigator.push(
