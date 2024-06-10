@@ -1,7 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_full_service/full_service_cubit.dart';
+import 'package:tikom/data/blocs/fetch_full_service/full_service_state.dart';
+import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
+import 'package:tikom/data/blocs/user_data/user_data_state.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
+import 'package:tikom/data/repository/transaction_repository.dart';
+import 'package:tikom/ui/screen/catering/map.dart';
+import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 
-class CheckoutServiceScreen extends StatelessWidget {
+class CheckoutServiceScreen extends StatefulWidget {
+  final NewTransactionFullService newTransactionFullService;
+  final double totalCost;
+
+  CheckoutServiceScreen(
+      {required this.newTransactionFullService, required this.totalCost});
+  @override
+  State<CheckoutServiceScreen> createState() => _CheckoutServiceScreenState();
+}
+
+class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
+  String delivery_place = 'Pilih Alamat';
+  String delivery_price = '';
+
+  int disccount = 0;
+  int default_price = 0;
+  int point = 0;
+  bool usePoints = false;
+
+  int payment_option = 0;
+
+  int base_delivery_id = 0;
+  String base_delivery_name = '';
+  String base_delivery_address = '';
+  String base_delivery_price = '';
+  String base_delivery_long = '';
+  String base_delivery_lat = '';
+
+  PaymentOption _selectedPaymentOption = PaymentOption.fullPayment;
+
+  int totalPrice = 0;
+
+  List delivered = [];
+  late List voucher = [];
+
+  late FullServiceCubit _fullServiceCubit;
+  late UserDataCubit _userDataCubit;
+
+  void handleBaseDelivery() async {
+    print('panggil handler Base Delivery');
+    try {
+      final TransactionRepository transRepository = TransactionRepository();
+      final response =
+          await transRepository.showDeliveryBase(type: 'full_service');
+      print('form base delivery');
+      print(response);
+      if (response.status == 'success') {
+        setState(() {
+          base_delivery_id = response.data.id;
+          base_delivery_name = response.data.name;
+          base_delivery_price = response.data.price.toString();
+          base_delivery_address = response.data.address;
+          base_delivery_long = response.data.long;
+          base_delivery_lat = response.data.lat;
+        });
+      } else {}
+    } catch (error) {
+      print('error handrel base deliver');
+      print(error.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    handleBaseDelivery();
+    // Default Price
+    _fullServiceCubit = FullServiceCubit()..loadFullService();
+    _fullServiceCubit.stream.listen((state) {
+      print('masuk');
+      if (state is FullServiceSuccess) {
+        setState(() {
+          default_price = state.full_service[0].price;
+          default_price = default_price + widget.totalCost.toInt();
+          totalPrice = default_price;
+          payment_option = default_price;
+        });
+      }
+    });
+    // Point
+    _userDataCubit = UserDataCubit()..loadUserData();
+    _userDataCubit.stream.listen((state) {
+      print('masuk');
+      if (state is UserDataLoaded) {
+        setState(() {
+          point = int.parse(state.user.point);
+        });
+      }
+    });
+    super.initState();
+    //
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +115,9 @@ class CheckoutServiceScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 1,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -39,19 +138,19 @@ class CheckoutServiceScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildOrderLocation(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildOrderDetails(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildDeliveryOption(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildDiscountOption(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildPaymentOptions(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildPaymentDetails(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -86,7 +185,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildOrderLocation() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -95,7 +194,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -104,8 +203,8 @@ class CheckoutServiceScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.green),
-              SizedBox(width: 8),
+              const Icon(Icons.location_on, color: Colors.green),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Take your order at :',
@@ -118,31 +217,31 @@ class CheckoutServiceScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.only(left: 32.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'PT. TITIK KOMA BAHAGIA ABADI',
+                  base_delivery_name,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Jl. Bali No.23, Gubeng, Kec. Gubeng, Surabaya, Jawa Timur 60281',
+                  base_delivery_address,
                   style: GoogleFonts.poppins(fontSize: 14),
                 ),
               ],
             ),
           ),
-          Divider(height: 32, color: Colors.grey),
+          const Divider(height: 32, color: Colors.grey),
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.green),
-              SizedBox(width: 8),
+              const Icon(Icons.location_on, color: Colors.green),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'To your Address:',
@@ -155,21 +254,47 @@ class CheckoutServiceScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0),
-            child: Row(
-              children: [
-                Text(
-                  'Pilih Alamat',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+          const SizedBox(height: 8),
+          // MapScreenCatering
+          InkWell(
+            onTap: () async {
+              var data_back = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MapScreenCatering(
+                          long: base_delivery_long,
+                          lat: base_delivery_lat,
+                        )),
+              );
+              if (data_back != null) {
+                setState(() {
+                  if (delivered.isNotEmpty) {
+                    delivered.clear();
+                  }
+                  delivered.add(data_back);
+                  delivery_place = delivered[0][1];
+                  delivery_price = (int.parse(base_delivery_price) *
+                          int.parse(delivered[0][0].toStringAsFixed(0)))
+                      .toString();
+                });
+              }
+              // print(delivered);/
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 32.0),
+              child: Row(
+                children: [
+                  Text(
+                    delivery_place,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios, size: 16),
-              ],
+                  const Spacer(),
+                  const Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
             ),
           ),
         ],
@@ -179,7 +304,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildDeliveryOption() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -188,7 +313,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -202,7 +327,7 @@ class CheckoutServiceScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             children: [
               CircleAvatar(
@@ -213,7 +338,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                   height: 24,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'Driver Tikom NIH',
                 style: GoogleFonts.poppins(
@@ -230,7 +355,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildOrderDetails() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -239,7 +364,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -256,22 +381,22 @@ class CheckoutServiceScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextButton.icon(
-                onPressed: () {
-                  // Aksi ketika tombol add more ditekan
-                },
-                icon: Icon(Icons.add, color: Colors.green),
-                label: Text(
-                  'add more',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.green,
-                  ),
-                ),
-              ),
+              // TextButton.icon(
+              //   onPressed: () {
+              //     // Aksi ketika tombol add more ditekan
+              //   },
+              //   icon: const Icon(Icons.add, color: Colors.green),
+              //   label: Text(
+              //     'add more',
+              //     style: GoogleFonts.poppins(
+              //       fontSize: 14,
+              //       color: Colors.green,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             children: [
               CircleAvatar(
@@ -282,7 +407,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                   height: 32,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -293,49 +418,70 @@ class CheckoutServiceScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    'Additional Extra:',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                  if (widget.newTransactionFullService.add_on!['barista']?[1] !=
+                          '0' &&
+                      widget.newTransactionFullService.add_on!['service']?[1] !=
+                          '') ...[
+                    Text(
+                      'Additional Extra:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '1 x Barista - 6 Hours',
-                    style: GoogleFonts.poppins(fontSize: 12),
-                  ),
-                  Text(
-                    'Custom Cup:',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                  ],
+                  if (widget.newTransactionFullService.add_on!['barista']?[1] !=
+                      '0') ...[
+                    Text(
+                      '${widget.newTransactionFullService.add_on!['barista']?[1]} x Barista - 6 Hours',
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
-                  ),
-                  Text(
-                    'Event',
-                    style: GoogleFonts.poppins(fontSize: 12),
-                  ),
-                  Text(
-                    'Notes:',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                  ],
+                  if (widget.newTransactionFullService.add_on!['service']?[1] !=
+                      '0') ...[
+                    Text(
+                      '${widget.newTransactionFullService.add_on!['service']?[1]} x Service - 1 Hours',
+                      style: GoogleFonts.poppins(fontSize: 12),
                     ),
-                  ),
-                  Text(
-                    'Birthday',
-                    style: GoogleFonts.poppins(fontSize: 12),
-                  ),
+                  ],
+                  if (widget.newTransactionFullService.custom_cup_name !=
+                      '') ...[
+                    Text(
+                      'Custom Cup:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      widget.newTransactionFullService.custom_cup_name,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  ],
+                  if (widget.newTransactionFullService.custom_cup_notes !=
+                      '') ...[
+                    Text(
+                      'Notes:',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      widget.newTransactionFullService.custom_cup_notes,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  ],
                 ],
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Rp 6.250.000',
+                default_price.toString(),
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -343,7 +489,7 @@ class CheckoutServiceScreen extends StatelessWidget {
               ),
             ],
           ),
-          Divider(height: 32, color: Colors.grey),
+          const Divider(height: 32, color: Colors.grey),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -355,7 +501,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Rp 6.250.000',
+                'Rp $default_price',
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -370,7 +516,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildDiscountOption() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -379,7 +525,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -393,24 +539,91 @@ class CheckoutServiceScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.card_giftcard, color: Colors.green),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'my voucher',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () async {
+              List<String> data = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VoucherPage()),
+              );
+              print(data);
+              if (data != null) {
+                setState(() {
+                  // voucher.clear();
+                  voucher.add(data);
+                  var percentage = double.parse(voucher[0][2]) / 100;
+
+                  double price_discountData = totalPrice * percentage;
+
+                  double discounted_price = totalPrice - price_discountData;
+                  int discounted_price2 = discounted_price.round();
+
+                  disccount += price_discountData.round();
+                  // print("Final Price: $finalPrice");
+                  totalPrice -= disccount;
+                  payment_option = totalPrice;
+                });
+
+                print(voucher);
+              }
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.card_giftcard, color: Colors.green),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'My Voucher',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Icon(Icons.arrow_forward_ios, size: 16),
-            ],
+                const Icon(Icons.arrow_forward_ios, size: 16),
+              ],
+            ),
           ),
-          Divider(height: 32, color: Colors.grey),
+          if (voucher.isNotEmpty) ...[
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        voucher[0][1],
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            voucher.clear();
+                            totalPrice += disccount;
+                            payment_option += disccount;
+                            disccount = 0;
+                          });
+                        },
+                        child: const Icon(Icons.close,
+                            color: Colors.white, size: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const Divider(height: 32, color: Colors.grey),
           Row(
             children: [
               CircleAvatar(
@@ -421,10 +634,10 @@ class CheckoutServiceScreen extends StatelessWidget {
                   height: 24,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '10000 poin',
+                  '$point poin',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -432,8 +645,21 @@ class CheckoutServiceScreen extends StatelessWidget {
                 ),
               ),
               Switch(
-                value: true,
+                value: usePoints,
                 onChanged: (value) {
+                  setState(() {
+                    usePoints = value;
+                    if (value) {
+                      disccount += point;
+                      totalPrice -= point;
+                      payment_option -= point;
+                    } else {
+                      disccount -= point;
+                      totalPrice += point;
+                      payment_option -= point;
+                    }
+                  });
+
                   // Aksi ketika switch diubah
                 },
                 activeColor: Colors.green,
@@ -447,7 +673,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildPaymentOptions() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -456,7 +682,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -470,14 +696,17 @@ class CheckoutServiceScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             children: [
               Radio(
-                value: 0,
-                groupValue: 0, // Sesuaikan dengan nilai grup yang dipilih
+                value: PaymentOption.downPayment,
+                groupValue: _selectedPaymentOption,
                 onChanged: (value) {
-                  // Aksi ketika opsi pembayaran dipilih
+                  setState(() {
+                    _selectedPaymentOption = value!;
+                    payment_option = (totalPrice / 2).round();
+                  });
                 },
                 activeColor: Colors.green,
               ),
@@ -490,10 +719,13 @@ class CheckoutServiceScreen extends StatelessWidget {
           Row(
             children: [
               Radio(
-                value: 1,
-                groupValue: 0, // Sesuaikan dengan nilai grup yang dipilih
+                value: PaymentOption.fullPayment,
+                groupValue: _selectedPaymentOption,
                 onChanged: (value) {
-                  // Aksi ketika opsi pembayaran dipilih
+                  setState(() {
+                    _selectedPaymentOption = value!;
+                    payment_option = totalPrice;
+                  });
                 },
                 activeColor: Colors.green,
               ),
@@ -503,9 +735,9 @@ class CheckoutServiceScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'Down Payment (DP) Amount : Rp 3.125.000',
+            'Down Payment (DP) Amount : Rp $payment_option',
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -518,7 +750,7 @@ class CheckoutServiceScreen extends StatelessWidget {
 
   Widget _buildPaymentDetails() {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -527,7 +759,7 @@ class CheckoutServiceScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -541,7 +773,7 @@ class CheckoutServiceScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -550,7 +782,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                'Rp 3.125.000',
+                'Rp $default_price',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
@@ -563,7 +795,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                '- Rp 10.000',
+                '- Rp $disccount',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
@@ -576,13 +808,13 @@ class CheckoutServiceScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
               Text(
-                'Rp 200.000',
+                'Rp $delivery_price',
                 style: GoogleFonts.poppins(fontSize: 14),
               ),
             ],
           ),
-          SizedBox(height: 8),
-          Divider(height: 32, color: Colors.grey),
+          const SizedBox(height: 8),
+          const Divider(height: 32, color: Colors.grey),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -594,7 +826,7 @@ class CheckoutServiceScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Rp 3.315.000',
+                'Rp ${payment_option !=  totalPrice ? payment_option : totalPrice}',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -607,3 +839,5 @@ class CheckoutServiceScreen extends StatelessWidget {
     );
   }
 }
+
+enum PaymentOption { downPayment, fullPayment }

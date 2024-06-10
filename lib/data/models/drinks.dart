@@ -77,3 +77,23 @@ class Drinks {
     );
   }
 }
+
+
+class DrinkResponse {
+  final List<Drinks> drinks;
+
+   DrinkResponse({required this.drinks});
+
+  factory  DrinkResponse.fromJson(Map<String, dynamic> json) {
+    print('--model---');
+    print(json['data']);
+    var dataList = json['data'] as List;
+    List<Drinks> order =
+        dataList.map((item) => Drinks.fromJson(item)).toList();
+
+    return  DrinkResponse(
+      drinks: order,
+    );
+  }
+}
+

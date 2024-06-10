@@ -30,7 +30,9 @@ class Transaction {
   final int price_amount;
   final int down_payment;
   final String payment_type;
+  final String point;
   final List<Media>? media;
+  final BaseDelivery base_delivery;
 
   Transaction({
     required this.id,
@@ -46,6 +48,8 @@ class Transaction {
     required this.payment_type,
     required this.down_payment,
     this.media,
+    required this.point,
+    required this.base_delivery,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -73,6 +77,8 @@ class Transaction {
       down_payment: json['down_payment'] ?? 0,
       service_date: json['service_date'],
       media: mediaDetails.isNotEmpty ? mediaDetails : null,
+      point: json['point'],
+      base_delivery: BaseDelivery.fromJson(json['base_delivery']),
     );
   }
 
@@ -151,12 +157,12 @@ class BaseDelivery {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name':name,
-      'price':price,
+      'name': name,
+      'price': price,
       'type': type,
       'address': address,
-      'long':long,
-      'lat':lat,
+      'long': long,
+      'lat': lat,
     };
   }
 }

@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_product_catering/product_catering_cubit.dart';
+import 'package:tikom/data/blocs/fetch_product_catering/product_catering_state.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/ui/screen/catering/add_on.dart';
 
 class MenuOptionsScreen extends StatefulWidget {
+  const MenuOptionsScreen({required this.newTransactionFullService});
+
+  final NewTransactionFullService newTransactionFullService;
   @override
   _MenuOptionsScreenState createState() => _MenuOptionsScreenState();
 }
 
 class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
   String? selectedDrink;
+  late ProductCateringCubit _productCateringCubit;
+  @override
+  void initState() {
+    _productCateringCubit = ProductCateringCubit()..loadProductCatering();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,99 +45,94 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'choose one of your favorite drinks for your happy day',
-              style: GoogleFonts.poppins(fontSize: 14),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
+      body: BlocBuilder<ProductCateringCubit, ProductCateringState>(
+        bloc: _productCateringCubit,
+        builder: (context, state) {
+          if (state is ProductCateringLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ProductCateringSuccess) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MenuCard(
-                    imageUrl:
-                        'https://via.placeholder.com/150', // Ganti dengan URL gambar yang benar
-                    title: 'Americano',
-                    isSelected: selectedDrink == 'Americano',
-                    onSelect: () {
-                      setState(() {
-                        selectedDrink = 'Americano';
-                      });
-                    },
+                  Text(
+                    'choose one of your favorite drinks for your happy day',
+                    style: GoogleFonts.poppins(fontSize: 14),
                   ),
-                  MenuCard(
-                    imageUrl:
-                        'https://via.placeholder.com/150', // Ganti dengan URL gambar yang benar
-                    title: 'Kopi Susu Tiger',
-                    isSelected: selectedDrink == 'Kopi Susu Tiger',
-                    onSelect: () {
-                      setState(() {
-                        selectedDrink = 'Kopi Susu Tiger';
-                      });
-                    },
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                      children: [
+                        for (var i = 0; i < state.drinks.length; i++) ...[
+                          MenuCard(
+                            imageUrl: state.drinks[i]
+                                .imgUrl, // Ganti dengan URL gambar yang benar
+                            title: state.drinks[i].name,
+                            isSelected: selectedDrink == state.drinks[i].uuid,
+                            onSelect: () {
+                              setState(() {
+                                selectedDrink = state.drinks[i].uuid;
+                              });
+                            },
+                          ),
+                        ]
+                      ],
+                    ),
                   ),
-                  MenuCard(
-                    imageUrl:
-                        'https://via.placeholder.com/150', // Ganti dengan URL gambar yang benar
-                    title: 'Kopi Aren Doppio',
-                    isSelected: selectedDrink == 'Kopi Aren Doppio',
-                    onSelect: () {
-                      setState(() {
-                        selectedDrink = 'Kopi Aren Doppio';
-                      });
-                    },
-                  ),
-                  MenuCard(
-                    imageUrl:
-                        'https://via.placeholder.com/150', // Ganti dengan URL gambar yang benar
-                    title: 'Latte',
-                    isSelected: selectedDrink == 'Latte',
-                    onSelect: () {
-                      setState(() {
-                        selectedDrink = 'Latte';
-                      });
-                    },
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        NewTransactionFullService newTransFullService =
+                            NewTransactionFullService(
+                          full_service:
+                              widget.newTransactionFullService.full_service,
+                          product: selectedDrink,
+                            
+                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AdditionalExtrasScreen(newTransactionFullService: newTransFullService,)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
+                        child: Text(
+                          'next',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AdditionalExtrasScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  child: Text(
-                    'next',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+            );
+          }
+          if (state is ProductCateringFailure) {
+            print('error');
+            print(state.message);
+            return Center(child: Text(state.message));
+          }
+          return Container();
+        },
       ),
     );
   }

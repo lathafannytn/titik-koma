@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_my_point/fetch_my_point_cubit.dart';
+import 'package:tikom/data/blocs/fetch_my_point/fetch_my_point_state.dart';
+import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
+import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 
+class PointDetailsScreen extends StatefulWidget {
+  @override
+  State<PointDetailsScreen> createState() => _PointDetailsScreenState();
+}
 
+class _PointDetailsScreenState extends State<PointDetailsScreen> {
+  UserDataCubit? _userDataCubit;
+  String myPoint = '';
 
-class PointDetailsScreen extends StatelessWidget {
+  @override
+  void initState() {
+    _userDataCubit = BlocProvider.of<UserDataCubit>(context);
+    _userDataCubit?.loadUserData();
+
+    _userDataCubit?.stream.listen((state) {
+      if (state is UserDataLoaded) {
+        setState(() {
+          myPoint = state.user.point;
+        });
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +43,8 @@ class PointDetailsScreen extends StatelessWidget {
         title: Text(
           'Tikom Points',
           style: GoogleFonts.poppins(
-            textStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            textStyle:
+                TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
         backgroundColor: Colors.white,
@@ -39,7 +66,7 @@ class PointDetailsScreen extends StatelessWidget {
             children: [
               buildPointsSummary(),
               SizedBox(height: 16),
-              buildPointsHistoryHeader(),
+              // buildPointsHistoryHeader(),
               SizedBox(height: 8),
               buildPointsHistory(),
             ],
@@ -65,26 +92,29 @@ class PointDetailsScreen extends StatelessWidget {
               textStyle: TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '25',
+                myPoint,
                 style: GoogleFonts.poppins(
-                  textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+                  textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32),
                 ),
               ),
-              Icon(Icons.qr_code, color: Colors.white, size: 32),
+              // Icon(Icons.qr_code, color: Colors.white, size: 32),
             ],
           ),
-          SizedBox(height: 8),
-          Text(
-            '100 points = \$1.00. You can use these points as payment.',
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
+          // SizedBox(height: 8),
+          // Text(
+          //   '100 points = \$1.00. You can use these points as payment.',
+          //   style: GoogleFonts.poppins(
+          //     textStyle: TextStyle(color: Colors.white, fontSize: 14),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -107,7 +137,8 @@ class PointDetailsScreen extends StatelessWidget {
           child: Text(
             'View All',
             style: GoogleFonts.poppins(
-              textStyle: TextStyle(color: Color.fromARGB(255, 30, 83, 66), fontSize: 14),
+              textStyle: TextStyle(
+                  color: Color.fromARGB(255, 30, 83, 66), fontSize: 14),
             ),
           ),
         ),
@@ -116,16 +147,32 @@ class PointDetailsScreen extends StatelessWidget {
   }
 
   Widget buildPointsHistory() {
-    return Column(
-      children: [
-        buildPointsHistoryItem('You earn points', '+25', 'Dec 22, 2023 - 09:41:45 AM'),
-        buildPointsHistoryItem('You use points', '-200', 'Dec 22, 2023 - 09:41:20 AM'),
-        buildPointsHistoryItem('You earn points', '+50', 'Dec 19, 2023 - 19:20:49 PM'),
-        buildPointsHistoryItem('You earn points', '+100', 'Dec 18, 2023 - 20:46:53 PM'),
-        buildPointsHistoryItem('You earn points', '+50', 'Dec 17, 2023 - 10:07:38 AM'),
-        buildPointsHistoryItem('You use points', '-100', 'Dec 14, 2023 - 16:44:57 PM'),
-        buildPointsHistoryItem('You earn points', '+25', 'Dec 14, 2023 - 15:24:45 PM'),
-      ],
+    return BlocBuilder<PointHistoryCubit, PointHistoryState>(
+      bloc: PointHistoryCubit()..loadPointHistory(),
+      builder: (context, state) {
+        if (state is PointHistoryLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is PointHistorySuccess) {
+          return Column(
+            children: [
+              for (var i = 0; i < state.voucher.length; i++)...[
+                buildPointsHistoryItem(
+                   state.voucher[i].desc, state.voucher[i].point,  state.voucher[i].created),
+              ]
+            ],
+          );
+        }
+
+        if (state is PointHistoryFailure) {
+          print('error');
+          print(state.message);
+          return Center(child: Text(state.message));
+        }
+        return SizedBox();
+      },
     );
   }
 
@@ -141,7 +188,8 @@ class PointDetailsScreen extends StatelessWidget {
               Text(
                 title,
                 style: GoogleFonts.poppins(
-                  textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  textStyle:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               Text(
