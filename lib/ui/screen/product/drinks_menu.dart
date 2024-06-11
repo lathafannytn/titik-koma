@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-
 import 'package:tikom/class/card/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
@@ -32,6 +30,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   int total_price_discount = 0;
   int price_discount = 0;
   int total_quantity = 0;
+  int quantity_discount = 0;
   int full_quantity = 0;
   List<Category> categories = [];
   List<Drinks> drinks = [];
@@ -49,16 +48,33 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       print('form potongan');
       print(response);
       if (response.status == 'success') {
-        setState(() {
-          if (full_quantity >= response.data.total_quantity) {
+        if (full_quantity >= response.data.total_quantity) {
+          setState(() {
+            quantity_discount = response.data.total_quantity;
             price_discount = int.parse(response.data.total_price.toString());
             total_price_discount = total_price - price_discount;
-          }
+          });
+        } else {
+          setState(() {
+            price_discount = 0;
+            total_price_discount = total_price;
+          });
+        }
+      } else {
+        setState(() {
+          price_discount = 0;
+          total_price_discount = total_price;
         });
-      } else {}
+      }
+      print('handdre');
+      print(price_discount);
     } catch (error) {
       print('error handrel');
       print(error.toString());
+      setState(() {
+        price_discount = 0;
+        total_price_discount = total_price;
+      });
     }
   }
 
@@ -176,6 +192,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           setState(() {
             total_price = state.categories[0].total_price;
             full_quantity = state.categories[0].total_quantity;
+            // handlePotonganDefault();
           });
         }
       });
@@ -217,9 +234,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                   child: Text(
                     categories[index].name.replaceAll(' ', '\n'),
                     style: GoogleFonts.poppins(
-                      color: currentSelected == index
-                          ? Colors.white
-                          : Colors.grey,
+                      color:
+                          currentSelected == index ? Colors.white : Colors.grey,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -522,147 +538,154 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
               color: Colors.white,
-              child: BlocBuilder<OrderProductCubit, OrderProductState>(
+              child: BlocListener<OrderProductCubit, OrderProductState>(
                 bloc: _orderProductCubit,
-                builder: (context, state) {
-                  if (state is OrderProductLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                listener: (context, state) {
+                  if (state is OrderDataSuccess) {
+                    handlePotonganDefault();
                   }
-                  if (state is OrderProductSuccess) {
-                    return Column(
-                      children: [
-                        if (full_quantity < 10) ...[
-                          const SizedBox(height: 10),
-                          Text(
-                            "Minimum Purchase 10 Item",
-                            style: GoogleFonts.poppins(
-                              color: Colors.red,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                },
+                child: BlocBuilder<OrderProductCubit, OrderProductState>(
+                  bloc: _orderProductCubit,
+                  builder: (context, state) {
+                    if (state is OrderProductLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is OrderProductSuccess) {
+                      return Column(
+                        children: [
+                          if (full_quantity < 10) ...[
+                            const SizedBox(height: 10),
+                            Text(
+                              "Minimum Purchase 10 Item",
+                              style: GoogleFonts.poppins(
+                                color: Colors.red,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 5),
-                        ],
-
-                        Expanded(
-                          child: ListView.builder(
-                            controller: scrollController,
-                            itemCount: state.order.length,
-                            itemBuilder: (context, index) {
-                              var data = state.order[index];
-                              return ListTile(
-                                title: Text(data.product_detail.name,
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.bold)),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(data.selected,
-                                        style: GoogleFonts.poppins()),
-                                    Text(data.add_on_product,
-                                        style: GoogleFonts.poppins()),
-                                  ],
-                                ),
-                                leading:
-                                    Image.network(data.product_detail.image),
-                                trailing: Container(
-                                  width: 120,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                            const SizedBox(height: 5),
+                          ],
+                          Expanded(
+                            child: ListView.builder(
+                              controller: scrollController,
+                              itemCount: state.order.length,
+                              itemBuilder: (context, index) {
+                                var data = state.order[index];
+                                return ListTile(
+                                  title: Text(data.product_detail.name,
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold)),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          handlePlusMinus(data.uuid, 'MINUS');
-                                        },
-                                        icon: Icon(Icons.remove_circle_outline,
-                                            color:
-                                                Color.fromARGB(255, 9, 76, 58)),
-                                      ),
-                                      Text('${data.total_quantity}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 16)),
-                                      IconButton(
-                                        onPressed: () {
-                                          handlePlusMinus(data.uuid, 'PLUS');
-                                        },
-                                        icon: Icon(Icons.add_circle_outline,
-                                            color:
-                                                Color.fromARGB(255, 9, 76, 58)),
-                                      ),
+                                      Text(data.selected,
+                                          style: GoogleFonts.poppins()),
+                                      Text(data.add_on_product,
+                                          style: GoogleFonts.poppins()),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                        // Text('Total: Rp $total_price',
-                        //       style: GoogleFonts.poppins(
-                        //           fontWeight: FontWeight.bold)),
-                        ListTile(
-                          title: Text.rich(
-                            TextSpan(
-                              text: 'Total: ',
-                              style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold),
-                              children: [
-                                TextSpan(
-                                  text: 'Rp $total_price',
-                                  style: TextStyle(
-                                    decoration: price_discount != 0
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
-                                  ),
-                                ),
-                                if (price_discount != 0) ...[
-                                  TextSpan(
-                                    text: ' $total_price_discount',
-                                    style: const TextStyle(
-                                      color: Colors.red,
+                                  leading:
+                                      Image.network(data.product_detail.image),
+                                  trailing: Container(
+                                    width: 120,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            handlePlusMinus(data.uuid, 'MINUS');
+                                          },
+                                          icon: Icon(
+                                              Icons.remove_circle_outline,
+                                              color: Color.fromARGB(
+                                                  255, 9, 76, 58)),
+                                        ),
+                                        Text('${data.total_quantity}',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16)),
+                                        IconButton(
+                                          onPressed: () {
+                                            handlePlusMinus(data.uuid, 'PLUS');
+                                          },
+                                          icon: Icon(Icons.add_circle_outline,
+                                              color: Color.fromARGB(
+                                                  255, 9, 76, 58)),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ]
-                              ],
+                                );
+                              },
                             ),
                           ),
-                          trailing: ElevatedButton(
-                            onPressed: full_quantity < 10
-                                ? null
-                                : () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CheckoutScreen(
-                                                uuid: state.order[0].uuid,
-                                                count: full_quantity,
-                                                isPickupSelected:
-                                                    isPickupSelected,
-                                              )),
-                                    );
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 9, 76, 58),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                          ListTile(
+                            title: Text.rich(
+                              TextSpan(
+                                text: 'Total: ',
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold),
+                                children: [
+                                  TextSpan(
+                                    text: 'Rp $total_price',
+                                    style: TextStyle(
+                                      decoration:
+                                          full_quantity >= quantity_discount
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                    ),
+                                  ),
+                                  if (full_quantity >= quantity_discount) ...[
+                                    TextSpan(
+                                      text: ' $total_price_discount',
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ]
+                                ],
                               ),
                             ),
-                            child:
-                                Text("Checkout", style: GoogleFonts.poppins()),
+                            trailing: ElevatedButton(
+                              onPressed: full_quantity < 10
+                                  ? null
+                                  : () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CheckoutScreen(
+                                                  uuid: state.order[0].uuid,
+                                                  count: full_quantity,
+                                                  isPickupSelected:
+                                                      isPickupSelected,
+                                                )),
+                                      );
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 9, 76, 58),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text("Checkout",
+                                  style: GoogleFonts.poppins()),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                  if (state is OrderProductFailure) {
-                    print('error');
-                    print(state.message);
-                  }
-                  return SizedBox();
-                },
+                        ],
+                      );
+                    }
+                    if (state is OrderProductFailure) {
+                      print('error');
+                      print(state.message);
+                    }
+                    return SizedBox();
+                  },
+                ),
               ),
             );
           },
