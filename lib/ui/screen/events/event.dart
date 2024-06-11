@@ -8,7 +8,18 @@ import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_state.dart';
 
 import 'event_detail.dart';
 
+void main() {
+  runApp(MyApp());
+}
 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: PopularEventList(),
+    );
+  }
+}
 
 class PopularEventList extends StatelessWidget {
   @override
@@ -22,17 +33,22 @@ class PopularEventList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Popular Now',
+                'Event Collaboration TIKOM',
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                'See All',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.pink,
+              InkWell(
+                onTap: () {
+                  print('See All diklik');
+                },
+                child: Text(
+                  'See All',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: Color.fromARGB(255, 45, 136, 93),
+                  ),
                 ),
               ),
             ],
@@ -48,11 +64,11 @@ class PopularEventList extends StatelessWidget {
                   return SizedBox(
                     height: 300,
                     child: ListView.builder(
-                      itemCount : state.eventData.length,
+                      itemCount: state.eventData.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (BuildContext context, int index) {
                         var data = state.eventData[index];
-                        return PopularEventCard(context,data);
+                        return PopularEventCard(context, data);
                       },
                     ),
                   );
@@ -70,12 +86,15 @@ class PopularEventList extends StatelessWidget {
     );
   }
 
-  Widget PopularEventCard(BuildContext context,dynamic data) {
+  Widget PopularEventCard(BuildContext context, dynamic data) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => EventDetailsPage(uuid: data.uuid,)),
+          MaterialPageRoute(
+              builder: (context) => EventDetailsPage(
+                    uuid: data.uuid,
+                  )),
         );
       },
       child: Container(

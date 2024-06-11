@@ -88,12 +88,7 @@ class _ViewTicketPageState extends State<ViewTicketPage> {
                                   .contain, // Ensures the image fits within the specified dimensions
                             ),
                           ),
-                          // QrImage(
-                          //   data: '123456',
-                          //   version: QrVersions.auto,
-                          //   size: 200.0,
-                          //   foregroundColor: Colors.pink,
-                          // ),
+                          
                           const SizedBox(height: 16),
                           const Divider(color: Colors.grey),
                           const SizedBox(height: 16),
