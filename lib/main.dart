@@ -77,7 +77,9 @@ class _MyAppState extends State<MyApp> {
               );
             } else {
               if (snapshot.hasData && snapshot.data != null) {
-                return const MyHomePage(tabIndex: 0,);
+                return const MyHomePage(
+                  tabIndex: 0,
+                );
                 // return PaymentPage();
               } else {
                 return const SignIn();
@@ -125,7 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: WillPopScope(
+          child: _screens[_selectedIndex],
+          onWillPop: () async {
+            return false;
+          }),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[

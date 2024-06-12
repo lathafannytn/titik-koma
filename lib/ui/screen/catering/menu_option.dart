@@ -89,20 +89,26 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
                   const SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        NewTransactionFullService newTransFullService =
-                            NewTransactionFullService(
-                          full_service:
-                              widget.newTransactionFullService.full_service,
-                          product: selectedDrink,
-                            
-                        );
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    AdditionalExtrasScreen(newTransactionFullService: newTransFullService,)));
-                      },
+                      onPressed: selectedDrink != null
+                          ? () {
+                              print('produc select');
+                              print(selectedDrink);
+                              NewTransactionFullService newTransFullService =
+                                  NewTransactionFullService(
+                                full_service: widget
+                                    .newTransactionFullService.full_service,
+                                product: selectedDrink,
+                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AdditionalExtrasScreen(
+                                            newTransactionFullService:
+                                                newTransFullService,
+                                          )));
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         primary: Colors.green,
                         shape: RoundedRectangleBorder(

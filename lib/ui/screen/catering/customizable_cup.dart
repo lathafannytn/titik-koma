@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/catering/checkout.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 
-
 class CustomizableCupScreen extends StatefulWidget {
   final double totalCost;
   final NewTransactionFullService newTransactionFullService;
-  CustomizableCupScreen({required this.totalCost, required this.newTransactionFullService});
+  CustomizableCupScreen(
+      {required this.totalCost, required this.newTransactionFullService});
 
   @override
   _CustomizableCupScreenState createState() => _CustomizableCupScreenState();
@@ -100,7 +100,6 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                       });
                     },
                   ),
-                  
                 ],
               ),
             ),
@@ -119,8 +118,8 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                   NewTransactionFullService newTransFullService =
+                onPressed: selectedCup != null ? () {
+                  NewTransactionFullService newTransFullService =
                       NewTransactionFullService(
                     full_service: widget.newTransactionFullService.full_service,
                     product: widget.newTransactionFullService.product,
@@ -131,8 +130,11 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CheckoutServiceScreen(newTransactionFullService: newTransFullService, totalCost: widget.totalCost,)));
-                },
+                          builder: (context) => CheckoutServiceScreen(
+                                newTransactionFullService: newTransFullService,
+                                totalCost: widget.totalCost,
+                              )));
+                } : null,
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                   shape: RoundedRectangleBorder(
