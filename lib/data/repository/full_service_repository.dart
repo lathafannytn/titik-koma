@@ -10,6 +10,7 @@ import 'package:tikom/data/models/drinks.dart';
 
 import 'package:tikom/data/models/full_service.dart';
 import 'package:tikom/data/models/sign_in.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/auth_repository.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/utils/storage_service.dart';
@@ -64,5 +65,46 @@ class FullServiceRepository {
     );
     print(response);
     return DrinkResponse.fromJson(response);
+  }
+
+  Future<TransactionFullServiceStoreResponse> store(
+      {required int price,
+      required String voucher,
+      required String custom_cup_name,
+      required String custom_cup_note,
+      required String products,
+          required List<String> add_on,
+      required String payment_method,
+      required String use_point,
+      required dynamic base_delivery,
+      required dynamic delivery_address,
+      required dynamic delivery_price}) async {
+    final body = jsonEncode({
+      'price': price,
+      'voucher': voucher,
+      'payment_type': payment_method,
+      'products': products,
+      'custom_cup_name': custom_cup_name,
+      'custom_cup_note':custom_cup_note,
+      'use_point': use_point,
+      'base_delivery': base_delivery,
+      'delivery_address': delivery_address,
+      'delivery_price': delivery_price,
+      'add_on': add_on
+    });
+    final _token = await _authenticationRepository.getToken();
+
+    final response = await _provider.post(
+      'transaction/store',
+      body: body,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('disini store trans');
+    print(response);
+    return TransactionFullServiceStoreResponse.fromJson(response);
   }
 }

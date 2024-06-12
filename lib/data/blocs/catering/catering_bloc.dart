@@ -24,19 +24,28 @@ class CateringBloc extends Bloc<CateringBlocEvent, CateringBlocState> {
       emit(CateringBlocLoading());
       try {
         print(event);
-        // final CateringResponse = await CateringRepository.store(
-        //   event: event.event,
-        // );
+        final cateringResponse = await _fullServiceRepository.store(
+            price: int.parse(event.price),
+            voucher: event.voucher,
+            custom_cup_name: event.custom_cup_name,
+            products: event.custom_cup_name,
+            payment_method: event.payment_type,
+            use_point: event.use_point,
+            base_delivery: event.base_delivery,
+            delivery_address: event.delivery_address,
+            delivery_price: event.delivery_price,
+            custom_cup_note: event.custom_cup_note,
+            add_on: event.add_on);
         // print('masuk');
-        // print(CateringResponse.message);
-        // print('disini');
-        // if (CateringResponse.status == 'success') {
-        //   emit(CateringBlocSuccess(message: CateringResponse.message));
-        // } else {
-        //   emit(CateringBlocFailure(
-        //       message: CateringResponse.message,
-        //       error: 'Not Server' ?? 'Unknown error'));
-        // }
+        print(cateringResponse.message);
+        print('disini');
+        if (cateringResponse.status == 'success') {
+          emit(CateringBlocSuccess(message: cateringResponse.message));
+        } else {
+          emit(CateringBlocFailure(
+              message: cateringResponse.message,
+              error: 'Not Server' ?? 'Unknown error'));
+        }
       } catch (error) {
         print(error);
         emit(CateringBlocFailure(

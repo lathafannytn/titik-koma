@@ -83,8 +83,9 @@ class _PackageScreenState extends State<PackageScreen> {
                               child: PageView(
                                 children: [
                                   PackageCard(
-                                    title:state.full_service[0].type,
-                                    price: 'only IDR ${state.full_service[0].price}',
+                                    title: state.full_service[0].type,
+                                    price:
+                                        'only IDR ${state.full_service[0].price}',
                                     description:
                                         state.full_service[0].description,
                                     includes: const [
@@ -95,14 +96,18 @@ class _PackageScreenState extends State<PackageScreen> {
                                     ],
                                     onTap: () {
                                       print('Pop-Up Cold Card Clicked');
-                                      NewTransactionFullService newTransFullService = NewTransactionFullService(
-                                        full_service: state.full_service[0].id
-                                      );
+                                      NewTransactionFullService
+                                          newTransFullService =
+                                          NewTransactionFullService(
+                                              full_service:
+                                                  state.full_service[0].id);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  MenuOptionsScreen(newTransactionFullService: newTransFullService)));
+                                                  MenuOptionsScreen(
+                                                      newTransactionFullService:
+                                                          newTransFullService)));
                                     },
                                   ),
                                   PackageCard(

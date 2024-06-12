@@ -8,6 +8,9 @@ import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/ui/screen/catering/map.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/utils/extentions.dart' as AppExt;
+import 'package:tikom/ui/widgets/loading_dialog.dart';
 
 class CheckoutServiceScreen extends StatefulWidget {
   final NewTransactionFullService newTransactionFullService;
@@ -71,6 +74,36 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
     }
   }
 
+  void handlePlaceOrder() {
+    try {
+      var data_voucher = voucher.length > 0 ? voucher[0][0] : '-';
+      var data_payment_type = 'Virtual BCA';
+      var data_use_point = usePoints ? 'yes' : '-';
+      var data_price = totalPrice;
+      
+      AppExt.hideKeyboard(context);
+       DialogTemp().Konfirmasi(
+        context: context,
+        onYes: () {
+          LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
+          print('Handle Place Order Runn');
+        
+        },
+        title: "Apakah Ingin Checkout?",
+        onYesText: 'Ya',
+      );
+    } catch (e) {
+      print(e.toString());
+      DialogTemp().Informasi(
+          context: context,
+          onYes: () {
+            Navigator.pop(context);
+          },
+          onYesText: 'Ya',
+          title: 'Error');
+    }
+  }
+
   @override
   void initState() {
     handleBaseDelivery();
@@ -97,6 +130,9 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
         });
       }
     });
+
+    // Data
+
     super.initState();
     //
   }
@@ -160,6 +196,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             child: ElevatedButton(
               onPressed: () {
                 // Aksi ketika tombol Place Order ditekan
+                handlePlaceOrder();
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
@@ -826,7 +863,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 ),
               ),
               Text(
-                'Rp ${payment_option !=  totalPrice ? payment_option : totalPrice}',
+                'Rp ${payment_option != totalPrice ? payment_option : totalPrice}',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

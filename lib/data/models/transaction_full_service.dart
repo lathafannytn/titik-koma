@@ -26,3 +26,18 @@ class NewTransactionFullService {
     );
   }
 }
+
+class TransactionFullServiceStoreResponse {
+  final String status;
+  late String message;
+
+  TransactionFullServiceStoreResponse(
+      {required this.status, required this.message});
+
+  factory TransactionFullServiceStoreResponse.fromJson(
+          Map<String, dynamic> json) =>
+      TransactionFullServiceStoreResponse(
+        status: json['status'],
+        message: json["msg"],
+      );
+}

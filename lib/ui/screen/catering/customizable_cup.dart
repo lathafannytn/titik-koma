@@ -52,21 +52,21 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                 children: [
                   CupCard(
                     imageUrl: 'assets/images/custom1.jpg',
-                    title: 'Event',
-                    isSelected: selectedCup == 'Event',
+                    title: 'Event 1',
+                    isSelected: selectedCup == 'Event 1',
                     onSelect: () {
                       setState(() {
-                        selectedCup = 'Event';
+                        selectedCup = 'Event 1';
                       });
                     },
                   ),
                   CupCard(
                     imageUrl: 'assets/images/custom2.jpg',
-                    title: 'Event',
-                    isSelected: selectedCup == 'Event',
+                    title: 'Event 2',
+                    isSelected: selectedCup == 'Event 2',
                     onSelect: () {
                       setState(() {
-                        selectedCup = 'Event';
+                        selectedCup = 'Event 2';
                       });
                     },
                   ),
@@ -82,21 +82,21 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                   ),
                   CupCard(
                     imageUrl: 'assets/images/custom4.jpg',
-                    title: 'Wedding',
-                    isSelected: selectedCup == 'Wedding',
+                    title: 'Wedding 1',
+                    isSelected: selectedCup == 'Wedding 1',
                     onSelect: () {
                       setState(() {
-                        selectedCup = 'Wedding';
+                        selectedCup = 'Wedding 1';
                       });
                     },
                   ),
                   CupCard(
                     imageUrl: 'assets/images/custom5.jpg',
-                    title: 'Wedding',
-                    isSelected: selectedCup == 'Wedding',
+                    title: 'Wedding 2',
+                    isSelected: selectedCup == 'Wedding 2',
                     onSelect: () {
                       setState(() {
-                        selectedCup = 'Wedding';
+                        selectedCup = 'Wedding 2';
                       });
                     },
                   ),
