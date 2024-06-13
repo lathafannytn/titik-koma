@@ -2,31 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
 
 class DetailHistoryOrderScreen extends StatefulWidget {
-  // final String status;
-  // final String date;
-  // final String time;
-  // final String location;
-  // final List<String> items;
-  // final int totalItems;
-  // final int totalPrice;
-  // final String orderId;
-  // final String orderTime;
-  // final String orderChannel;
-  // final String paymentMethod;
-  // final int voucher;
-  // final int points;
   final String uuid;
 
   const DetailHistoryOrderScreen({required this.uuid});
 
   @override
-  State<DetailHistoryOrderScreen> createState() =>
-      _DetailHistoryOrderScreenState();
+  State<DetailHistoryOrderScreen> createState() => _DetailHistoryOrderScreenState();
 }
 
 class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
@@ -34,7 +21,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Transaction'),
+        title: Text('Detail Transaction', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -57,22 +44,32 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                     children: [
                       Text(
                         state.transactions[0].transaction_code,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24.0,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0,
+                          ),
                         ),
                       ),
                       SizedBox(height: 8.0),
                       Row(
                         children: [
-                          Icon(Icons.check_circle_outline_outlined,
-                              color: Colors.green),
+                          Icon(
+                            state.transactions[0].status == 'WAITING PAYMENT' 
+                              ? Icons.error_outline 
+                              : Icons.check_circle_outline_outlined,
+                            color: state.transactions[0].status == 'WAITING PAYMENT' 
+                              ? Colors.red 
+                              : Colors.green,
+                          ),
                           SizedBox(width: 8.0),
                           Text(
                             state.transactions[0].status,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16.0,
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.0,
+                              ),
                             ),
                           ),
                         ],
@@ -82,60 +79,51 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                   SizedBox(height: 16.0),
                   Card(
                     margin: EdgeInsets.only(bottom: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(color: Colors.grey[300]!),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text(
-                          //   location,
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.bold,
-                          //   ),
-                          // ),
-                          // Text(
-                          //   'Detail Location'
-
-                          // ),
-                          SizedBox(height: 12.0),
-                          Text('Product'),
+                          Text('Product', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
                           SizedBox(height: 3.0),
-                          for (var i = 0;
-                              i < state.transactions[0].product_detail.length;
-                              i++) ...[
+                          for (var i = 0; i < state.transactions[0].product_detail.length; i++) ...[
                             Text(
-                                "${i + 1}. ${state.transactions[0].product_detail[i].name}"),
+                              "${i + 1}. ${state.transactions[0].product_detail[i].name}",
+                              style: GoogleFonts.poppins(fontSize: 14),
+                            ),
                           ],
-                          // ...items.map((item) => Text(item)).toList(),
                           Divider(thickness: 1),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Subtotal'),
-                              Text('Rp ${state.transactions[0].price}'),
+                              Text('Subtotal', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Rp ${state.transactions[0].price}', style: GoogleFonts.poppins(fontSize: 14)),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Voucher'),
+                              Text('Voucher', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
                               Text(
-                                  '- Rp ${state.transactions[0].price_discount}',
-                                  style: TextStyle(color: Colors.red)),
+                                '- Rp ${state.transactions[0].price_discount}',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(color: Colors.red),
+                                  fontSize: 14,
+                                ),
+                              ),
                             ],
                           ),
                           Divider(thickness: 1),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Total',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'Rp ${state.transactions[0].price_amount}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
+                              Text('Total', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Rp ${state.transactions[0].price_amount}',
+                                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
                             ],
                           ),
                         ],
@@ -143,6 +131,11 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                     ),
                   ),
                   Card(
+                    margin: EdgeInsets.only(bottom: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: BorderSide(color: Colors.grey[300]!),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Row(
@@ -150,31 +143,35 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('TIKOM Points'),
-                              Text('Waktu Pemesanan'),
-                              Text('Saluran Pesanan'),
-                              // Text('Metode Pembayaran'),
+                            children: [
+                              Text('TIKOM Points', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Waktu Pemesanan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Saluran Pesanan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('+${state.transactions[0].point}'),
-                              Text(DateFormat('dd MMM yyyy HH:mm').format(
-                                  DateTime.parse(
-                                      state.transactions[0].service_date))),
-                              Text(state.transactions[0].base_delivery.name),
-                              // Text(state.transactions[0].payment_type),
+                              Text('+${state.transactions[0].point}', style: GoogleFonts.poppins(fontSize: 13)),
+                              Text(
+                                DateFormat('dd MMM yyyy HH:mm')
+                                    .format(DateTime.parse(state.transactions[0].service_date)),
+                                style: GoogleFonts.poppins(fontSize: 13),
+                              ),
+                              Text(state.transactions[0].base_delivery.name, style: GoogleFonts.poppins(fontSize: 13)),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
                   if (state.transactions[0].is_fullservice == 1) ...[
                     Card(
+                      margin: EdgeInsets.only(bottom: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: Colors.grey[300]!),
+                      ),
                       child: Padding(
                         padding: EdgeInsets.all(16.0),
                         child: Row(
@@ -182,20 +179,20 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Catering'),
-                                Text('Barista'),
-                                Text('Service'),
-                                Text('Custom Cup'),
+                              children: [
+                                Text('Catering', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                                Text('Barista', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                                Text('Service', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                                Text('Custom Cup', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
                               ],
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('${state.transactions[0].catering_name}'),
-                                Text('${state.transactions[0].barista_count}'),
-                                Text('${state.transactions[0].service_count}'),
-                                Text('${state.transactions[0].custom_cup}'),
+                                Text('${state.transactions[0].catering_name}', style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('+${state.transactions[0].barista_count}', style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('+${state.transactions[0].service_count}', style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('${state.transactions[0].custom_cup}', style: GoogleFonts.poppins(fontSize: 14)),
                               ],
                             ),
                           ],
@@ -203,40 +200,39 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 20),
                   if (state.transactions[0].media != null) ...[
-                    for (var i = 0;
-                        i < state.transactions[0].media!.length;
-                        i++) ...[
+                    for (var i = 0; i < state.transactions[0].media!.length; i++) ...[
                       Card(
+                        margin: EdgeInsets.only(bottom: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          side: BorderSide(color: Colors.grey[300]!),
+                        ),
                         child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                Text(state
-                                    .transactions[0].media![i].description),
-                                const SizedBox(height: 5),
-                                Image.network(
-                                  state.transactions[0].media![i].url,
-                                  // height: 200,
-                                  // width: 100,
-                                )
-                              ],
-                            )),
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(state.transactions[0].media![i].description, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              const SizedBox(height: 10),
+                              Image.network(
+                                state.transactions[0].media![i].url,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                    ]
+                    ],
                   ],
-                  const SizedBox(height: 20),
                   if (state.transactions[0].status == 'WAITING PAYMENT') ...[
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PaymentPage(uuid: state.transactions[0].uuid),
-                            ));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentPage(uuid: state.transactions[0].uuid),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.green,
@@ -244,17 +240,19 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text('Payment'),
+                      child: Text('Payment', style: GoogleFonts.poppins(fontSize: 14)),
                     ),
                     const SizedBox(height: 20),
-                  ]
+                  ],
                 ],
               );
             }
             if (state is TransactionFailure) {
               print('error');
               print(state.error);
-              return Center(child: Text(state.error));
+              return Center(
+                child: Text(state.error, style: GoogleFonts.poppins(fontSize: 14)),
+              );
             }
             return SizedBox();
           },

@@ -529,163 +529,203 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   }
 
   void _showBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showBottomSheet(
       context: context,
-      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
           expand: false,
+          initialChildSize: 0.5,
+          minChildSize: 0.3,
+          maxChildSize: 0.7,
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
-              color: Colors.white,
-              child: BlocListener<OrderProductCubit, OrderProductState>(
-                bloc: _orderProductCubit,
-                listener: (context, state) {
-                  if (state is OrderDataSuccess) {
-                    handlePotonganDefault();
-                  }
-                },
-                child: BlocBuilder<OrderProductCubit, OrderProductState>(
-                  bloc: _orderProductCubit,
-                  builder: (context, state) {
-                    if (state is OrderProductLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is OrderProductSuccess) {
-                      return Column(
-                        children: [
-                          if (full_quantity < 10) ...[
-                            const SizedBox(height: 10),
-                            Text(
-                              "Minimum Purchase 10 Item",
-                              style: GoogleFonts.poppins(
-                                color: Colors.red,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 5),
-                          ],
-                          Expanded(
-                            child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: state.order.length,
-                              itemBuilder: (context, index) {
-                                var data = state.order[index];
-                                return ListTile(
-                                  title: Text(data.product_detail.name,
-                                      style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.bold)),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Keranjang',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: BlocBuilder<OrderProductCubit, OrderProductState>(
+                      bloc: _orderProductCubit,
+                      builder: (context, state) {
+                        if (state is OrderProductLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (state is OrderProductSuccess) {
+                          return ListView.builder(
+                            controller: scrollController,
+                            itemCount: state.order.length,
+                            itemBuilder: (context, index) {
+                              var data = state.order[index];
+                              return ListTile(
+                                title: Text(data.product_detail.name,
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold)),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(data.selected,
+                                        style: GoogleFonts.poppins()),
+                                    Text(data.add_on_product,
+                                        style: GoogleFonts.poppins()),
+                                  ],
+                                ),
+                                leading:
+                                    Image.network(data.product_detail.image),
+                                trailing: Container(
+                                  width: 120,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(data.selected,
-                                          style: GoogleFonts.poppins()),
-                                      Text(data.add_on_product,
-                                          style: GoogleFonts.poppins()),
+                                      IconButton(
+                                        onPressed: () {
+                                          handlePlusMinus(data.uuid, 'MINUS');
+                                        },
+                                        icon: Icon(Icons.remove_circle_outline,
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
+                                      ),
+                                      Text('${data.total_quantity}',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16)),
+                                      IconButton(
+                                        onPressed: () {
+                                          handlePlusMinus(data.uuid, 'PLUS');
+                                        },
+                                        icon: Icon(Icons.add_circle_outline,
+                                            color:
+                                                Color.fromARGB(255, 9, 76, 58)),
+                                      ),
                                     ],
                                   ),
-                                  leading:
-                                      Image.network(data.product_detail.image),
-                                  trailing: Container(
-                                    width: 120,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            handlePlusMinus(data.uuid, 'MINUS');
-                                          },
-                                          icon: Icon(
-                                              Icons.remove_circle_outline,
-                                              color: Color.fromARGB(
-                                                  255, 9, 76, 58)),
-                                        ),
-                                        Text('${data.total_quantity}',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16)),
-                                        IconButton(
-                                          onPressed: () {
-                                            handlePlusMinus(data.uuid, 'PLUS');
-                                          },
-                                          icon: Icon(Icons.add_circle_outline,
-                                              color: Color.fromARGB(
-                                                  255, 9, 76, 58)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        if (state is OrderProductFailure) {
+                          return Center(
+                            child: Text(
+                              state.message,
+                              style: GoogleFonts.poppins(),
                             ),
-                          ),
-                          ListTile(
-                            title: Text.rich(
-                              TextSpan(
-                                text: 'Total: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold),
-                                children: [
-                                  TextSpan(
-                                    text: 'Rp $total_price',
-                                    style: TextStyle(
-                                      decoration:
-                                          full_quantity >= quantity_discount
-                                              ? TextDecoration.lineThrough
-                                              : TextDecoration.none,
-                                    ),
-                                  ),
-                                  if (full_quantity >= quantity_discount) ...[
+                          );
+                        }
+                        return SizedBox();
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BlocBuilder<OrderProductCubit, OrderProductState>(
+                          bloc: _orderProductCubit,
+                          builder: (context, state) {
+                            if (state is OrderProductSuccess) {
+                              return Text.rich(
+                                TextSpan(
+                                  text: 'Total: ',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold),
+                                  children: [
                                     TextSpan(
-                                      text: ' $total_price_discount',
-                                      style: const TextStyle(
-                                        color: Colors.red,
+                                      text: 'Rp $total_price',
+                                      style: TextStyle(
+                                        decoration:
+                                            full_quantity >= quantity_discount
+                                                ? TextDecoration.lineThrough
+                                                : TextDecoration.none,
                                       ),
                                     ),
-                                  ]
-                                ],
-                              ),
-                            ),
-                            trailing: ElevatedButton(
-                              onPressed: full_quantity < 10
-                                  ? null
-                                  : () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CheckoutScreen(
-                                                  uuid: state.order[0].uuid,
-                                                  count: full_quantity,
-                                                  isPickupSelected:
-                                                      isPickupSelected,
-                                                )),
-                                      );
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                primary: Color.fromARGB(255, 9, 76, 58),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                    if (full_quantity >= quantity_discount) ...[
+                                      TextSpan(
+                                        text: ' $total_price_discount',
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ]
+                                  ],
                                 ),
-                              ),
-                              child: Text("Checkout",
-                                  style: GoogleFonts.poppins()),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    if (state is OrderProductFailure) {
-                      print('error');
-                      print(state.message);
-                    }
-                    return SizedBox();
-                  },
-                ),
+                              );
+                            }
+                            return SizedBox();
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        BlocBuilder<OrderProductCubit, OrderProductState>(
+                          bloc: _orderProductCubit,
+                          builder: (context, state) {
+                            if (state is OrderProductSuccess) {
+                              return ElevatedButton(
+                                onPressed: full_quantity < 10
+                                    ? null
+                                    : () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CheckoutScreen(
+                                                    uuid: state.order[0].uuid,
+                                                    count: full_quantity,
+                                                    isPickupSelected:
+                                                        isPickupSelected,
+                                                  )),
+                                        );
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 9, 76, 58),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text("Checkout",
+                                      style: GoogleFonts.poppins()),
+                                ),
+                              );
+                            }
+                            return SizedBox();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             );
           },

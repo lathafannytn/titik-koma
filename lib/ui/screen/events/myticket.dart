@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,52 +15,54 @@ class _TicketsScreenState extends State<TicketsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'All Tickets',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+      appBar: AppBar(
+        title: Text(
+          'All Tickets',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 1,
-          iconTheme: IconThemeData(color: Colors.black),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.all(10),
-                child: BlocBuilder<EventDataCubit, EventDataState>(
-                  bloc: EventDataCubit()..loadMyEventData(),
-                  builder: (context, state) {
-                    if (state is EventDataLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (state is EventDataSuccess) {
-                      if (state.eventData.isNotEmpty) {
-                        return Column(
-                          children: [
-                            for(var i = 0 ; i< state.eventData.length ; i++)...[
-                              TicketCard(
-                                event: state.eventData[i].name,
-                                location: state.eventData[i].location,
-                                imageUrl: state.eventData[i].imgUrl,
-                                status: 'Paid',
-                                uuid: state.eventData[i].uuid,
-
-                              ),
-                            ]
-                          ],
-                        );
-                      } else {
-                        return Text('Belum Ada Event');
-                      }
-                    } else if (state is EventDataFailure) {
-                      return Center(child: Text(state.message));
-                    }
-                    return Container();
-                  },
-                ))));
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: BlocBuilder<EventDataCubit, EventDataState>(
+            bloc: EventDataCubit()..loadMyEventData(),
+            builder: (context, state) {
+              if (state is EventDataLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is EventDataSuccess) {
+                if (state.eventData.isNotEmpty) {
+                  return Column(
+                    children: [
+                      for (var i = 0; i < state.eventData.length; i++) ...[
+                        TicketCard(
+                          event: state.eventData[i].name,
+                          location: state.eventData[i].location,
+                          imageUrl: state.eventData[i].imgUrl,
+                          status: 'Paid',
+                          uuid: state.eventData[i].uuid,
+                        ),
+                      ]
+                    ],
+                  );
+                } else {
+                  return Text('Belum Ada Event');
+                }
+              } else if (state is EventDataFailure) {
+                return Center(child: Text(state.message));
+              }
+              return Container();
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -77,7 +77,7 @@ class TicketCard extends StatelessWidget {
     required this.location,
     required this.imageUrl,
     required this.status,
-    required this.uuid
+    required this.uuid,
   });
 
   @override
@@ -91,8 +91,7 @@ class TicketCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.network(imageUrl,
-                    width: 80, height: 80, fit: BoxFit.cover),
+                Image.network(imageUrl, width: 80, height: 80, fit: BoxFit.cover),
                 SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -110,38 +109,50 @@ class TicketCard extends StatelessWidget {
                         children: [
                           Icon(Icons.location_on, size: 14),
                           SizedBox(width: 5),
-                          Text(location),
+                          Expanded(
+                            child: Text(
+                              location,
+                              style: GoogleFonts.poppins(fontSize: 14),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
                         ],
                       ),
                     ],
-                  ),
-                ),
-                Text(
-                  status,
-                  style: GoogleFonts.poppins(
-                    color: Colors.pink,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
             SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green[50],
+                    border: Border.all(color: Colors.green),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    status,
+                    style: GoogleFonts.poppins(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ViewTicketPage(
-                          uuid: uuid,
-                        ),
+                        builder: (context) => ViewTicketPage(uuid: uuid),
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.pink,
-                  ),
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
                   child: Text('View Ticket'),
                 ),
               ],

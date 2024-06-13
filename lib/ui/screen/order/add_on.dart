@@ -34,42 +34,20 @@ class _AddOnScreenState extends State<AddOnScreen> {
   String productImage = '';
 
   String _selectedOption = 'iced';
-  String _selectedIceSize = 'Regular Ice';
-  String _selectedIceCube = 'Normal Ice';
-  String _selectedEspresso = 'Normal Shot';
-  String _selectedSweetness = 'Normal Sweet';
+  String _selectedIceSize = '';
+  String _selectedIceCube = '';
+  String _selectedSweetness = '';
 
   int _basePrice = 0;
   double _additionalPrice = 0;
-
-  // void _updatePrice() {
-  //   double additionalPrice = 0;
-
-  //   if (_selectedIceSize == 'Large Ice') {
-  //     additionalPrice += 6000;
-  //   }
-
-  //   if (_selectedEspresso == '+1 Shot') {
-  //     additionalPrice += 6000;
-  //   } else if (_selectedEspresso == '+2 Shot') {
-  //     additionalPrice += 12000;
-  //   }
-
-  //   setState(() {
-  //     _additionalPrice = additionalPrice;
-  //   });
-  // }
 
   @override
   void initState() {
     super.initState();
     _orderBloc = OrderBloc();
-    // Add On
 
     _addOnProductDataCubit = AddOnProductDataCubit()..loadCupSizeData();
-    _addOnProductIceLevelDataCubit = AddOnProductDataCubit()
-      ..loadIceLevelData();
-
+    _addOnProductIceLevelDataCubit = AddOnProductDataCubit()..loadIceLevelData();
     _addOnProductSugarDataCubit = AddOnProductDataCubit()..loadSugarData();
 
     _productDetailDataCubit = BlocProvider.of<ProductDetailDataCubit>(context);
@@ -79,8 +57,24 @@ class _AddOnScreenState extends State<AddOnScreen> {
         setState(() {
           productName = state.productDetail.name;
           productImage = state.productDetail.image;
-
           _basePrice = state.productDetail.price as int;
+        });
+      }
+    });
+
+    // Inisialisasi nilai default untuk Ice Cube dan Sweetness
+    _addOnProductIceLevelDataCubit.stream.listen((state) {
+      if (state is AddOnProductIceLevelDataSuccess && state.categories.isNotEmpty) {
+        setState(() {
+          _selectedIceCube = state.categories[0].uuid;
+        });
+      }
+    });
+
+    _addOnProductSugarDataCubit.stream.listen((state) {
+      if (state is AddOnProductSugarDataSuccess && state.categories.isNotEmpty) {
+        setState(() {
+          _selectedSweetness = state.categories[0].uuid;
         });
       }
     });
@@ -108,8 +102,6 @@ class _AddOnScreenState extends State<AddOnScreen> {
     print(selected);
     print(add_on);
   }
-
-  void getOnProduct() {}
 
   @override
   Widget build(BuildContext context) {
@@ -274,10 +266,6 @@ class _AddOnScreenState extends State<AddOnScreen> {
     );
   }
 
-  Widget buildProductDetails() {
-    return Container();
-  }
-
   Widget buildOptions() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -314,7 +302,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           const SizedBox(height: 16),
           buildSectionTitle('Ukuran Cup'),
           const SizedBox(height: 8),
-          BlocBuilder(
+          BlocBuilder<AddOnProductDataCubit, AddOnProductDataState>(
             bloc: _addOnProductDataCubit,
             builder: (context, state) {
               if (state is AddOnProductDataLoading) {
@@ -324,18 +312,15 @@ class _AddOnScreenState extends State<AddOnScreen> {
               }
               if (state is AddOnProductDataSuccess) {
                 return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (var i in state.categories)
-                      buildRadioListTile(
-                        title: i.name,
-                        value: i.uuid,
-                        groupValue: _selectedIceSize,
-                        onChanged: (value) {
+                      buildOptionContainer(
+                        label: i.name,
+                        isSelected: _selectedIceSize == i.uuid,
+                        onTap: () {
                           setState(() {
-                            _selectedIceSize = value!;
+                            _selectedIceSize = i.uuid;
                             _additionalPrice += i.extraPrice;
-                            // _updatePrice();
                           });
                         },
                       ),
@@ -352,7 +337,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           const SizedBox(height: 16),
           buildSectionTitle('Ice Cube'),
           const SizedBox(height: 8),
-          BlocBuilder(
+          BlocBuilder<AddOnProductDataCubit, AddOnProductDataState>(
             bloc: _addOnProductIceLevelDataCubit,
             builder: (context, state) {
               if (state is AddOnProductIceLevelDataLoading) {
@@ -366,15 +351,16 @@ class _AddOnScreenState extends State<AddOnScreen> {
                   children: [
                     for (var i in state.categories)
                       buildRadioListTile(
-                          title: i.name,
-                          value: i.uuid,
-                          groupValue: _selectedIceCube,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedIceCube = value!;
-                              _additionalPrice += i.extraPrice;
-                            });
-                          }),
+                        title: i.name,
+                        value: i.uuid,
+                        groupValue: _selectedIceCube,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedIceCube = value!;
+                            _additionalPrice += i.extraPrice;
+                          });
+                        },
+                      ),
                   ],
                 );
               }
@@ -388,7 +374,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           const SizedBox(height: 16),
           buildSectionTitle('Sweetness'),
           const SizedBox(height: 8),
-          BlocBuilder(
+          BlocBuilder<AddOnProductDataCubit, AddOnProductDataState>(
             bloc: _addOnProductSugarDataCubit,
             builder: (context, state) {
               if (state is AddOnProductSugarDataLoading) {
@@ -438,27 +424,35 @@ class _AddOnScreenState extends State<AddOnScreen> {
 
   Widget buildOptionContainer({
     required String label,
-    required IconData icon,
+    IconData? icon,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green : Colors.grey[300],
+          color: isSelected ? Colors.green[50] : Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? Colors.green : Colors.grey,
+            width: 2.0,
+          ),
         ),
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: isSelected ? Colors.white : Colors.black),
+            if (icon != null)
+              Icon(icon, color: isSelected ? Colors.green : Colors.black),
+            const SizedBox(height: 4),
             Text(
               label,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   fontSize: 16,
-                  color: isSelected ? Colors.white : Colors.black,
+                  color: isSelected ? Colors.green : Colors.black,
                 ),
               ),
             ),
@@ -484,6 +478,9 @@ class _AddOnScreenState extends State<AddOnScreen> {
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
+      activeColor: Colors.green, // Menyesuaikan warna aktif
+      controlAffinity:
+          ListTileControlAffinity.trailing, // Radio button di kanan
     );
   }
 
@@ -530,7 +527,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Rp ${(_basePrice + _additionalPrice).toStringAsFixed(0)}',
+              'Total Price\nRp ${(_basePrice + _additionalPrice).toStringAsFixed(0)}',
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -539,9 +536,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
               onPressed: () {
                 _handlerCheckout();
               },
-              // ignore: sort_child_properties_last
               child: Text(
-                'Add to Cart',
+                'order now',
                 style: GoogleFonts.poppins(
                   textStyle: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
@@ -552,7 +548,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),
