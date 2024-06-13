@@ -1,3 +1,4 @@
+import 'package:tikom/data/models/add_on_catering.dart';
 import 'package:tikom/data/models/media.dart';
 import 'package:tikom/data/models/product.dart';
 
@@ -33,24 +34,35 @@ class Transaction {
   final String point;
   final List<Media>? media;
   final BaseDelivery base_delivery;
+  final dynamic is_fullservice;
+  final List<AddOnCatering>? addOnCatering;
+  final String? catering_name;
+  final dynamic barista_count;
+  final dynamic service_count;
+  final dynamic custom_cup;
 
-  Transaction({
-    required this.id,
-    required this.uuid,
-    required this.status,
-    required this.price,
-    required this.transaction_code,
-    required this.service_date,
-    required this.product_count,
-    required this.product_detail,
-    required this.price_amount,
-    required this.price_discount,
-    required this.payment_type,
-    required this.down_payment,
-    this.media,
-    required this.point,
-    required this.base_delivery,
-  });
+  Transaction(
+      {required this.id,
+      required this.uuid,
+      required this.status,
+      required this.price,
+      required this.transaction_code,
+      required this.service_date,
+      required this.product_count,
+      required this.product_detail,
+      required this.price_amount,
+      required this.price_discount,
+      required this.payment_type,
+      required this.down_payment,
+      this.media,
+      required this.point,
+      required this.base_delivery,
+      required this.is_fullservice,
+      this.catering_name,
+      this.barista_count,
+      this.service_count,
+      this.custom_cup,
+      this.addOnCatering});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     var productsJson = json['products'] as List<dynamic>;
@@ -61,6 +73,11 @@ class Transaction {
     var mediaJson = json['media'] as List<dynamic>?;
     List<Media> mediaDetails = mediaJson != null
         ? mediaJson.map((i) => Media.fromJson(i)).toList()
+        : [];
+
+    var addOnCateringJson = json['addOnCatering'] as List<dynamic>?;
+    List<AddOnCatering> addOnCateringDetails = addOnCateringJson != null
+        ? addOnCateringJson.map((i) => AddOnCatering.fromJson(i)).toList()
         : [];
 
     return Transaction(
@@ -79,6 +96,13 @@ class Transaction {
       media: mediaDetails.isNotEmpty ? mediaDetails : null,
       point: json['point'],
       base_delivery: BaseDelivery.fromJson(json['base_delivery']),
+      is_fullservice: json['is_fullservice'] ?? 0,
+      addOnCatering: addOnCateringDetails,
+      catering_name: json['catering_name'] ?? '',
+      barista_count: json['barista_count'] ?? '',
+      service_count: json['service_count'] ?? '',
+      custom_cup: json['custom_cup'] ?? '',
+
     );
   }
 

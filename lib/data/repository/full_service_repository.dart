@@ -70,16 +70,20 @@ class FullServiceRepository {
   Future<TransactionFullServiceStoreResponse> store(
       {required int price,
       required String voucher,
+      required dynamic service,
+      required String service_date,
       required String custom_cup_name,
       required String custom_cup_note,
       required String products,
-          required List<String> add_on,
+          required Map<String, List<String>> add_on,
       required String payment_method,
       required String use_point,
       required dynamic base_delivery,
       required dynamic delivery_address,
       required dynamic delivery_price}) async {
     final body = jsonEncode({
+      'service_date' : service_date,
+      'service': service,
       'price': price,
       'voucher': voucher,
       'payment_type': payment_method,
@@ -95,7 +99,7 @@ class FullServiceRepository {
     final _token = await _authenticationRepository.getToken();
 
     final response = await _provider.post(
-      'transaction/store',
+      'full-service/store',
       body: body,
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer $_token',

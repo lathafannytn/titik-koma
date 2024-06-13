@@ -161,7 +161,9 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text('+${state.transactions[0].point}'),
-                              Text(DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(state.transactions[0].service_date))),
+                              Text(DateFormat('dd MMM yyyy HH:mm').format(
+                                  DateTime.parse(
+                                      state.transactions[0].service_date))),
                               Text(state.transactions[0].base_delivery.name),
                               // Text(state.transactions[0].payment_type),
                             ],
@@ -170,6 +172,37 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  if (state.transactions[0].is_fullservice == 1) ...[
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text('Catering'),
+                                Text('Barista'),
+                                Text('Service'),
+                                Text('Custom Cup'),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text('${state.transactions[0].catering_name}'),
+                                Text('${state.transactions[0].barista_count}'),
+                                Text('${state.transactions[0].service_count}'),
+                                Text('${state.transactions[0].custom_cup}'),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   if (state.transactions[0].media != null) ...[
                     for (var i = 0;

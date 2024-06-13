@@ -28,14 +28,14 @@ class CateringBloc extends Bloc<CateringBlocEvent, CateringBlocState> {
             price: int.parse(event.price),
             voucher: event.voucher,
             custom_cup_name: event.custom_cup_name,
-            products: event.custom_cup_name,
+            products: event.products,
             payment_method: event.payment_type,
             use_point: event.use_point,
             base_delivery: event.base_delivery,
             delivery_address: event.delivery_address,
             delivery_price: event.delivery_price,
             custom_cup_note: event.custom_cup_note,
-            add_on: event.add_on);
+            add_on: event.add_on, service_date: event.service_date, service: event.service);
         // print('masuk');
         print(cateringResponse.message);
         print('disini');

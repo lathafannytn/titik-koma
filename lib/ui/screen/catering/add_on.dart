@@ -37,7 +37,7 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
           baristaUUID = state.data[0].uuid;
           baristaPrice = state.data[0].extraPrice;
 
-          serviceUUID = state.data[0].uuid;
+          serviceUUID = state.data[1].uuid;
           servicePrice = state.data[1].extraPrice;
         });
       }

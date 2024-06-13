@@ -1,5 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:tikom/data/blocs/catering/catering_bloc.dart';
+import 'package:tikom/data/blocs/fetch_add_on_catering/add_on_catering_state.dart';
 import 'package:tikom/data/blocs/fetch_full_service/full_service_cubit.dart';
 import 'package:tikom/data/blocs/fetch_full_service/full_service_state.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
@@ -7,6 +12,7 @@ import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/ui/screen/catering/map.dart';
+import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
@@ -26,6 +32,8 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   String delivery_place = 'Pilih Alamat';
   String delivery_price = '';
 
+  late CateringBloc _catering_bloc;
+
   int disccount = 0;
   int default_price = 0;
   int point = 0;
@@ -39,6 +47,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   String base_delivery_price = '';
   String base_delivery_long = '';
   String base_delivery_lat = '';
+  bool isPickupNowSelected = true;
 
   PaymentOption _selectedPaymentOption = PaymentOption.fullPayment;
 
@@ -49,6 +58,31 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
 
   late FullServiceCubit _fullServiceCubit;
   late UserDataCubit _userDataCubit;
+  DateTime selectedPickupDate = DateTime.now();
+  TimeOfDay selectedPickupTime = TimeOfDay(hour: 12, minute: 0);
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay(hour: 12, minute: 0);
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2030),
+    );
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
+  String getFormattedDateTime() {
+    final DateFormat dateFormatter = DateFormat('MMM dd yyyy');
+    final String date = dateFormatter.format(selectedDate);
+    final String time = selectedTime.format(context);
+    return '$time, $date';
+  }
 
   void handleBaseDelivery() async {
     print('panggil handler Base Delivery');
@@ -77,17 +111,41 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   void handlePlaceOrder() {
     try {
       var data_voucher = voucher.length > 0 ? voucher[0][0] : '-';
-      var data_payment_type = 'Virtual BCA';
       var data_use_point = usePoints ? 'yes' : '-';
       var data_price = totalPrice;
-      
+      var dateSelected = selectedDate.toString().split(" ")[0];
+      var timeSeleted = selectedTime;
+
+      print(dateSelected);
+      print(timeSeleted.hour);
+      var dateTimeSelected =
+          '$dateSelected ${timeSeleted.hour}:${timeSeleted.minute}';
       AppExt.hideKeyboard(context);
-       DialogTemp().Konfirmasi(
+      DialogTemp().Konfirmasi(
         context: context,
         onYes: () {
           LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
           print('Handle Place Order Runn');
-        
+          _catering_bloc.add(CateringBlocButtonPressed(
+            service: widget.newTransactionFullService.full_service,
+              price: totalPrice.toString(),
+              custom_cup_name: widget.newTransactionFullService.custom_cup_name,
+              custom_cup_note:
+                  widget.newTransactionFullService.custom_cup_notes,
+              base_delivery: base_delivery_id,
+              service_date: dateTimeSelected,
+              products: widget.newTransactionFullService.product,
+              delivery_address: delivery_place,
+              delivery_price: delivery_price,
+              payment_type: 'QRIS',
+              voucher: data_voucher,
+              use_point: data_use_point,
+              add_on: widget.newTransactionFullService.add_on!['barista']?[1] !=
+                          '0' &&
+                      widget.newTransactionFullService.add_on!['service']?[1] !=
+                          ''
+                  ? widget.newTransactionFullService.add_on!
+                  : <String, List<String>>{}));
         },
         title: "Apakah Ingin Checkout?",
         onYesText: 'Ya',
@@ -107,6 +165,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   @override
   void initState() {
     handleBaseDelivery();
+    _catering_bloc = CateringBloc();
     // Default Price
     _fullServiceCubit = FullServiceCubit()..loadFullService();
     _fullServiceCubit.stream.listen((state) {
@@ -175,6 +234,8 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  _buildDate(context),
+                  const SizedBox(height: 20),
                   _buildOrderLocation(),
                   const SizedBox(height: 20),
                   _buildOrderDetails(),
@@ -191,26 +252,77 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Aksi ketika tombol Place Order ditekan
-                handlePlaceOrder();
+          BlocProvider(
+            create: (context) => _catering_bloc,
+            child: BlocListener<CateringBloc, CateringBlocState>(
+              listener: (context, state) {
+                if (state is CateringBlocSuccess) {
+                  AppExt.popScreen(context);
+                  var responseM = state.message;
+                  List<String> dataRes = responseM.split("//");
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PaymentPage(uuid: dataRes[1].toString()),
+                      ));
+                  // Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => MyHomePage(
+                  //               tabIndex: 2,
+                  //             )));
+                  // DialogTemp().Informasi(
+                  //     context: context,
+                  //     onYes: () {
+                  //       // Navigator.pushReplacement(
+                  //       //     context,
+                  //       //     MaterialPageRoute(
+                  //       //         builder: (context) => MyHomePage(
+                  //       //               tabIndex: 2,
+                  //       //             )));
+                  //       // Navigator.pushReplacement(
+                  //       //     context,
+                  //       //     MaterialPageRoute(
+                  //       //         builder: (context) => PaymentMethodScreen(
+                  //       //               totalAmount: total_price,
+                  //       //             )));
+                  //     },
+                  //     onYesText: 'Oke',
+                  //     title: 'Berhasil Melakukan Order');
+                } else if (state is CateringBlocFailure) {
+                  AppExt.popScreen(context);
+                  DialogTemp().Informasi(
+                      context: context,
+                      onYes: () {
+                        Navigator.pop(context);
+                      },
+                      onYesText: 'Oke',
+                      title: 'Gagal Melakukan Order');
+                }
               },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-              ),
-              child: Text(
-                'Place Order',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Aksi ketika tombol Place Order ditekan
+                    handlePlaceOrder();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 15),
+                  ),
+                  child: Text(
+                    'Place Order',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -873,6 +985,157 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDate(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _showPickupTimeDialog(context);
+      },
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isPickupNowSelected
+                      ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+                      : 'Pick up at ${getFormattedDateTime()}',
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showPickupTimeDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Set your pick up date and time',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _selectDate(context);
+                        setState(() {});
+                      },
+                      child: Text(
+                        'Choose Date',
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: CupertinoTimerPicker(
+                            mode: CupertinoTimerPickerMode.hm,
+                            initialTimerDuration: Duration(
+                              hours: selectedTime.hour,
+                              minutes: selectedTime.minute,
+                            ),
+                            onTimerDurationChanged: (Duration newDuration) {
+                              setState(() {
+                                selectedTime = TimeOfDay(
+                                  hour: newDuration.inHours,
+                                  minute: newDuration.inMinutes % 60,
+                                );
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        this.setState(() {
+                          isPickupNowSelected = false;
+                        });
+                      },
+                      child: Text(
+                        'Set Time',
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
