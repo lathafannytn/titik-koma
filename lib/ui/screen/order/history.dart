@@ -45,35 +45,38 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
           }
           if (state is TransactionSuccessData) {
             if (state.transactions.length > 0) {
-              return Container(
+              return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: ListView.builder(
-                  itemCount: state.transactions.length,
-                  itemBuilder: (context, index) {
-                    final transaction = state.transactions[index];
-                    return buildOrderCard(context,
-                        uuid: transaction.uuid,
-                        status: transaction.status,
-                        date: transaction.service_date,
-                        totalItems: transaction.product_count,
-                        totalPrice: transaction.price,
-                        code: transaction.transaction_code);
-                  },
-                ),
+                itemCount: state.transactions.length,
+                itemBuilder: (context, index) {
+                  final transaction = state.transactions[index];
+                  return buildOrderCard(context,
+                      uuid: transaction.uuid,
+                      status: transaction.status,
+                      date: transaction.service_date,
+                      totalItems: transaction.product_count,
+                      totalPrice: transaction.price,
+                      code: transaction.transaction_code);
+                },
               );
             } else {
-              return const Center(child: Text('Data Kosong'));
+              return Center(
+                child: Text(
+                  'Data Kosong',
+                  style: GoogleFonts.poppins(),
+                ),
+              );
             }
           }
           if (state is TransactionFailure) {
             print('error');
             print(state.error);
-            return Center(child: Text(state.error));
+            return Center(
+              child: Text(
+                state.error,
+                style: GoogleFonts.poppins(),
+              ),
+            );
           }
           return const SizedBox();
         },
@@ -90,17 +93,39 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
     required int totalItems,
     required int totalPrice,
   }) {
+    Color statusColor;
+    switch (status) {
+      case 'READY':
+        statusColor = Colors.green;
+        break;
+      case 'PROCESSED':
+      case 'PENDING':
+      case 'WAITING PAYMENT':
+        statusColor = Colors.orange;
+        break;
+      case 'CANCEL':
+        statusColor = Colors.red;
+        break;
+      default:
+        statusColor = Colors.grey;
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailHistoryOrderScreen(uuid: uuid,),
+            builder: (context) => DetailHistoryOrderScreen(uuid: uuid),
           ),
         );
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          side: BorderSide(color: Colors.grey[300]!), // Border for the card
+        ),
+        elevation: 0, // Remove shadow
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -111,41 +136,40 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
                 children: [
                   Text(
                     'Code : $code',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  Text(
-                    status,
-                    style: const TextStyle(
-                      color: Colors.grey,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: statusColor.withOpacity(0.1),
+                      border: Border.all(color: statusColor),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      status,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          color: statusColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 4.0),
-              Text(DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date))),
+              Text(
+                DateFormat('dd MMM yyyy HH:mm').format(DateTime.parse(date)),
+                style: GoogleFonts.poppins(),
+              ),
               const SizedBox(height: 8.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('$totalItems item • Rp $totalPrice'),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implementasikan fungsi pesan lagi
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      onPrimary: Colors.black,
-                      side: const BorderSide(color: Colors.grey),
-                      elevation: 0, // Hilangkan bayangan
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    child: const Text('Pesan Lagi'),
-                  ),
-                ],
+              Text(
+                '$totalItems item • Rp $totalPrice',
+                style: GoogleFonts.poppins(),
               ),
             ],
           ),
