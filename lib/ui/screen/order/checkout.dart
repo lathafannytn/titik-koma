@@ -1502,7 +1502,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     Navigator.pop(context);
                   },
                   onYesText: 'Oke',
-                  title: 'Gagal Melakukan Order');
+                  title: state.error);
             }
           },
           child: SizedBox(

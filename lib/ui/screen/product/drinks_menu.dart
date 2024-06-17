@@ -40,43 +40,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   String token = StorageService.getToken('token');
   bool isPickupSelected = true;
 
-  void handlePotonganDefault() async {
-    print('panggil handler potongan');
-    try {
-      final OrderRepository orderRepository = OrderRepository();
-      final response = await orderRepository.showPotongan(type: 'transaksi');
-      print('form potongan');
-      print(response);
-      if (response.status == 'success') {
-        if (full_quantity >= response.data.total_quantity) {
-          setState(() {
-            quantity_discount = response.data.total_quantity;
-            price_discount = int.parse(response.data.total_price.toString());
-            total_price_discount = total_price - price_discount;
-          });
-        } else {
-          setState(() {
-            price_discount = 0;
-            total_price_discount = total_price;
-          });
-        }
-      } else {
-        setState(() {
-          price_discount = 0;
-          total_price_discount = total_price;
-        });
-      }
-      print('handdre');
-      print(price_discount);
-    } catch (error) {
-      print('error handrel');
-      print(error.toString());
-      setState(() {
-        price_discount = 0;
-        total_price_discount = total_price;
-      });
-    }
-  }
+
 
   @override
   void initState() {
@@ -113,6 +77,47 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       });
     });
     handlePotonganDefault();
+  }
+    void handlePotonganDefault() async {
+    print('panggil handler potongan');
+    try {
+      final OrderRepository orderRepository = OrderRepository();
+      final response = await orderRepository.showPotongan(type: 'transaksi');
+      print('form potongan');
+      print(response);
+      if (response.status == 'success') {
+        print('monday tuesday');
+        print(full_quantity);
+        print(response.data.total_quantity);
+        if (full_quantity >= response.data.total_quantity) {
+          setState(() {
+            quantity_discount = response.data.total_quantity;
+            price_discount = int.parse(response.data.total_price.toString());
+            total_price_discount = total_price - price_discount;
+          });
+        } else {
+          setState(() {
+            price_discount = 0;
+            total_price_discount = total_price;
+          });
+        }
+      } else {
+        setState(() {
+          price_discount = 0;
+          total_price_discount = total_price;
+        });
+      }
+      print('handdre');
+      print(price_discount);
+      print(quantity_discount);
+    } catch (error) {
+      print('error handrel');
+      print(error.toString());
+      setState(() {
+        price_discount = 0;
+        total_price_discount = total_price;
+      });
+    }
   }
 
   Future<List<Category>> fetchCategories() async {

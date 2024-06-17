@@ -33,21 +33,20 @@ class Order {
 class OrderResponse {
   final String status;
   final String message;
-  final List<Order> data;
+  final List<Order>? data;
 
-  OrderResponse(
-      {required this.data, required this.status, required this.message});
+  OrderResponse({this.data, required this.status, required this.message});
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) {
-    var orderJson =
-        json['data'] as Map<String, dynamic>; // Access the data object as a map
-    Order order = Order.fromJson(
-        orderJson); // Convert the data object directly to an Order
+    List<Order>? orders;
+    if (json.containsKey('data')) {
+      var orderJson = json['data'] as Map<String, dynamic>;
+      Order order = Order.fromJson(orderJson);
+      orders = [order];
+    }
 
     return OrderResponse(
-        data: [order], // Wrap the Order object in a list
-        message: json['msg'],
-        status: json['status']);
+        data: orders, message: json['msg'], status: json['status']);
   }
 }
 

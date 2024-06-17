@@ -46,7 +46,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           print('lagi error else');
           print(transactionResponse.error);
           emit(TransactionFailure(
-              error: transactionResponse.error ?? 'Unknown error'));
+              error: transactionResponse.message ?? 'Unknown error'));
         }
       } catch (error) {
         print('lagi error');

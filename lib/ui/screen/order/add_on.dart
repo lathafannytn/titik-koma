@@ -147,7 +147,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           } else if (state is OrderFailure) {
             AppExt.popScreen(context);
             final snackBar = SnackBar(
-              content: Text('Failed: ${state.error}'),
+              content: Text('${state.message}'),
               backgroundColor: Colors.red,
               duration: Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
