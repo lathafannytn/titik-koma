@@ -398,6 +398,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                           description: drink.desc,
                                           imagePath: drink.imgUrl,
                                           uuid: drink.uuid,
+                                          stock: drink.stock,
                                         );
                                       },
                                       shrinkWrap: true,

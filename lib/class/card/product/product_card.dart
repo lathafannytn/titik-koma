@@ -8,6 +8,7 @@ class ProductCard extends StatelessWidget {
   final num price;
   final String description;
   final String imagePath;
+  final dynamic stock;
 
   ProductCard({
     required this.uuid,
@@ -15,6 +16,7 @@ class ProductCard extends StatelessWidget {
     required this.price,
     required this.description,
     required this.imagePath,
+    required this.stock,
   });
 
   @override
@@ -71,7 +73,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {
+              onPressed: stock != 0 ?() {
                 print("IconButton pressed");
                 print(uuid);
                 Navigator.push(
@@ -81,10 +83,10 @@ class ProductCard extends StatelessWidget {
                             uuid: uuid,
                           )),
                 );
-              },
+              } : null,
               icon: Icon(
                 Icons.add_circle_outline_outlined,
-                color: Color.fromARGB(255, 3, 115, 76),
+                color:  stock != 0 ?const Color.fromARGB(255, 3, 115, 76) : Colors.grey,
               ),
             ),
           ],
