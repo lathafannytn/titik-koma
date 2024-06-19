@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'menu_options_cafe.dart';
+
 
 class PackageBundlingScreen extends StatefulWidget {
   @override
@@ -88,7 +90,12 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     price: 'IDR 5.000.000',
                     pax: '200 pax',
                     onTap: () {
-                      print('Package A clicked');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenuOptionCafe(),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -98,7 +105,12 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     price: 'IDR 6.000.000',
                     pax: '250 pax',
                     onTap: () {
-                      print('Package B clicked');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenuOptionCafe(),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -108,7 +120,12 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
                     price: 'IDR 7.000.000',
                     pax: '300 pax',
                     onTap: () {
-                      print('Package C clicked');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MenuOptionCafe(),
+                        ),
+                      );
                     },
                   ),
                 ),
