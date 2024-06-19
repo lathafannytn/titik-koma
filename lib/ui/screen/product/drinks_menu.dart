@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:tikom/class/card/product/product_card.dart';
+import 'package:tikom/ui/screen/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_cubit.dart';
 import 'package:tikom/data/blocs/fetch_order/fetch_order_state.dart';

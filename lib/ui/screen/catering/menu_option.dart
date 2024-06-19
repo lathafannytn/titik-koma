@@ -72,8 +72,7 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
                       children: [
                         for (var i = 0; i < state.drinks.length; i++) ...[
                           MenuCard(
-                            imageUrl: state.drinks[i]
-                                .imgUrl, // Ganti dengan URL gambar yang benar
+                            imageUrl: state.drinks[i].imgUrl,
                             title: state.drinks[i].name,
                             isSelected: selectedDrink == state.drinks[i].uuid,
                             onSelect: () {
