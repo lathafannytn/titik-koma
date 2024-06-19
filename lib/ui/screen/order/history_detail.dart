@@ -13,7 +13,8 @@ class DetailHistoryOrderScreen extends StatefulWidget {
   const DetailHistoryOrderScreen({required this.uuid});
 
   @override
-  State<DetailHistoryOrderScreen> createState() => _DetailHistoryOrderScreenState();
+  State<DetailHistoryOrderScreen> createState() =>
+      _DetailHistoryOrderScreenState();
 }
 
 class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
@@ -21,7 +22,9 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Transaction', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+        title: Text('Detail Transaction',
+            style:
+                GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
@@ -55,12 +58,13 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       Row(
                         children: [
                           Icon(
-                            state.transactions[0].status == 'WAITING PAYMENT' 
-                              ? Icons.error_outline 
-                              : Icons.check_circle_outline_outlined,
-                            color: state.transactions[0].status == 'WAITING PAYMENT' 
-                              ? Colors.red 
-                              : Colors.green,
+                            state.transactions[0].status == 'WAITING PAYMENT'
+                                ? Icons.error_outline
+                                : Icons.check_circle_outline_outlined,
+                            color: state.transactions[0].status ==
+                                    'WAITING PAYMENT'
+                                ? Colors.red
+                                : Colors.green,
                           ),
                           SizedBox(width: 8.0),
                           Text(
@@ -88,27 +92,44 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Product', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text('Product',
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold, fontSize: 14)),
                           SizedBox(height: 3.0),
-                          for (var i = 0; i < state.transactions[0].product_detail.length; i++) ...[
-                            Text(
-                              "${i + 1}. ${state.transactions[0].product_detail[i].name}",
-                              
-                              style: GoogleFonts.poppins(fontSize: 14),
+                          for (var i = 0;
+                              i < state.transactions[0].product_detail.length;
+                              i++) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "${i + 1}. ${state.transactions[0].product_detail[i].name} (${state.transactions[0].product_detail[i].pivot_quantity})",
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                                Text('Rp ${state.transactions[0].product_detail[i].pivot_price}',
+                                    style: GoogleFonts.poppins(fontSize: 14)),
+                              ],
                             ),
                           ],
                           Divider(thickness: 1),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Subtotal', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                              Text('Rp ${state.transactions[0].price}', style: GoogleFonts.poppins(fontSize: 14)),
+                              Text('Subtotal',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              Text('Rp ${state.transactions[0].price}',
+                                  style: GoogleFonts.poppins(fontSize: 14)),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Voucher', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Voucher',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                               Text(
                                 '- Rp ${state.transactions[0].price_discount}',
                                 style: GoogleFonts.poppins(
@@ -122,9 +143,14 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Total', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('Total',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                               Text('Rp ${state.transactions[0].price_amount}',
-                                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                             ],
                           ),
                         ],
@@ -145,21 +171,33 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('TIKOM Points', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                              Text('Waktu Pemesanan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                              Text('Saluran Pesanan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text('TIKOM Points',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              Text('Waktu Pemesanan',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
+                              Text('Saluran Pesanan',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('+${state.transactions[0].point}', style: GoogleFonts.poppins(fontSize: 13)),
+                              Text('+${state.transactions[0].point}',
+                                  style: GoogleFonts.poppins(fontSize: 13)),
                               Text(
-                                DateFormat('dd MMM yyyy HH:mm')
-                                    .format(DateTime.parse(state.transactions[0].service_date)),
+                                DateFormat('dd MMM yyyy HH:mm').format(
+                                    DateTime.parse(
+                                        state.transactions[0].service_date)),
                                 style: GoogleFonts.poppins(fontSize: 13),
                               ),
-                              Text(state.transactions[0].base_delivery.name, style: GoogleFonts.poppins(fontSize: 13)),
+                              Text(state.transactions[0].base_delivery.name,
+                                  style: GoogleFonts.poppins(fontSize: 13)),
                             ],
                           ),
                         ],
@@ -181,19 +219,35 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Catering', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                                Text('Barista', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                                Text('Service', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                                Text('Custom Cup', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                                Text('Catering',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text('Barista',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text('Service',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text('Custom Cup',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
                               ],
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text('${state.transactions[0].catering_name}', style: GoogleFonts.poppins(fontSize: 14)),
-                                Text('+${state.transactions[0].barista_count}', style: GoogleFonts.poppins(fontSize: 14)),
-                                Text('+${state.transactions[0].service_count}', style: GoogleFonts.poppins(fontSize: 14)),
-                                Text('${state.transactions[0].custom_cup}', style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('${state.transactions[0].catering_name}',
+                                    style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('+${state.transactions[0].barista_count}',
+                                    style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('+${state.transactions[0].service_count}',
+                                    style: GoogleFonts.poppins(fontSize: 14)),
+                                Text('${state.transactions[0].custom_cup}',
+                                    style: GoogleFonts.poppins(fontSize: 14)),
                               ],
                             ),
                           ],
@@ -202,7 +256,9 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                     ),
                   ],
                   if (state.transactions[0].media != null) ...[
-                    for (var i = 0; i < state.transactions[0].media!.length; i++) ...[
+                    for (var i = 0;
+                        i < state.transactions[0].media!.length;
+                        i++) ...[
                       Card(
                         margin: EdgeInsets.only(bottom: 16.0),
                         shape: RoundedRectangleBorder(
@@ -214,7 +270,10 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(state.transactions[0].media![i].description, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
+                              Text(state.transactions[0].media![i].description,
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                               const SizedBox(height: 10),
                               Image.network(
                                 state.transactions[0].media![i].url,
@@ -231,7 +290,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PaymentPage(uuid: state.transactions[0].uuid),
+                            builder: (context) =>
+                                PaymentPage(uuid: state.transactions[0].uuid),
                           ),
                         );
                       },
@@ -241,7 +301,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: Text('Payment', style: GoogleFonts.poppins(fontSize: 14)),
+                      child: Text('Payment',
+                          style: GoogleFonts.poppins(fontSize: 14)),
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -252,7 +313,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
               print('error');
               print(state.error);
               return Center(
-                child: Text(state.error, style: GoogleFonts.poppins(fontSize: 14)),
+                child:
+                    Text(state.error, style: GoogleFonts.poppins(fontSize: 14)),
               );
             }
             return SizedBox();

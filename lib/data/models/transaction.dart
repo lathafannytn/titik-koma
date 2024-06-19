@@ -26,7 +26,7 @@ class Transaction {
   final String transaction_code;
   final String service_date;
   final int product_count;
-  final List<ProductDetail> product_detail;
+  final List<ProductDetailOrder> product_detail;
   final int price_discount;
   final int price_amount;
   final int down_payment;
@@ -66,8 +66,8 @@ class Transaction {
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     var productsJson = json['products'] as List<dynamic>;
-    List<ProductDetail> productDetails =
-        productsJson.map((i) => ProductDetail.fromJson(i)).toList();
+    List<ProductDetailOrder> productDetails =
+        productsJson.map((i) => ProductDetailOrder.fromJson(i)).toList();
 
     // Check if 'media' is null and handle accordingly
     var mediaJson = json['media'] as List<dynamic>?;
