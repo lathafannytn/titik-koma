@@ -9,6 +9,7 @@ import 'package:tikom/data/blocs/fetch_full_service/full_service_state.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 
 import 'package:tikom/ui/screen/catering/menu_option.dart';
+import 'package:tikom/ui/screen/catering/package_bundling.dart';
 
 class PackageScreen extends StatefulWidget {
   @override
@@ -125,6 +126,12 @@ class _PackageScreenState extends State<PackageScreen> {
                                     onTap: () {
                                       // Action saat card diklik
                                       print('Pop-Up Cafe Card Clicked');
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PackageBundlingScreen()),
+                                      );
                                     },
                                   ),
                                 ],
