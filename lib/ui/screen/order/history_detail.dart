@@ -93,6 +93,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                           for (var i = 0; i < state.transactions[0].product_detail.length; i++) ...[
                             Text(
                               "${i + 1}. ${state.transactions[0].product_detail[i].name}",
+                              
                               style: GoogleFonts.poppins(fontSize: 14),
                             ),
                           ],
