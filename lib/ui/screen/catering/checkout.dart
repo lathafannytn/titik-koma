@@ -63,6 +63,11 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 12, minute: 0);
 
+  DateTimeRange selectedDateRange = DateTimeRange(
+    start: DateTime.now(),
+    end: DateTime.now().add(Duration(days: 1)),
+  );
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -127,7 +132,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
           LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
           print('Handle Place Order Runn');
           _catering_bloc.add(CateringBlocButtonPressed(
-            service: widget.newTransactionFullService.full_service,
+              service: widget.newTransactionFullService.full_service,
               price: totalPrice.toString(),
               custom_cup_name: widget.newTransactionFullService.custom_cup_name,
               custom_cup_note:
@@ -1009,7 +1014,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 Text(
                   isPickupNowSelected
                       ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
-                      : 'Pick up at ${getFormattedDateTime()}',
+                      : 'Pick up between ${DateFormat('MMM dd yyyy').format(selectedDateRange.start)} and ${DateFormat('MMM dd yyyy').format(selectedDateRange.end)} at ${selectedTime.format(context)}',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -1033,6 +1038,11 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            DateTimeRange selectedDateRange = DateTimeRange(
+              start: DateTime.now(),
+              end: DateTime.now().add(Duration(days: 1)),
+            );
+
             return SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(16.0),
@@ -1049,7 +1059,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Set your pick up date and time',
+                      'Set your pick up date range and time',
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -1060,11 +1070,20 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                     SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () async {
-                        await _selectDate(context);
-                        setState(() {});
+                        DateTimeRange? picked = await showDateRangePicker(
+                          context: context,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2030),
+                          initialDateRange: selectedDateRange,
+                        );
+                        if (picked != null && picked != selectedDateRange) {
+                          setState(() {
+                            selectedDateRange = picked;
+                          });
+                        }
                       },
                       child: Text(
-                        'Choose Date',
+                        'Choose Date Range',
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -1075,7 +1094,16 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
+                      'From: ${DateFormat('EEE, MMM d, yyyy').format(selectedDateRange.start)}',
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'To: ${DateFormat('EEE, MMM d, yyyy').format(selectedDateRange.end)}',
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
