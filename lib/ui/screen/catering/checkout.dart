@@ -125,8 +125,22 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
 
       print(dateSelected);
       print(timeSeleted.hour);
-      var dateTimeSelected =
-          '$dateSelected ${timeSeleted.hour}:${timeSeleted.minute}';
+      print('Handle Place Order ');
+      print(selectedDateRange);
+      var dateTimeSelected = '';
+      if (isSingleDate) {
+        dateTimeSelected =
+            '$dateSelected ${timeSeleted.hour}:${timeSeleted.minute}';
+      } else {
+        var dateStart =
+            DateFormat('yyyy-MM-dd').format(selectedDateRange.start);
+        var dateEnd = DateFormat('yyyy-MM-dd').format(selectedDateRange.end);
+        print(dateStart);
+        print(dateEnd);
+        dateTimeSelected =
+            '$dateStart ${timeSeleted.hour}:${timeSeleted.minute}//$dateEnd ${timeSeleted.hour}:${timeSeleted.minute}';
+      }
+      print(dateTimeSelected);
       AppExt.hideKeyboard(context);
       DialogTemp().Konfirmasi(
         context: context,
