@@ -1,4 +1,5 @@
 import 'package:tikom/data/models/add_on_catering.dart';
+import 'package:tikom/data/models/inventory_item.dart';
 import 'package:tikom/data/models/media.dart';
 import 'package:tikom/data/models/product.dart';
 
@@ -36,6 +37,8 @@ class Transaction {
   final BaseDelivery base_delivery;
   final dynamic is_fullservice;
   final List<AddOnCatering>? addOnCatering;
+  final List<InventoryItem>? inventoryItems;
+
   final String? catering_name;
   final dynamic barista_count;
   final dynamic service_count;
@@ -62,6 +65,7 @@ class Transaction {
       this.barista_count,
       this.service_count,
       this.custom_cup,
+      this.inventoryItems,
       this.addOnCatering});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -78,6 +82,11 @@ class Transaction {
     var addOnCateringJson = json['addOnCatering'] as List<dynamic>?;
     List<AddOnCatering> addOnCateringDetails = addOnCateringJson != null
         ? addOnCateringJson.map((i) => AddOnCatering.fromJson(i)).toList()
+        : [];
+
+    var inventoryItemsJson = json['inventoris_item'] as List<dynamic>?;
+    List<InventoryItem> inventoryItemsDetails = inventoryItemsJson != null
+        ? inventoryItemsJson.map((i) => InventoryItem.fromJson(i)).toList()
         : [];
 
     return Transaction(
@@ -102,6 +111,7 @@ class Transaction {
       barista_count: json['barista_count'] ?? '',
       service_count: json['service_count'] ?? '',
       custom_cup: json['custom_cup'] ?? '',
+      inventoryItems: inventoryItemsDetails
 
     );
   }

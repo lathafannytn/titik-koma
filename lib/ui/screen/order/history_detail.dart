@@ -106,7 +106,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                   "${i + 1}. ${state.transactions[0].product_detail[i].name} (${state.transactions[0].product_detail[i].pivot_quantity})",
                                   style: GoogleFonts.poppins(fontSize: 14),
                                 ),
-                                Text('Rp ${state.transactions[0].product_detail[i].pivot_price}',
+                                Text(
+                                    'Rp ${state.transactions[0].product_detail[i].pivot_price}',
                                     style: GoogleFonts.poppins(fontSize: 14)),
                               ],
                             ),
@@ -250,6 +251,33 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                     style: GoogleFonts.poppins(fontSize: 14)),
                               ],
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      margin: EdgeInsets.only(bottom: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Inventory Item',
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold, fontSize: 14)),
+                            SizedBox(height: 3.0),
+                            for (var i = 0;
+                                i < state.transactions[0].inventoryItems!.length;
+                                i++) ...[
+                              Text(
+                                "${i + 1}. ${state.transactions[0].inventoryItems?[i].name}",
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
+                            ],
                           ],
                         ),
                       ),
