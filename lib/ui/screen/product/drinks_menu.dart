@@ -27,10 +27,12 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   late OrderDataCubit _orderDataCubit;
   late OrderProductCubit _orderProductCubit;
   int total_price = 0;
-  int total_price_discount = 0;
-  int price_discount = 0;
+  int? total_price_discount =
+      StorageService.getDataInt('total_price_discount_order') ?? 0;
+  int price_discount = StorageService.getDataInt('price_discount_order') ?? 0;
   int total_quantity = 0;
-  int quantity_discount = 0;
+  int quantity_discount =
+      StorageService.getDataInt('quantity_discount_order') ?? 0;
   int full_quantity = 0;
   List<Category> categories = [];
   List<Drinks> drinks = [];
@@ -40,11 +42,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   String token = StorageService.getToken('token');
   bool isPickupSelected = true;
 
-
-
   @override
   void initState() {
-    super.initState();
     _orderDataCubit = OrderDataCubit()..loadOrderData();
     _orderProductCubit = OrderProductCubit()..loadOrderProduct();
 
@@ -77,8 +76,10 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       });
     });
     handlePotonganDefault();
+    super.initState();
   }
-    void handlePotonganDefault() async {
+
+  void handlePotonganDefault() async {
     print('panggil handler potongan');
     try {
       final OrderRepository orderRepository = OrderRepository();
@@ -89,23 +90,27 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
         print('monday tuesday');
         print(full_quantity);
         print(response.data.total_quantity);
-        if (full_quantity >= response.data.total_quantity) {
           setState(() {
             quantity_discount = response.data.total_quantity;
             price_discount = int.parse(response.data.total_price.toString());
+            StorageService.saveData(
+                'quantity_discount_order', quantity_discount.toString());
+            StorageService.saveData(
+                'price_discount_order', quantity_discount.toString());
             total_price_discount = total_price - price_discount;
+            StorageService.saveData(
+                'total_price_discount_order', total_price_discount.toString());
+
+            print('hmm');
+            print(price_discount);
           });
-        } else {
-          setState(() {
-            price_discount = 0;
-            total_price_discount = total_price;
-          });
-        }
-      } else {
-        setState(() {
-          price_discount = 0;
-          total_price_discount = total_price;
-        });
+        // if (full_quantity >= response.data.total_quantity) {
+        // } else {
+        //   setState(() {
+        //     price_discount = 0;
+        //     total_price_discount = total_price;
+        //   });
+        // }
       }
       print('handdre');
       print(price_discount);
@@ -197,7 +202,15 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           setState(() {
             total_price = state.categories[0].total_price;
             full_quantity = state.categories[0].total_quantity;
-            // handlePotonganDefault();
+            if (full_quantity >= quantity_discount) {
+              total_price_discount = total_price - price_discount;
+              
+            }
+            print('quantity Discount');
+            // print(int.parse(
+            //     StorageService.getDataInt('quantity_discount_order').toString()));
+            print(quantity_discount);
+            print(total_price_discount);
           });
         }
       });

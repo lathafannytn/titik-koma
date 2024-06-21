@@ -24,9 +24,20 @@ class StorageService {
   static Future<void> saveData(String key, String value) async {
     await _box.write(key, value);
   }
+    static Future<void> saveDataInit(String key, int value) async {
+    await _box.write(key, value);
+  }
 
   static Future<String?> getData(String key) async {
-    return _box.read(key);
+    var data = _box.read(key);
+    return data;
+  }
+    static dynamic getDataInt(String key)  {
+    var data = _box.read(key);
+      if (data != null && data is String) {
+      return int.tryParse(data);
+    }
+    return null;
   }
 
   static Future<void> removeData(String key) async {
