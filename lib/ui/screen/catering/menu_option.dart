@@ -74,6 +74,7 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
                           MenuCard(
                             imageUrl: state.drinks[i].imgUrl,
                             title: state.drinks[i].name,
+                            description: state.drinks[i].desc,
                             isSelected: selectedDrink == state.drinks[i].uuid,
                             onSelect: () {
                               setState(() {
@@ -146,12 +147,14 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
 class MenuCard extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final String description;
   final bool isSelected;
   final VoidCallback onSelect;
 
   MenuCard({
     required this.imageUrl,
     required this.title,
+    required this.description,
     required this.isSelected,
     required this.onSelect,
   });
@@ -167,36 +170,42 @@ class MenuCard extends StatelessWidget {
         elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  imageUrl,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: 10),
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      description,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
-                title,
-                style: GoogleFonts.poppins(
-                    fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-                  child: Icon(
-                    isSelected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: Colors.green,
-                  ),
-                ),
+              Icon(
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: Colors.green,
               ),
             ],
           ),

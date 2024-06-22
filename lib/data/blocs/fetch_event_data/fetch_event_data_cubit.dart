@@ -6,7 +6,7 @@ import 'package:tikom/data/repository/event_data_repository.dart';
 import 'package:tikom/data/repository/my_voucher_repository.dart';
 
 class EventDataCubit extends Cubit<EventDataState> {
-  EventDataCubit() : super(EventDataInitial());
+  EventDataCubit([eventRepository]) : super(EventDataInitial());
 
   final EventDataRepository _EventDataRepository = EventDataRepository();
 

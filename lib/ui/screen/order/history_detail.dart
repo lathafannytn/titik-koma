@@ -58,7 +58,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       Row(
                         children: [
                           Icon(
-                            state.transactions[0].status == 'WAITING PAYMENT'
+                            state.transactions[0].status == 'WAITING PAYMENT' 
                                 ? Icons.error_outline
                                 : Icons.check_circle_outline_outlined,
                             color: state.transactions[0].status ==

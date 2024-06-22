@@ -105,16 +105,8 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                       fontSize: 32),
                 ),
               ),
-              // Icon(Icons.qr_code, color: Colors.white, size: 32),
             ],
           ),
-          // SizedBox(height: 8),
-          // Text(
-          //   '100 points = \$1.00. You can use these points as payment.',
-          //   style: GoogleFonts.poppins(
-          //     textStyle: TextStyle(color: Colors.white, fontSize: 14),
-          //   ),
-          // ),
         ],
       ),
     );

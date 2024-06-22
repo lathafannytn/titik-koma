@@ -6,34 +6,32 @@ import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 
 import 'history_detail.dart';
 
-class RiwayatPemesananScreen extends StatefulWidget {
+class HistoryScreen extends StatefulWidget {
   @override
-  State<RiwayatPemesananScreen> createState() => _RiwayatPemesananScreenState();
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
         title: Text(
-          'Riwayat Pemesanan',
+          'My Order',
           style: GoogleFonts.poppins(
             textStyle: const TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
-        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
+        leading: IconButton(
             onPressed: () {
-              // Search action
+              Navigator.pop(context);
             },
-          ),
-        ],
+            icon: Icon(Icons.arrow_back_ios_new_outlined)),
       ),
       body: BlocBuilder<TransactionBloc, TransactionState>(
         bloc: TransactionBloc()..data(),
@@ -101,6 +99,7 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
       case 'PROCESSED':
       case 'PENDING':
       case 'WAITING PAYMENT':
+      case 'WAITING PAYMENT CONFIRMATION':
         statusColor = Colors.orange;
         break;
       case 'CANCEL':
@@ -109,6 +108,8 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
       default:
         statusColor = Colors.grey;
     }
+
+    String formattedStatus = status.replaceAll(' ', '\n');
 
     return GestureDetector(
       onTap: () {
@@ -149,13 +150,18 @@ class _RiwayatPemesananScreenState extends State<RiwayatPemesananScreen> {
                       border: Border.all(color: statusColor),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      status,
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(
-                          color: statusColor,
-                          fontWeight: FontWeight.bold,
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: Text(
+                        formattedStatus,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                            color: statusColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

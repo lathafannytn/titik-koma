@@ -13,6 +13,7 @@ import 'package:tikom/ui/screen/poin/point_detail.dart';
 import 'package:tikom/ui/screen/widget/catering_widget.dart';
 import 'package:tikom/ui/screen/widget/reveralwidget.dart';
 
+import '../voucher/voucher_page.dart';
 import 'list_notif.dart';
 
 class HomePage extends StatefulWidget {
@@ -189,16 +190,28 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SizedBox(width: 50),
-                          const Icon(
-                            Icons.discount,
-                            color: Color.fromRGBO(68, 208, 145, 1.0),
-                            size: 20,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            "${user.countVoucher}",
-                            style: GoogleFonts.poppins(
-                                fontSize: 15, color: Colors.black),
+                          InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VoucherPage())),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.discount,
+                                  color: Color.fromRGBO(68, 208, 145, 1.0),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "${user.countVoucher}",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -214,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Tukarkan poinmu dengan rewards menarik",
+                        "Cek history poinmu disini",
                         style: GoogleFonts.poppins(
                           fontSize: 12.0,
                           color: Colors.black,

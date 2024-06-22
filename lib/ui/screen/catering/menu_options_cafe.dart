@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'card/option.dart';
 
+
 class MenuOptionCafe extends StatefulWidget {
   @override
   _MenuOptionCafeState createState() => _MenuOptionCafeState();
 }
 
 class _MenuOptionCafeState extends State<MenuOptionCafe> {
+
   List<String> checkedItems = [];
 
   void handleToggle(String uuid, bool isChecked) {
@@ -21,9 +23,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
   }
 
   void _showCheckedItems(BuildContext context) {
-    var checkedProducts = productData
-        .where((product) => checkedItems.contains(product['uuid']))
-        .toList();
+    var checkedProducts = productData.where((product) => checkedItems.contains(product['uuid'])).toList();
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -34,15 +34,13 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
             children: [
               Text(
                 'Cart',
-                style: GoogleFonts.poppins(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               ...checkedProducts.map((product) {
                 return ListTile(
                   title: Text(product['name'], style: GoogleFonts.poppins()),
-                  subtitle: Text('Rp ${product['price'].toStringAsFixed(0)}',
-                      style: GoogleFonts.poppins()),
+                  subtitle: Text('Rp ${product['price'].toStringAsFixed(0)}', style: GoogleFonts.poppins()),
                 );
               }).toList(),
             ],
@@ -83,8 +81,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
                 price: product['price'],
                 description: product['description'],
                 stock: product['stock'],
-                onToggle: (isChecked) =>
-                    handleToggle(product['uuid'], isChecked),
+                onToggle: (isChecked) => handleToggle(product['uuid'], isChecked),
               );
             },
           ),
@@ -149,7 +146,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
       ),
     );
   }
-
+  
   List<Map<String, dynamic>> productData = [
     {
       'uuid': '1',
@@ -222,4 +219,6 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
       'stock': 5,
     },
   ];
+
+  
 }

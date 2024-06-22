@@ -80,7 +80,7 @@ class _PackageScreenState extends State<PackageScreen> {
                             ),
                             const SizedBox(height: 20),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height - 300,
+                              height: MediaQuery.of(context).size.height - 200,
                               child: PageView(
                                 children: [
                                   PackageCard(
@@ -333,88 +333,90 @@ class PackageCard extends StatelessWidget {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(25.0)),
                     ),
-                    builder: (context) => Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 50,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(10),
+                    builder: (context) => SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Container(
+                                width: 60,
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Center(
-                            child: Text(
-                              'technical requirements',
+                            const SizedBox(height: 10),
+                            Center(
+                              child: Text(
+                                'technical requirements',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  color: Colors.green[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Electrical :',
                               style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                color: Colors.green[700],
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Electrical :',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 5),
+                            Text(
+                              '• 4400w electricity\n• 1x 20A cable',
+                              style: GoogleFonts.poppins(fontSize: 14),
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '• 4400w electricity\n• 1x 20A cable',
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Space :',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '• Minimum 1.2m x 2m\n• Recommended 2m x 2m',
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Table :',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            '• Minimum of 2x 120cm Tables: 1 for the bar and 1 for general use.\n• Recommended: 3 tables.\n• For 1pc bar table, must be able to support a total weight of 100kg.',
-                            style: GoogleFonts.poppins(fontSize: 14),
-                          ),
-                          const SizedBox(height: 20),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.green[700],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Space :',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              child: const Text('OK'),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 5),
+                            Text(
+                              '• Minimum 1.2m x 2m\n• Recommended 2m x 2m',
+                              style: GoogleFonts.poppins(fontSize: 14),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Table :',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              '• Minimum of 2x 120cm Tables: 1 for the bar and 1 for general use.\n• Recommended: 3 tables.\n• For 1pc bar table, must be able to support a total weight of 100kg.',
+                              style: GoogleFonts.poppins(fontSize: 14),
+                            ),
+                            const SizedBox(height: 20),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green[700],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: const Text('OK'),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

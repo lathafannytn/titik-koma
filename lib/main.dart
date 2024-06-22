@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     HomePage(),
     DrinksMenuPage(),
-    RiwayatPemesananScreen(),
+    HistoryScreen(),
     ProfileScreen()
   ];
 

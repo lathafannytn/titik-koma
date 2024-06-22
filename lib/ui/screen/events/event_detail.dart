@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,7 +98,8 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         state.eventData.name,
@@ -111,16 +114,21 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                           Icon(Icons.location_on,
                                               color: Colors.grey),
                                           SizedBox(width: 4),
-                                          Text(
-                                            state.eventData.location,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 14,
-                                              color: Colors.grey,
+                                          Expanded(
+                                            child: Text(
+                                              state.eventData.location,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: true,
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 4),
+                                      SizedBox(height: 10),
                                       Row(
                                         children: [
                                           Icon(Icons.calendar_today,
@@ -221,7 +229,8 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                   builder: (context) {
                                     return AlertDialog(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16.0),
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
                                       ),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -320,7 +329,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                   ),
                                 ),
                                 child: Text(
-                                  'Buy Ticket',
+                                  'Book Ticket',
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: 16,

@@ -7,6 +7,7 @@ import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_cubit.dart';
 import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_state.dart';
 
 import 'event_detail.dart';
+import 'see_all.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,7 +42,12 @@ class PopularEventList extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  print('See All diklik');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SeeAllEventsPage(),
+                    ),
+                  );
                 },
                 child: Text(
                   'See All',
@@ -92,9 +98,10 @@ class PopularEventList extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EventDetailsPage(
-                    uuid: data.uuid,
-                  )),
+            builder: (context) => EventDetailsPage(
+              uuid: data.uuid,
+            ),
+          ),
         );
       },
       child: Container(
@@ -119,51 +126,17 @@ class PopularEventList extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                  child: Image.asset(
-                    'assets/images/home.jpg',
+                  child: Image.network(
+                    data.imgUrl,
                     height: 150,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 10,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    // child: Text(
-                    //   'Dance',
-                    //   style: GoogleFonts.poppins(
-                    //     color: Colors.black,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
                   ),
                 ),
               ],
             ),
             Padding(
               padding: EdgeInsets.all(8.0),
-              // child: Row(
-              //   children: [
-              //     Text(
-              //       'Altanito Salami',
-              //       style: GoogleFonts.poppins(),
-              //     ),
-              //   ],
-              // ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -188,46 +161,31 @@ class PopularEventList extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          'https://www.example.com/participant1.jpg',
-                        ),
-                        radius: 12,
-                      ),
-                      Positioned(
-                        left: 15,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            'https://www.example.com/participant2.jpg',
-                          ),
-                          radius: 12,
-                        ),
-                      ),
-                      Positioned(
-                        left: 30,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          child: Text(
-                            '+15',
-                            style: GoogleFonts.poppins(
-                                color: Colors.white, fontSize: 12),
-                          ),
-                          radius: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
                   Text(
-                    '\FREE',
+                    'Max Person:',
                     style: GoogleFonts.poppins(
-                      color: Colors.pink,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      color: Colors.black,
                     ),
                   ),
+                  SizedBox(width: 8),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 12,
+                    child: Center(
+                      child: Text(
+                        '${data.max_person}',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  Spacer(),
                 ],
               ),
             ),
