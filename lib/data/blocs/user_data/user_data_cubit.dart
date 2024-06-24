@@ -9,17 +9,19 @@ import 'package:tikom/data/repository/user_repository.dart';
 class UserDataCubit extends Cubit<UserDataState> {
   UserDataCubit() : super(UserDataInitial());
 
-
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository();
   final UserRepository _userRepository = UserRepository();
 
- 
   Future<void> loadUserData() async {
     emit(UserDataLoading());
     try {
       final userResponse = await _userRepository.fetchUser();
+      print('User response: $userResponse');
       if (userResponse != null && userResponse.data != null) {
+        //aku nambah
+        print('User data: ${userResponse.data}');
+
         emit(UserDataLoaded(userResponse.data!));
       } else {
         emit(UserDataError('User data is null'));
@@ -28,8 +30,6 @@ class UserDataCubit extends Cubit<UserDataState> {
       emit(UserDataError(error.toString()));
     }
   }
-
-  
 }
 
 // class UserDataCubit extends Cubit<UserDataState> {

@@ -49,6 +49,8 @@ class User {
    factory User.fromJson(Map<String, dynamic> json) {
     var profil = json['profil'];
     var voucher = json['voucher'];
+    print('Profil: $profil'); 
+    print('Voucher: $voucher'); 
     
     return User(
       id: json["id"] ?? 0,

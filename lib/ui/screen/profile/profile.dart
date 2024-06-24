@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _userDataCubit = BlocProvider.of<UserDataCubit>(context);
     _userDataCubit
-        ?.loadUserData(); // Load user data when the screen initializes
+        ?.loadUserData();
     print('Profile Page');
   }
 
@@ -48,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return Center(child: CircularProgressIndicator());
               } else if (state is UserDataLoaded) {
                 final user = state.user;
+                print('User countVoucher: ${user.countVoucher}');
                 return buildProfileContent(
                     context,
                     user.name,
