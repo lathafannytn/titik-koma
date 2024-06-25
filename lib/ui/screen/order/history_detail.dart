@@ -141,6 +141,44 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                             ],
                           ),
                           Divider(thickness: 1),
+                          if (state.transactions[0].repayment == 1) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('DP',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text(
+                                  '- Rp ${state.transactions[0].down_payment}',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(color: Colors.red),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(thickness: 1),
+                          ],
+                           if (state.transactions[0].repayment == 2) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('DP',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text(
+                                  'Lunas',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(color: Colors.red),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(thickness: 1),
+                          ],
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -314,7 +352,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       ),
                     ],
                   ],
-                  if (state.transactions[0].status == 'WAITING PAYMENT') ...[
+                  if (state.transactions[0].status == 'WAITING PAYMENT' ||
+                      state.transactions[0].repayment == 1) ...[
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacement(

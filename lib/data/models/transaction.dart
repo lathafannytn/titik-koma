@@ -43,6 +43,7 @@ class Transaction {
   final dynamic barista_count;
   final dynamic service_count;
   final dynamic custom_cup;
+  final dynamic repayment;
 
   Transaction(
       {required this.id,
@@ -66,6 +67,7 @@ class Transaction {
       this.service_count,
       this.custom_cup,
       this.inventoryItems,
+      this.repayment,
       this.addOnCatering});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -90,30 +92,31 @@ class Transaction {
         : [];
 
     return Transaction(
-      id: json['id'].toString(),
-      uuid: json['uuid'],
-      status: json['status'],
-      price: json['price'],
-      product_count: json['product_count'],
-      transaction_code: json['transaction_code'],
-      product_detail: productDetails,
-      price_amount: json['price_amount'],
-      price_discount: json['price_discount'],
-      payment_type: json['payment_type'],
-      down_payment: json['down_payment'] ?? 0,
-      service_date: json['service_date'],
-      media: mediaDetails.isNotEmpty ? mediaDetails : null,
-      point: json['point'],
-      base_delivery: BaseDelivery.fromJson(json['base_delivery']),
-      is_fullservice: json['is_fullservice'] ?? 0,
-      addOnCatering: addOnCateringDetails,
-      catering_name: json['catering_name'] ?? '',
-      barista_count: json['barista_count'] ?? '',
-      service_count: json['service_count'] ?? '',
-      custom_cup: json['custom_cup'] ?? '',
-      inventoryItems: inventoryItemsDetails
+        id: json['id'].toString(),
+        uuid: json['uuid'],
+        status: json['status'],
+        price: json['price'],
+        product_count: json['product_count'],
+        transaction_code: json['transaction_code'],
+        product_detail: productDetails,
+        price_amount: json['price_amount'],
+        price_discount: json['price_discount'],
+        payment_type: json['payment_type'],
+        down_payment: json['down_payment'] ?? 0,
+        service_date: json['service_date'],
+        media: mediaDetails.isNotEmpty ? mediaDetails : null,
+        point: json['point'],
+        base_delivery: BaseDelivery.fromJson(json['base_delivery']),
+        is_fullservice: json['is_fullservice'] ?? 0,
+        addOnCatering: addOnCateringDetails,
+        catering_name: json['catering_name'] ?? '',
+        barista_count: json['barista_count'] ?? '',
+        service_count: json['service_count'] ?? '',
+        custom_cup: json['custom_cup'] ?? '',
+        repayment: json['repayments'] ?? '',
 
-    );
+        
+        inventoryItems: inventoryItemsDetails);
   }
 
   Map<String, dynamic> toJson() {
