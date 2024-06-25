@@ -17,6 +17,7 @@ class TransactionButtonPressed extends TransactionEvent {
   final dynamic is_delivery;
   final dynamic delivery_address;
   final dynamic delivery_price;
+  final dynamic down_payment;
 
   const TransactionButtonPressed(
       {required this.price,
@@ -27,8 +28,8 @@ class TransactionButtonPressed extends TransactionEvent {
       required this.base_delivery,
       required this.is_delivery,
       required this.delivery_address,
-      required this.delivery_price
-    });
+      required this.down_payment,
+      required this.delivery_price});
 
   @override
   List<Object> get props => [price, payment_type, voucher, use_point];

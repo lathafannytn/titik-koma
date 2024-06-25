@@ -58,7 +58,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       Row(
                         children: [
                           Icon(
-                            state.transactions[0].status == 'WAITING PAYMENT' 
+                            state.transactions[0].status == 'WAITING PAYMENT'
                                 ? Icons.error_outline
                                 : Icons.check_circle_outline_outlined,
                             color: state.transactions[0].status ==
@@ -271,7 +271,9 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                     fontWeight: FontWeight.bold, fontSize: 14)),
                             SizedBox(height: 3.0),
                             for (var i = 0;
-                                i < state.transactions[0].inventoryItems!.length;
+                                i <
+                                    state
+                                        .transactions[0].inventoryItems!.length;
                                 i++) ...[
                               Text(
                                 "${i + 1}. ${state.transactions[0].inventoryItems?[i].name}",

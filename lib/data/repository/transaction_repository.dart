@@ -35,7 +35,8 @@ class TransactionRepository {
     required dynamic base_delivery,
     required dynamic is_delivery,
     required dynamic delivery_address,
-    required dynamic delivery_price
+    required dynamic delivery_price,
+    required dynamic down_payment
   }) async {
     final body = jsonEncode({
       'price': price,
@@ -46,7 +47,8 @@ class TransactionRepository {
       'base_delivery' : base_delivery,
       'is_delivery': is_delivery,
       'delivery_address' : delivery_address,
-      'delivery_price' : delivery_price
+      'delivery_price' : delivery_price,
+      'down_payment' : down_payment
     });
     final _token = await _authenticationRepository.getToken();
 

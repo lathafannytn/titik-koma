@@ -90,20 +90,20 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
         print('monday tuesday');
         print(full_quantity);
         print(response.data.total_quantity);
-          setState(() {
-            quantity_discount = response.data.total_quantity;
-            price_discount = int.parse(response.data.total_price.toString());
-            StorageService.saveData(
-                'quantity_discount_order', quantity_discount.toString());
-            StorageService.saveData(
-                'price_discount_order', quantity_discount.toString());
-            total_price_discount = total_price - price_discount;
-            StorageService.saveData(
-                'total_price_discount_order', total_price_discount.toString());
+        setState(() {
+          quantity_discount = response.data.total_quantity;
+          price_discount = int.parse(response.data.total_price.toString());
+          StorageService.saveData(
+              'quantity_discount_order', quantity_discount.toString());
+          StorageService.saveData(
+              'price_discount_order', quantity_discount.toString());
+          total_price_discount = total_price - price_discount;
+          StorageService.saveData(
+              'total_price_discount_order', total_price_discount.toString());
 
-            print('hmm');
-            print(price_discount);
-          });
+          print('hmm');
+          print(price_discount);
+        });
         // if (full_quantity >= response.data.total_quantity) {
         // } else {
         //   setState(() {
@@ -204,7 +204,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
             full_quantity = state.categories[0].total_quantity;
             if (full_quantity >= quantity_discount) {
               total_price_discount = total_price - price_discount;
-              
             }
             print('quantity Discount');
             // print(int.parse(
@@ -448,7 +447,9 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               );
             }
             if (state is OrderDataSuccess) {
-              if (state.categories.length > 0) {
+              print('success');
+              print(state.categories.length);
+              if (state.categories.isNotEmpty) {
                 return BottomAppBar(
                   color: Colors.white,
                   child: InkWell(

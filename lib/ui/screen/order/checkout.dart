@@ -23,6 +23,7 @@ import 'package:tikom/ui/screen/order/maps5.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/utils/storage_service.dart';
 import '../voucher/voucher_page.dart';
 
 import 'package:tikom/utils/extentions.dart' as AppExt;
@@ -423,6 +424,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             is_delivery: widget.isPickupSelected,
             delivery_address: delivery_name,
             delivery_price: delivery_price,
+            down_payment: _selectedPaymentOption == PaymentOption.fullPayment ? '-' : 1
           ));
         },
         title: "Apakah Ingin Checkout?",
@@ -1261,7 +1263,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onChanged: (PaymentOption? value) {
                     setState(() {
                       _selectedPaymentOption = value!;
+                      int point_check = point != '' ? int.parse(point) : 0;
                       payment_option = (total_price / 2).round();
+                      print('For Down Button');
+                      print(total_price);
+                      print(payment_option);
                     });
                   },
                 ),
@@ -1435,7 +1441,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                     ),
                     Text(
-                      'Rp. ${usePoints ? total_price : payment_option}', // Adjust total based on points usage
+                      'Rp. ${_selectedPaymentOption == PaymentOption.fullPayment ? total_price : payment_option}', // Adjust total based on points usage
                       style: GoogleFonts.poppins(
                         textStyle: const TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -1462,6 +1468,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           listener: (context, state) {
             if (state is TransactionSuccess) {
               AppExt.popScreen(context);
+              //Remove shared preferences Order
+              StorageService.removeData('total_price_discount_order');
+              StorageService.removeData('price_discount_order');
               var responseM = state.message;
               List<String> dataRes = responseM.split("//");
               Navigator.pushReplacement(
