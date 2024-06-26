@@ -819,14 +819,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 onChanged: (value) {
                   setState(() {
                     usePoints = value;
-                    if (value) {
+                    if (usePoints) {
                       disccount += point;
                       totalPrice -= point;
                       payment_option -= point;
                     } else {
                       disccount -= point;
                       totalPrice += point;
-                      payment_option -= point;
+                      payment_option += point;
                     }
                   });
 
