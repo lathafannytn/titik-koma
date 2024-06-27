@@ -4,10 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 class OptionCard extends StatefulWidget {
   final String uuid;
   final String name;
+  final String imagePath;
   final num price;
   final String description;
   final dynamic stock;
-  final Function(bool) onToggle;
+  final Function(bool, String) onSelectionChanged;
 
   OptionCard({
     required this.uuid,
@@ -15,7 +16,8 @@ class OptionCard extends StatefulWidget {
     required this.price,
     required this.description,
     required this.stock,
-    required this.onToggle,
+    required this.onSelectionChanged,
+    required this.imagePath,
   });
 
   @override
@@ -45,9 +47,13 @@ class _OptionCardState extends State<OptionCard> {
                 width: 80,
                 height: 80,
                 color: Colors.grey[300],
-                child: Icon(
-                  Icons.image,
-                  color: Colors.grey[700],
+                child: ClipRRect(
+                  child: Image.network(
+                    widget.imagePath,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
@@ -87,7 +93,7 @@ class _OptionCardState extends State<OptionCard> {
                 onPressed: () {
                   setState(() {
                     isChecked = !isChecked;
-                    widget.onToggle(isChecked);
+                    widget.onSelectionChanged(isChecked, cupSize);
                   });
                 },
                 icon: Icon(
@@ -122,9 +128,13 @@ class _OptionCardState extends State<OptionCard> {
                     width: 100,
                     height: 100,
                     color: Colors.grey[300],
-                    child: Icon(
-                      Icons.image,
-                      color: Colors.grey[700],
+                    child: ClipRRect(
+                      child: Image.network(
+                        widget.imagePath,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -155,7 +165,7 @@ class _OptionCardState extends State<OptionCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ChoiceChip(
-                        label: Text('Hot'),
+                        label: const Text('Hot'),
                         selected: localCupSize == 'Hot',
                         onSelected: (bool selected) {
                           setState(() {
@@ -165,7 +175,7 @@ class _OptionCardState extends State<OptionCard> {
                       ),
                       const SizedBox(width: 10),
                       ChoiceChip(
-                        label: Text('Cold'),
+                        label: const Text('Cold'),
                         selected: localCupSize == 'Cold',
                         onSelected: (bool selected) {
                           setState(() {
@@ -193,7 +203,7 @@ class _OptionCardState extends State<OptionCard> {
                       setState(() {
                         isChecked = localChecked;
                         cupSize = localCupSize;
-                        widget.onToggle(isChecked);
+                        widget.onSelectionChanged(isChecked, cupSize);
                       });
                     },
                     icon: Icon(

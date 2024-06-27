@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/catering/catering_bloc.dart';
 import 'package:tikom/data/blocs/fetch_add_on_catering/add_on_catering_state.dart';
+import 'package:tikom/data/blocs/fetch_bundle/fetch_bundle_cubit.dart';
+import 'package:tikom/data/blocs/fetch_bundle/fetch_bundle_state.dart';
 import 'package:tikom/data/blocs/fetch_full_service/full_service_cubit.dart';
 import 'package:tikom/data/blocs/fetch_full_service/full_service_state.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
@@ -32,7 +34,10 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   String delivery_place = 'Pilih Alamat';
   String delivery_price = '';
 
+  String full_service_name = '';
+
   late CateringBloc _catering_bloc;
+  late BundleCubit _bundle_cubit;
 
   int disccount = 0;
   int default_price = 0;
@@ -187,13 +192,39 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
   void initState() {
     handleBaseDelivery();
     _catering_bloc = CateringBloc();
+    print('cek');
+    print(widget.newTransactionFullService.package);
     // Default Price
     _fullServiceCubit = FullServiceCubit()..loadFullService();
     _fullServiceCubit.stream.listen((state) {
       print('masuk');
       if (state is FullServiceSuccess) {
         setState(() {
-          default_price = state.full_service[0].price;
+          if (widget.newTransactionFullService.package == null) {
+            print('cold');
+            default_price = int.parse(state.full_service[0].price.toString());
+            full_service_name = state.full_service[0].type;
+          } else {
+            print('cafe');
+            // Pakage
+            var data =
+                widget.newTransactionFullService.package.toString().split('//');
+            _bundle_cubit = BundleCubit()
+              ..loadBundleProduct(int.parse(data[0]));
+            _bundle_cubit.stream.listen((state) {
+              if (state is BundleSuccess) {
+                print('get bundle');
+                print(state.bundle[0].bundle_price.toString());
+                setState(() {
+                  default_price =
+                      int.parse(state.bundle[0].bundle_price.toString());
+                });
+              }
+            });
+            print('get bundle2');
+            print(default_price);
+            full_service_name = state.full_service[1].type;
+          }
           default_price = default_price + widget.totalCost.toInt();
           totalPrice = default_price;
           payment_option = default_price;
@@ -582,7 +613,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Pop-Up Cafe - 250 pax',
+                    '${full_service_name}',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

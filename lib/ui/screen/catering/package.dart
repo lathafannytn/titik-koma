@@ -112,10 +112,9 @@ class _PackageScreenState extends State<PackageScreen> {
                                     },
                                   ),
                                   PackageCard(
-                                    title: 'Pop-Up Cafe',
-                                    price: 'start from IDR 5.000.000',
-                                    description:
-                                        'hot & cold beverages only, with barista',
+                                    title: state.full_service[1].type,
+                                    price: 'start from IDR ${state.full_service[1].price}',
+                                    description:  state.full_service[1].description,
                                     includes: const [
                                       'serve 100 pax 8 oz cups (mini) OR serve 70 pax 12 oz cups (regular)',
                                       '6 hours rental of 1 unit Hot Dispenser',
@@ -124,13 +123,17 @@ class _PackageScreenState extends State<PackageScreen> {
                                     ],
                                     pax: '200\npax',
                                     onTap: () {
-                                      // Action saat card diklik
+                                      NewTransactionFullService
+                                          newTransFullService =
+                                          NewTransactionFullService(
+                                              full_service:
+                                                  state.full_service[1].id);
                                       print('Pop-Up Cafe Card Clicked');
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                PackageBundlingScreen()),
+                                                PackageBundlingScreen(newTransactionFullService:newTransFullService,)),
                                       );
                                     },
                                   ),

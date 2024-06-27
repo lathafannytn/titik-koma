@@ -118,23 +118,29 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: selectedCup != null ? () {
-                  NewTransactionFullService newTransFullService =
-                      NewTransactionFullService(
-                    full_service: widget.newTransactionFullService.full_service,
-                    product: widget.newTransactionFullService.product,
-                    add_on: widget.newTransactionFullService.add_on,
-                    custom_cup_name: selectedCup,
-                    custom_cup_notes: customTextController.text,
-                  );
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CheckoutServiceScreen(
-                                newTransactionFullService: newTransFullService,
-                                totalCost: widget.totalCost,
-                              )));
-                } : null,
+                onPressed: selectedCup != null
+                    ? () {
+                        NewTransactionFullService newTransFullService =
+                            NewTransactionFullService(
+                          full_service:
+                              widget.newTransactionFullService.full_service,
+                          product: widget.newTransactionFullService.product,
+                          add_on: widget.newTransactionFullService.add_on,
+                          custom_cup_name: selectedCup,
+                          custom_cup_notes: customTextController.text,
+                          product_list: widget.newTransactionFullService.product_list,
+                          package: widget.newTransactionFullService.package
+                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CheckoutServiceScreen(
+                                      newTransactionFullService:
+                                          newTransFullService,
+                                      totalCost: widget.totalCost,
+                                    )));
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                   shape: RoundedRectangleBorder(

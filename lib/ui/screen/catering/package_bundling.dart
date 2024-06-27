@@ -1,18 +1,32 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tikom/data/blocs/fetch_bundle/fetch_bundle_cubit.dart';
+import 'package:tikom/data/blocs/fetch_bundle/fetch_bundle_state.dart';
+import 'package:tikom/data/models/transaction_full_service.dart';
 
 import 'menu_options_cafe.dart';
 
-
 class PackageBundlingScreen extends StatefulWidget {
+  final NewTransactionFullService newTransactionFullService;
+  PackageBundlingScreen({required this.newTransactionFullService});
+
   @override
   _PackageBundlingScreenState createState() => _PackageBundlingScreenState();
 }
 
 class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
+  late BundleCubit _bundleCubit;
+
+  @override
+  void initState() {
+    _bundleCubit = BundleCubit()..loadBundle();
+    super.initState();
+  }
+
   int _currentIndex = 0;
   final List<String> _images = [
     'assets/images/home.jpg',
@@ -81,55 +95,82 @@ class _PackageBundlingScreenState extends State<PackageBundlingScreen> {
             }).toList(),
           ),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(16),
-              children: [
-                Center(
-                  child: PackageItem(
-                    title: 'Package A',
-                    price: 'IDR 5.000.000',
-                    pax: '200 pax',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MenuOptionCafe(),
+            child: BlocBuilder<BundleCubit, BundleState>(
+              bloc: _bundleCubit,
+              builder: (context, state) {
+                if (state is BundleLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state is BundleFailure) {
+                  return Center(child: Text(state.message));
+                }
+                if (state is BundleSuccess) {
+                  print(state.bundle.length);
+                  return ListView.builder(
+                    itemCount: state.bundle.length,
+                    padding: EdgeInsets.all(16),
+                    itemBuilder: (BuildContext context, int index) {
+                      var bundleData = state.bundle[index];
+                      return Center(
+                        child: PackageItem(
+                          title: bundleData.name,
+                          price: 'IDR ${bundleData.bundle_price}',
+                          pax: '${bundleData.desc}',
+                          onTap: () {
+                            // data
+                            NewTransactionFullService newTransFullService =
+                                NewTransactionFullService(
+                                    full_service: widget
+                                        .newTransactionFullService.full_service,
+                                    package: '${bundleData.id}//${bundleData.max_buy}'
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MenuOptionCafe(newTransactionFullService: newTransFullService,),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
-                  ),
-                ),
-                Center(
-                  child: PackageItem(
-                    title: 'Package B',
-                    price: 'IDR 6.000.000',
-                    pax: '250 pax',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MenuOptionCafe(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Center(
-                  child: PackageItem(
-                    title: 'Package C',
-                    price: 'IDR 7.000.000',
-                    pax: '300 pax',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MenuOptionCafe(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                    // children: [
+
+                    //   Center(
+                    //     child: PackageItem(
+                    //       title: 'Package B',
+                    //       price: 'IDR 6.000.000',
+                    //       pax: '250 pax',
+                    //       onTap: () {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => MenuOptionCafe(),
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+                    //   Center(
+                    //     child: PackageItem(
+                    //       title: 'Package C',
+                    //       price: 'IDR 7.000.000',
+                    //       pax: '300 pax',
+                    //       onTap: () {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => MenuOptionCafe(),
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+                    // ],
+                  );
+                }
+                return SizedBox();
+              },
             ),
           ),
         ],
@@ -194,7 +235,8 @@ class PackageItem extends StatelessWidget {
                     clipBehavior: Clip.none,
                     children: [
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(20),
@@ -214,7 +256,7 @@ class PackageItem extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             SvgPicture.asset(
-                              'assets/icons/star.svg', 
+                              'assets/icons/star.svg',
                               color: Color.fromARGB(255, 12, 190, 124),
                               width: 65,
                               height: 65,
