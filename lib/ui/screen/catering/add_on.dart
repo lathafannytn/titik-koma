@@ -91,21 +91,41 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   Map<String, List<String>> addOn = {
-                    'barista': [baristaUUID.toString(),baristaCount.toString()],
-                    'service': [serviceUUID.toString(),serviceCount.toString()],
+                    'barista': [
+                      baristaUUID.toString(),
+                      baristaCount.toString()
+                    ],
+                    'service': [
+                      serviceUUID.toString(),
+                      serviceCount.toString()
+                    ],
                   };
 
-                  NewTransactionFullService newTransFullService =
-                      NewTransactionFullService(
-                    full_service: widget.newTransactionFullService.full_service,
-                    product: widget.newTransactionFullService.product,
-                    add_on: addOn,
-                  );
+                  NewTransactionFullService newTransFullService;
+                  if (widget.newTransactionFullService.package != null) {
+                    newTransFullService = NewTransactionFullService(
+                      full_service:
+                          widget.newTransactionFullService.full_service,
+                      product_list: widget.newTransactionFullService.product_list,
+                      add_on: addOn,
+                      package: widget.newTransactionFullService.package,
+                    );
+                  } else {
+                    newTransFullService = NewTransactionFullService(
+                      full_service:
+                          widget.newTransactionFullService.full_service,
+                      product: widget.newTransactionFullService.product,
+                      add_on: addOn,
+                         package: widget.newTransactionFullService.package,
+                    );
+                  }
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              CustomizableCupScreen(totalCost: totalCost, newTransactionFullService:newTransFullService)));
+                          builder: (context) => CustomizableCupScreen(
+                              totalCost: totalCost,
+                              newTransactionFullService: newTransFullService)));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,

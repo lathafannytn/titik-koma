@@ -7,6 +7,8 @@ class NewTransactionFullService {
   final Map<String, List<String>>? add_on;
   final dynamic custom_cup_name;
   final dynamic custom_cup_notes;
+  final String? package;
+  final List<List<String>>? product_list;
 
   NewTransactionFullService({
     this.full_service,
@@ -14,6 +16,8 @@ class NewTransactionFullService {
     this.product,
     this.custom_cup_name,
     this.custom_cup_notes,
+    this.package,
+    this.product_list,
   });
 
   factory NewTransactionFullService.fromJson(Map<String, dynamic> json) {

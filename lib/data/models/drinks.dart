@@ -45,7 +45,7 @@ class Drinks {
   final dynamic price;
   final dynamic desc;
   final dynamic imgUrl;
-  final dynamic categoryName;
+  final dynamic? categoryName;
 
   Drinks(
       {required this.id,
@@ -56,7 +56,7 @@ class Drinks {
       required this.imgUrl,
       required this.stock,
       required this.categoryId,
-      required this.categoryName});
+      this.categoryName});
 
   factory Drinks.fromJson(Map<String, dynamic> json) {
     String imageUrl = default_url_image;
@@ -64,6 +64,8 @@ class Drinks {
       print(json['media'][0]['original_url']);
       imageUrl = json['media'][0]['original_url'];
     }
+    print('json drink');
+    print(json);
     return Drinks(
       id: json['id'],
       uuid: json['uuid'],
@@ -73,27 +75,24 @@ class Drinks {
       price: json['price'],
       stock: json['stok'],
       imgUrl: imageUrl,
-      categoryName: json['category']['name'],
+      categoryName: json.containsKey('category') ? json['category']['name'] : '',
     );
   }
 }
-
 
 class DrinkResponse {
   final List<Drinks> drinks;
 
-   DrinkResponse({required this.drinks});
+  DrinkResponse({required this.drinks});
 
-  factory  DrinkResponse.fromJson(Map<String, dynamic> json) {
+  factory DrinkResponse.fromJson(Map<String, dynamic> json) {
     print('--model---');
     print(json['data']);
     var dataList = json['data'] as List;
-    List<Drinks> order =
-        dataList.map((item) => Drinks.fromJson(item)).toList();
+    List<Drinks> order = dataList.map((item) => Drinks.fromJson(item)).toList();
 
-    return  DrinkResponse(
+    return DrinkResponse(
       drinks: order,
     );
   }
 }
-
