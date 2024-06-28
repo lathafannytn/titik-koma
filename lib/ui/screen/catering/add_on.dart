@@ -73,7 +73,7 @@ class _AdditionalExtrasScreenState extends State<AdditionalExtrasScreen> {
           children: [
             _buildCounterRow(
               'Barista',
-              'Rp $baristaPrice / 6 hours',
+              'Rp $baristaPrice / 4 hours',
               baristaCount,
               () => setState(() => baristaCount++),
               () => setState(() => baristaCount > 0 ? baristaCount-- : 0),

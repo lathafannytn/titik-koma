@@ -547,23 +547,10 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               Text(
                 'Order',
                 style: GoogleFonts.poppins(
-                  fontSize: 16, // Ukuran lebih besar
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // TextButton.icon(
-              //   onPressed: () {
-              //     // Aksi ketika tombol add more ditekan
-              //   },
-              //   icon: const Icon(Icons.add, color: Colors.green),
-              //   label: Text(
-              //     'add more',
-              //     style: GoogleFonts.poppins(
-              //       fontSize: 14,
-              //       color: Colors.green,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(height: 8),
@@ -603,7 +590,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                   if (widget.newTransactionFullService.add_on!['barista']?[1] !=
                       '0') ...[
                     Text(
-                      '${widget.newTransactionFullService.add_on!['barista']?[1]} x Barista - 6 Hours',
+                      '${widget.newTransactionFullService.add_on!['barista']?[1]} x Barista - 4 Hours',
                       style: GoogleFonts.poppins(fontSize: 12),
                     ),
                   ],
@@ -799,7 +786,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               CircleAvatar(
                 backgroundColor: Colors.grey[200],
                 child: Image.asset(
-                  'assets/logos/logo_tikom_bulat_hijau_hitam.png', // Ganti dengan path gambar logo Anda
+                  'assets/logos/logo_tikom_bulat_hijau_hitam.png',
                   width: 24,
                   height: 24,
                 ),

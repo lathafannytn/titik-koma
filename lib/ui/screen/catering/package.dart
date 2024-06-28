@@ -91,9 +91,8 @@ class _PackageScreenState extends State<PackageScreen> {
                                         state.full_service[0].description,
                                     includes: const [
                                       'serve 120 pax 8 oz cups (mini) OR serve 80 pax 12 oz cups (regular)',
-                                      '6 hours rental of 1 unit Ice Cold Dispenser',
+                                      '4 hours rental of 1 unit Ice Cold Dispenser',
                                       'Ice Cubes + Styrofoam Box',
-                                      'Napkins, Straws',
                                     ],
                                     onTap: () {
                                       print('Pop-Up Cold Card Clicked');
@@ -110,6 +109,7 @@ class _PackageScreenState extends State<PackageScreen> {
                                                       newTransactionFullService:
                                                           newTransFullService)));
                                     },
+                                    showTechnicalRequirements: false,
                                   ),
                                   PackageCard(
                                     title: 'Pop-Up Cafe',
@@ -117,10 +117,9 @@ class _PackageScreenState extends State<PackageScreen> {
                                     description:
                                         'hot & cold beverages only, with barista',
                                     includes: const [
-                                      'serve 100 pax 8 oz cups (mini) OR serve 70 pax 12 oz cups (regular)',
-                                      '6 hours rental of 1 unit Hot Dispenser',
-                                      'Hot Water + Cups',
-                                      'Napkins, Stirrers',
+                                      '4 hours full service coffee bar',
+                                      '2 Baristas',
+                                     ' Brewed with La Marzocco Linea Mini Espresso Machine',
                                     ],
                                     pax: '200\npax',
                                     onTap: () {
@@ -133,6 +132,7 @@ class _PackageScreenState extends State<PackageScreen> {
                                                 PackageBundlingScreen()),
                                       );
                                     },
+                                    showTechnicalRequirements: true,
                                   ),
                                 ],
                               ),
@@ -163,6 +163,7 @@ class PackageCard extends StatelessWidget {
   final List<String> includes;
   final String? pax;
   final VoidCallback? onTap;
+  final bool showTechnicalRequirements;
 
   PackageCard({
     required this.title,
@@ -171,6 +172,7 @@ class PackageCard extends StatelessWidget {
     required this.includes,
     this.pax,
     this.onTap,
+    required this.showTechnicalRequirements,
   });
 
   @override
@@ -313,115 +315,116 @@ class PackageCard extends StatelessWidget {
                 ),
               ),
               const Divider(),
-              ListTile(
-                title: Text(
-                  'technical requirements',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
+              if (showTechnicalRequirements)
+                ListTile(
+                  title: Text(
+                    'technical requirements',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.green[700],
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
                     color: Colors.green[700],
                   ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.green[700],
-                ),
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(25.0)),
-                    ),
-                    builder: (context) => SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Container(
-                                width: 60,
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(10),
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(25.0)),
+                      ),
+                      builder: (context) => SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Container(
+                                  width: 60,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Center(
-                              child: Text(
-                                'technical requirements',
+                              const SizedBox(height: 10),
+                              Center(
+                                child: Text(
+                                  'technical requirements',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    color: Colors.green[700],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'Electrical :',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  color: Colors.green[700],
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'Electrical :',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              const SizedBox(height: 5),
+                              Text(
+                                '• 4400w electricity\n• 1x 20A cable',
+                                style: GoogleFonts.poppins(fontSize: 14),
                               ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '• 4400w electricity\n• 1x 20A cable',
-                              style: GoogleFonts.poppins(fontSize: 14),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'Space :',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '• Minimum 1.2m x 2m\n• Recommended 2m x 2m',
-                              style: GoogleFonts.poppins(fontSize: 14),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'Table :',
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '• Minimum of 2x 120cm Tables: 1 for the bar and 1 for general use.\n• Recommended: 3 tables.\n• For 1pc bar table, must be able to support a total weight of 100kg.',
-                              style: GoogleFonts.poppins(fontSize: 14),
-                            ),
-                            const SizedBox(height: 20),
-                            Center(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.green[700],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'Space :',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: const Text('OK'),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 5),
+                              Text(
+                                '• Minimum 1.2m x 2m\n• Recommended 2m x 2m',
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'Table :',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                '• Minimum of 2x 120cm Tables: 1 for the bar and 1 for general use.\n• Recommended: 3 tables.\n• For 1pc bar table, must be able to support a total weight of 100kg.',
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
+                              const SizedBox(height: 20),
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.green[700],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: const Text('OK'),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
               const Divider(),
               ListTile(
                 title: Text(
