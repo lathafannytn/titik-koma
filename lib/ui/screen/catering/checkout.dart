@@ -163,6 +163,8 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               products: widget.newTransactionFullService.product,
               delivery_address: delivery_place,
               delivery_price: delivery_price,
+              package: widget.newTransactionFullService.package,
+              product_list: widget.newTransactionFullService.product_list,
               payment_type: 'QRIS',
               voucher: data_voucher,
               use_point: data_use_point,
@@ -190,6 +192,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
 
   @override
   void initState() {
+    super.initState();
     handleBaseDelivery();
     _catering_bloc = CateringBloc();
     print('cek');
@@ -204,6 +207,9 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             print('cold');
             default_price = int.parse(state.full_service[0].price.toString());
             full_service_name = state.full_service[0].type;
+            default_price = default_price + widget.totalCost.toInt();
+            totalPrice = default_price;
+            payment_option = default_price;
           } else {
             print('cafe');
             // Pakage
@@ -218,6 +224,9 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 setState(() {
                   default_price =
                       int.parse(state.bundle[0].bundle_price.toString());
+                  default_price = default_price + widget.totalCost.toInt();
+                  totalPrice = default_price;
+                  payment_option = default_price;
                 });
               }
             });
@@ -225,9 +234,10 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             print(default_price);
             full_service_name = state.full_service[1].type;
           }
-          default_price = default_price + widget.totalCost.toInt();
-          totalPrice = default_price;
-          payment_option = default_price;
+          setState(() {
+            print('in init total price');
+            print(totalPrice);
+          });
         });
       }
     });
@@ -244,7 +254,6 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
 
     // Data
 
-    super.initState();
     //
   }
 
@@ -477,6 +486,8 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                   delivery_price = (int.parse(base_delivery_price) *
                           int.parse(delivered[0][0].toStringAsFixed(0)))
                       .toString();
+                  totalPrice += int.parse(delivery_price);
+                  payment_option += int.parse(delivery_price);
                 });
               }
               // print(delivered);/

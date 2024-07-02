@@ -39,6 +39,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
             productData.add(state.bundle[0].drinks![i]);
           }
         });
+
         print(productData);
       }
     });
@@ -50,7 +51,9 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
       if (isChecked) {
         checkedItems.add([name, uuid, type]);
       } else {
-        checkedItems.remove([name, uuid, type]);
+        print('remove');
+        // checkedItems.remove([name, uuid, type]);
+         checkedItems.removeWhere((item) => item[1] == uuid);
       }
       print('checked item');
       print(checkedItems);
@@ -58,9 +61,16 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
   }
 
   void _showCheckedItems(BuildContext context) {
-    var checkedProducts = productData
-        .where((product) => checkedItems.contains(product.uuid))
-        .toList();
+    print(productData);
+    // var checkedProducts = productData
+    //     .where((product) => checkedItems.contains(product.uuid))
+    //     .toList();
+    var checkedProducts = productData.where((product) {
+      return checkedItems.any((item) => item[1] == product.uuid);
+    }).toList();
+    // print(checkedProducts2);
+    print(productData);
+    print('checked products');
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -74,7 +84,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
                 style: GoogleFonts.poppins(
                     fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               ...checkedProducts.map((product) {
                 return ListTile(
                   title: Text(product.name, style: GoogleFonts.poppins()),

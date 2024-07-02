@@ -47,7 +47,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
     _orderBloc = OrderBloc();
 
     _addOnProductDataCubit = AddOnProductDataCubit()..loadCupSizeData();
-    _addOnProductIceLevelDataCubit = AddOnProductDataCubit()..loadIceLevelData();
+    _addOnProductIceLevelDataCubit = AddOnProductDataCubit()
+      ..loadIceLevelData();
     _addOnProductSugarDataCubit = AddOnProductDataCubit()..loadSugarData();
 
     _productDetailDataCubit = BlocProvider.of<ProductDetailDataCubit>(context);
@@ -64,7 +65,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
 
     // Inisialisasi nilai default untuk Ice Cube dan Sweetness
     _addOnProductIceLevelDataCubit.stream.listen((state) {
-      if (state is AddOnProductIceLevelDataSuccess && state.categories.isNotEmpty) {
+      if (state is AddOnProductIceLevelDataSuccess &&
+          state.categories.isNotEmpty) {
         setState(() {
           _selectedIceCube = state.categories[0].uuid;
         });
@@ -72,7 +74,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
     });
 
     _addOnProductSugarDataCubit.stream.listen((state) {
-      if (state is AddOnProductSugarDataSuccess && state.categories.isNotEmpty) {
+      if (state is AddOnProductSugarDataSuccess &&
+          state.categories.isNotEmpty) {
         setState(() {
           _selectedSweetness = state.categories[0].uuid;
         });
