@@ -53,4 +53,54 @@ class FullServiceCafeRepository {
     print(response);
     return BundleResponse.fromJson(response);
   }
+
+  Future<TransactionFullServiceStoreResponse> store(
+      {
+        required  List<List<String>> product_list,
+        required String package,
+        required int price,
+      required String voucher,
+      required dynamic service,
+      required String service_date,
+      required String custom_cup_name,
+      required String custom_cup_note,
+      required Map<String, List<String>> add_on,
+      required String payment_method,
+      required String use_point,
+      required dynamic base_delivery,
+      required dynamic delivery_address,
+      required dynamic delivery_price}) async {
+    final body = jsonEncode({
+      'service_date' : service_date,
+      'service': service,
+      'price': price,
+      'voucher': voucher,
+      'payment_type': payment_method,
+      'custom_cup_name': custom_cup_name,
+      'custom_cup_note':custom_cup_note,
+      'use_point': use_point,
+      'base_delivery': base_delivery,
+      'delivery_address': delivery_address,
+      'delivery_price': delivery_price,
+      'add_on': add_on,
+      'products': product_list,
+      'package':package
+    });
+    final _token = await _authenticationRepository.getToken();
+
+    final response = await _provider.post(
+      'full-service/store-cafe',
+      body: body,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer $_token',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    print('disini store trans');
+    print(response);
+    return TransactionFullServiceStoreResponse.fromJson(response);
+  }
+
+
 }

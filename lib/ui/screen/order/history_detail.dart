@@ -353,7 +353,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                     ],
                   ],
                   if (state.transactions[0].status == 'WAITING PAYMENT' ||
-                      state.transactions[0].repayment == 1) ...[
+                      (state.transactions[0].repayment == 1 && state.transactions[0].down_payment != 0) ) ...[
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacement(
