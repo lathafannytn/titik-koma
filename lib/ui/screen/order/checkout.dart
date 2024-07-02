@@ -415,17 +415,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
           print('Handle Place Order Runn');
           _transactionBloc.add(TransactionButtonPressed(
-            price: default_price,
-            payment_type: data_payment_type,
-            voucher: data_voucher,
-            use_point: data_use_point,
-            service_date: dateTimeSelected,
-            base_delivery: base_delivery_id,
-            is_delivery: widget.isPickupSelected,
-            delivery_address: delivery_name,
-            delivery_price: delivery_price,
-            down_payment: _selectedPaymentOption == PaymentOption.fullPayment ? '-' : 1
-          ));
+              price: default_price,
+              payment_type: data_payment_type,
+              voucher: data_voucher,
+              use_point: data_use_point,
+              service_date: dateTimeSelected,
+              base_delivery: base_delivery_id,
+              is_delivery: widget.isPickupSelected,
+              delivery_address: delivery_name,
+              delivery_price: delivery_price,
+              down_payment: _selectedPaymentOption == PaymentOption.fullPayment
+                  ? '-'
+                  : 1));
         },
         title: "Apakah Ingin Checkout?",
         onYesText: 'Ya',
@@ -643,6 +644,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              GestureDetector(
+                onTap: () {
+                  _showPickupTimeDialog(context);
+                },
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            isPickupNowSelected
+                                ? 'Pick up now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+                                : 'Pick up at ${getFormattedDateTime()}',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios,
+                              size: 16, color: Colors.grey),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(color: Colors.grey),
               Text(
                 'Your order is delivered from:',
                 style: GoogleFonts.poppins(
