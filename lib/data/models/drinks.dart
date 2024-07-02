@@ -75,7 +75,8 @@ class Drinks {
       price: json['price'],
       stock: json['stok'],
       imgUrl: imageUrl,
-      categoryName: json.containsKey('category') ? json['category']['name'] : '',
+      categoryName:
+          json.containsKey('category') ? json['category']['name'] : '',
     );
   }
 }
