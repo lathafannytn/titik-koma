@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 import 'package:flutter/services.dart';
 
+import '../../../utils/constant.dart';
+
 class KodeReferralPage extends StatefulWidget {
   final String code;
 
@@ -49,7 +51,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Get a free coffee discount voucher every time your friend joins via your referral code.",
+                    "Get a voucher discount voucher every time your friend joins via your referral code.",
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black,
@@ -135,11 +137,11 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                               children: [
                                 CircleAvatar(
                                   radius: 25,
-                                  backgroundColor: Colors.orange[100],
+                                  backgroundColor: Colors.green[100],
                                   child: Text(
                                     '1',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.orange,
+                                      color: Constants.primaryColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     ),
@@ -170,11 +172,11 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                               children: [
                                 CircleAvatar(
                                   radius: 25,
-                                  backgroundColor: Colors.orange[100],
+                                  backgroundColor: Colors.green[100],
                                   child: Text(
                                     '2',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.orange,
+                                      color: Constants.primaryColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     ),
@@ -205,11 +207,11 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                               children: [
                                 CircleAvatar(
                                   radius: 25,
-                                  backgroundColor: Colors.orange[100],
+                                  backgroundColor: Colors.green[100],
                                   child: Text(
                                     '3',
                                     style: GoogleFonts.poppins(
-                                      color: Colors.orange,
+                                      color: Constants.primaryColor,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     ),
@@ -217,7 +219,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "Selesai! Kamu mendapatkan voucher diskon kopi gratis.",
+                                  "Selesai! Kamu akan mendapatkan voucher.",
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.black,
@@ -240,7 +242,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
             padding: EdgeInsets.all(20.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromRGBO(68, 208, 145, 1.0),
+                primary: Constants.primaryColor,
                 onPrimary: Colors.white,
                 minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
@@ -257,6 +259,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+
                 ),
               ),
             ),

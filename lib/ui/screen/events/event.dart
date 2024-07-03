@@ -34,7 +34,7 @@ class PopularEventList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Event Collaboration TIKOM',
+                'Event TIKOM',
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

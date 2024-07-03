@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tikom/data/repository/my_voucher_repository.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/voucher/qr_scan.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/ui/widgets/loading_dialog.dart';
+
+import '../../../utils/constant.dart';
 
 class RedeemVoucherPage extends StatefulWidget {
   @override
@@ -28,9 +31,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
           code: _voucherCodeController.text);
       print(response);
       if (response.status == 'success') {
-        // ignore: use_build_context_synchronously
         Navigator.pop(context);
-        // ignore: use_build_context_synchronously
         DialogTemp().Informasi(
             context: context,
             onYes: () {
@@ -44,9 +45,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
             onYesText: 'Lanjut',
             title: response.message);
       } else {
-        // ignore: use_build_context_synchronously
         Navigator.pop(context);
-        // ignore: use_build_context_synchronously
         DialogTemp().Informasi(
             context: context,
             onYes: () {
@@ -57,9 +56,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
       }
     } catch (error) {
       print(error.toString());
-      // ignore: use_build_context_synchronously
       Navigator.pop(context);
-      // ignore: use_build_context_synchronously
       DialogTemp().Informasi(
           context: context,
           onYes: () {
@@ -74,13 +71,28 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Tukar Voucher',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        title: Text(
+          'Tikom Redeem',
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        // iconTheme: IconThemeData(color: Colors.black),
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.help_outline, color: Colors.black),
+        //     onPressed: () {
+        //       // Help action
+        //     },
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -95,8 +107,8 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
               ),
               child: Column(
                 children: [
-                  Image.network(
-                    'https://www.clipartmax.com/png/middle/245-2456783_gift-voucher-png.png', // Ganti dengan URL gambar yang sesuai
+                  Image.asset(
+                    'assets/logos/logo_tikom_hijau_hitam.png',
                     height: 150,
                   ),
                   const SizedBox(height: 16.0),
@@ -104,6 +116,8 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                     controller: _voucherCodeController,
                     decoration: InputDecoration(
                       labelText: 'Masukan kode voucher anda',
+                      labelStyle: GoogleFonts.poppins(
+                          fontSize: 14, color: Color.fromARGB(255, 9, 76, 58)),
                       suffixIcon: InkWell(
                         onTap: () async {
                           final result = await Navigator.push(
@@ -120,8 +134,20 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                         },
                         child: const Icon(Icons.qr_code_scanner),
                       ),
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide:
+                            BorderSide(color: Color.fromARGB(255, 19, 78, 70)),
+                      ),
                     ),
+                    style: GoogleFonts.poppins(),
                   ),
                   const SizedBox(height: 16.0),
                   ElevatedButton(
@@ -129,14 +155,17 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                       handlerClaimVoucher();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey,
+                      primary: Constants.primaryColor,
                       onPrimary: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
                       minimumSize: Size(double.infinity, 50),
                     ),
-                    child: const Text('Gunakan'),
+                    child: Text(
+                      'Gunakan',
+                      style: GoogleFonts.poppins(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -148,9 +177,12 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
             ),
             const SizedBox(height: 8.0),
             Text(
-              '1. Kode voucher hanya dapat ditukarkan dengan voucher TOMORO, tidak dapat ditukarkan dengan uang tunai.\n'
+              '1. Kode voucher hanya dapat ditukarkan dengan voucher TIKOM, tidak dapat ditukarkan dengan uang tunai.\n'
               '2. Kode penukaran hanya dapat digunakan satu kali saja. Setelah penukaran berhasil, kode akan langsung menjadi tidak valid dan tidak dapat ditukarkan lagi.',
-              style: TextStyle(color: Colors.grey[600]),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
             ),
           ],
         ),

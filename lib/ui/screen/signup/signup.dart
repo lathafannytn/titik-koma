@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:tikom/ui/screen/auth_tidak%20di_pakai/login.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/customtextfield.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
+
+import '../../../utils/constant.dart';
 
 class AddOnScreen extends StatefulWidget {
   final String uuid;
@@ -127,27 +131,178 @@ class _AddOnScreenState extends State<AddOnScreen> {
         listener: (context, state) {
           if (state is OrderSuccess) {
             AppExt.popScreen(context);
-            DialogTemp().Informasi(
-                context: context,
-                onYes: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyHomePage(
-                                tabIndex: 1,
-                              )));
-                },
-                onYesText: 'Oke',
-                title: 'Berhasil Menambahkan Keranjang');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Constants.primaryColor,
+                          size: 80,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Berhasil',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Constants.primaryColor,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Menambahkan Keranjang',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Produk berhasil ditambahkan ke keranjang belanja Anda.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyHomePage(
+                                  tabIndex: 1,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Constants.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                          ),
+                          child: Text(
+                            'Oke',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+            // } else if (state is OrderFailure) {
+            //   AppExt.popScreen(context);
+            //   final snackBar = SnackBar(
+            //     content: Text('${state.message}'),
+            //     backgroundColor: Colors.red,
+            //     duration: Duration(seconds: 2),
+            //     behavior: SnackBarBehavior.floating,
+            //   );
+            //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            // }else if (state is OrderFailure) {
           } else if (state is OrderFailure) {
             AppExt.popScreen(context);
-            final snackBar = SnackBar(
-              content: Text('${state.message}'),
-              backgroundColor: Colors.red,
-              duration: Duration(seconds: 2),
-              behavior: SnackBarBehavior.floating,
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                          size: 80,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Gagal',
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          state.message,
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 15),
+                          ),
+                          child: Text(
+                            'Oke',
+                            style: GoogleFonts.poppins(
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
         child: Scaffold(
@@ -157,7 +312,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
                 slivers: [
                   SliverAppBar(
                     leading: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: Icon(Icons.arrow_back, color: Colors.black),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -165,11 +320,13 @@ class _AddOnScreenState extends State<AddOnScreen> {
                     expandedHeight: 400.0,
                     floating: false,
                     pinned: true,
+                    backgroundColor: Colors.white,
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
                         productName,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
                       ),
                       background: Container(
@@ -314,7 +471,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
                 );
               }
               if (state is AddOnProductDataSuccess) {
-                return Column(
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     for (var i in state.categories)
                       buildOptionContainer(
@@ -437,25 +595,26 @@ class _AddOnScreenState extends State<AddOnScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         decoration: BoxDecoration(
           color: isSelected ? Colors.green[50] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: isSelected ? Colors.green : Colors.grey,
+            color: isSelected ? Constants.primaryColor : Colors.grey,
             width: 2.0,
           ),
         ),
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(6.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null)
-              Icon(icon, color: isSelected ? Colors.green : Colors.black),
+              Icon(icon,
+                  color: isSelected ? Constants.primaryColor : Colors.black),
             const SizedBox(height: 4),
             Text(
               label,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                   fontSize: 16,
-                  color: isSelected ? Colors.green : Colors.black,
+                  color: isSelected ? Constants.primaryColor : Colors.black,
                 ),
               ),
             ),
@@ -481,7 +640,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
-      activeColor: Colors.green, // Menyesuaikan warna aktif
+      activeColor: Constants.primaryColor,
       controlAffinity:
           ListTileControlAffinity.trailing, // Radio button di kanan
     );
@@ -529,10 +688,31 @@ class _AddOnScreenState extends State<AddOnScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Total Price\nRp ${(_basePrice + _additionalPrice).toStringAsFixed(0)}',
-              style: GoogleFonts.poppins(
-                textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Total Price\n',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Constants.primaryColor,
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                    text:
+                        'Rp ${(_basePrice + _additionalPrice).toStringAsFixed(0)}',
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             ElevatedButton(
@@ -543,16 +723,20 @@ class _AddOnScreenState extends State<AddOnScreen> {
                 'order now',
                 style: GoogleFonts.poppins(
                   textStyle: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green,
+                primary: Constants.primaryColor,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                 ),
+                elevation: 0,
               ),
             ),
           ],

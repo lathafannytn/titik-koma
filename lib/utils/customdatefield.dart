@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomTextfield extends StatelessWidget {
-  final bool obscureText;
+class CustomDateField extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final IconData icon;
-  final Widget? suffixIcon;
   final TextStyle? hintStyle;
-  final TextEditingController controller;
 
-  const CustomTextfield({
+  const CustomDateField({
     Key? key,
-    required this.obscureText,
+    required this.controller,
     required this.hintText,
     required this.icon,
-    required this.controller,
-    this.suffixIcon,
     this.hintStyle,
   }) : super(key: key);
 
@@ -23,7 +19,7 @@ class CustomTextfield extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      obscureText: obscureText,
+      readOnly: true,
       style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: Color.fromARGB(255, 19, 78, 70)),
@@ -44,16 +40,20 @@ class CustomTextfield extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide(color: Color.fromARGB(255, 19, 78, 70), width: 2),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: Colors.red, width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: Colors.red, width: 2),
-        ),
-        suffixIcon: suffixIcon,
       ),
+      onTap: () async {
+        DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+        );
+
+        if (pickedDate != null) {
+          String formattedDate = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+          controller.text = formattedDate;
+        }
+      },
     );
   }
 }

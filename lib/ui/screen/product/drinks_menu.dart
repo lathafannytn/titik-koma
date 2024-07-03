@@ -16,6 +16,7 @@ import 'package:tikom/utils/storage_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../data/models/drinks.dart';
+import '../../../utils/constant.dart';
 import 'category.dart';
 
 class DrinksMenuPage extends StatefulWidget {
@@ -206,8 +207,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               total_price_discount = total_price - price_discount;
             }
             print('quantity Discount');
-            // print(int.parse(
-            //     StorageService.getDataInt('quantity_discount_order').toString()));
             print(quantity_discount);
             print(total_price_discount);
           });
@@ -505,19 +504,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               ),
                             ],
                           ),
-                          // ElevatedButton(
-                          //   onPressed: () {
-                          //     _showBottomSheet(context);
-                          //   },
-                          //   style: ElevatedButton.styleFrom(
-                          //     primary: Color.fromARGB(255, 9, 76, 58),
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(8),
-                          //     ),
-                          //   ),
-                          //   child:
-                          //       Text("Checkout", style: GoogleFonts.poppins()),
-                          // ),
                           Container(
                             padding: const EdgeInsets.all(5),
                             decoration: const BoxDecoration(
@@ -622,8 +608,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         style: GoogleFonts.poppins()),
                                   ],
                                 ),
-                                leading:
-                                    Image.network(data.product_detail.image),
+                                leading: Image.network(data.product_detail.image),
                                 trailing: Container(
                                   width: 120,
                                   child: Row(
@@ -715,20 +700,18 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                 onPressed: full_quantity < 10
                                     ? null
                                     : () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CheckoutScreen(
-                                                    uuid: state.order[0].uuid,
-                                                    count: full_quantity,
-                                                    isPickupSelected:
-                                                        isPickupSelected,
-                                                  )),
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) =>
+                                              CheckoutScreen(
+                                                uuid: state.order[0].uuid,
+                                                count: full_quantity,
+                                                isPickupSelected:isPickupSelected,
+                                              )
+                                            ),
                                         );
                                       },
                                 style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 9, 76, 58),
+                                  primary: Constants.primaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),

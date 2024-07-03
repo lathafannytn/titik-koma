@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_cubit.dart';
 import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_state.dart';
 import 'package:tikom/data/models/my_voucher.dart';
 import 'package:tikom/ui/screen/voucher/redeem.dart';
 import 'package:tikom/ui/screen/voucher/voucher_card.dart';
+
+import '../../../utils/constant.dart';
 
 class VoucherPage extends StatefulWidget {
   const VoucherPage({Key? key}) : super(key: key);
@@ -28,13 +31,28 @@ class _VoucherPageState extends State<VoucherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text(
           'Voucher Saya',
-          style: TextStyle(color: Colors.black),
+          style: GoogleFonts.poppins(
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-        backgroundColor: Colors.white,
+        centerTitle: true,
         iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help_outline, color: Colors.black),
+            onPressed: () {
+              // Help action
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<MyVoucherCubit, MyVoucherState>(
         bloc: _MyVoucherDataCubit,
@@ -57,7 +75,8 @@ class _VoucherPageState extends State<VoucherPage> {
                     expiryDate: data.end_date,
                     discount: "${data.percentage}% OFF",
                     onclick: () {
-                      Navigator.pop(context, [data.uuid,data.name,'${data.percentage}']);
+                      Navigator.pop(context,
+                          [data.uuid, data.name, '${data.percentage}']);
                     },
                   );
                 },
@@ -74,21 +93,27 @@ class _VoucherPageState extends State<VoucherPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: TextButton.icon(
+        child: TextButton(
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => RedeemVoucherPage()),
             );
           },
-          icon: Icon(Icons.card_giftcard, color: Colors.black),
-          label: Text(
+          child: Text(
             "Masukan Kode Voucher",
-            style: TextStyle(color: Colors.black),
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
           style: TextButton.styleFrom(
-            backgroundColor: Colors.grey[200],
+            backgroundColor: Constants.primaryColor,
             padding: EdgeInsets.symmetric(vertical: 16.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
           ),
         ),
       ),

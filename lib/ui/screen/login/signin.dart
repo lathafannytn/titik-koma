@@ -20,9 +20,8 @@ import 'package:tikom/ui/screen/forgotpassword/forgotpass.dart';
 import 'package:tikom/ui/screen/login/signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../utils/constant.dart';
 import 'package:http/http.dart' as http;
+import 'package:tikom/utils/constant.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 
 class SignIn extends StatefulWidget {
@@ -94,8 +93,9 @@ class _SignInState extends State<SignIn> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      MyHomePage(tabIndex: 0,)), // Replace with your target screen
+                  builder: (context) => MyHomePage(
+                        tabIndex: 0,
+                      )), // Replace with your target screen
             );
           });
         } else {
@@ -139,7 +139,6 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return BlocProvider(
       create: (context) => _signInBloc,
       child: BlocListener<SignInEmailBloc, SignInEmailState>(
@@ -167,7 +166,6 @@ class _SignInState extends State<SignIn> {
                 context: context,
                 onYes: () {
                   LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
-                  // To Regis Page
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -199,7 +197,32 @@ class _SignInState extends State<SignIn> {
                 children: [
                   SizedBox(height: 100.0),
                   Text(
-                    'Email',
+                    'Hi,',
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.primaryColor,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Welcome ',
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/logos/logo_tikom_hijau_hitam.png',
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    'Email address',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Color.fromARGB(255, 9, 76, 58),
@@ -210,7 +233,7 @@ class _SignInState extends State<SignIn> {
                     obscureText: false,
                     hintText: 'Enter Email',
                     icon: Icons.alternate_email,
-                    hintStyle: GoogleFonts.poppins(),
+                    hintStyle: GoogleFonts.poppins(color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -218,14 +241,15 @@ class _SignInState extends State<SignIn> {
                     child: ElevatedButton(
                       onPressed: _handleLogin,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        primary: Color.fromARGB(255, 9, 76, 58),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 10),
+                        primary: Constants.primaryColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: Text(
-                        'Login',
+                        'Log In',
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -234,33 +258,13 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Center(
-                  //   child: Text.rich(
-                  //     TextSpan(children: [
-                  //       TextSpan(
-                  //         text: 'Forgot Password? ',
-                  //         style: GoogleFonts.poppins(
-                  //           color: Colors.black,
-                  //         ),
-                  //       ),
-                  //       TextSpan(
-                  //         text: 'Reset Here',
-                  //         style: GoogleFonts.poppins(
-                  //           color: Color.fromARGB(255, 9, 76, 58),
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //     ]),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(child: Divider(color: Colors.grey)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          'Or With',
+                          'Or Login with',
                           style: GoogleFonts.poppins(color: Colors.grey),
                         ),
                       ),
@@ -276,7 +280,8 @@ class _SignInState extends State<SignIn> {
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -285,7 +290,7 @@ class _SignInState extends State<SignIn> {
                             child: Image.asset('assets/logos/logo_google.png'),
                           ),
                           Text(
-                            ' sign in with Google',
+                            ' Sign in with Google',
                             style: GoogleFonts.poppins(
                               color: const Color.fromARGB(223, 0, 0, 0),
                               fontSize: 15.0,
@@ -296,36 +301,6 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // InkWell(
-                  //   onTap: () {
-                  //     // Navigator.pushReplacement(
-                  //     //   context,
-                  //     //   PageTransition(
-                  //     //     child: SignUp(),
-                  //     //     type: PageTransitionType.bottomToTop,
-                  //     //   ),
-                  //     // );
-                  //   },
-                  //   child: Center(
-                  //     child: Text.rich(
-                  //       TextSpan(children: [
-                  //         TextSpan(
-                  //           text: "Don't have any Account? ",
-                  //           style: GoogleFonts.poppins(
-                  //             color: Colors.black,
-                  //           ),
-                  //         ),
-                  //         TextSpan(
-                  //           text: 'Register',
-                  //           style: GoogleFonts.poppins(
-                  //             color: Color.fromARGB(255, 9, 76, 58),
-                  //             fontWeight: FontWeight.bold,
-                  //           ),
-                  //         ),
-                  //       ]),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),

@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/data/blocs/sign_in_otp/sign_in_otp_bloc.dart';
@@ -12,13 +11,14 @@ import 'package:tikom/data/repository/auth_repository_email.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 
+import '../../../utils/constant.dart';
+
 class OtpEmailScreen extends StatefulWidget {
   final String email;
 
   const OtpEmailScreen({super.key, required this.email});
 
   @override
-  // ignore: library_private_types_in_public_api
   _OtpScreenState createState() => _OtpScreenState();
 }
 
@@ -58,11 +58,10 @@ class _OtpScreenState extends State<OtpEmailScreen> {
         }
       });
     }
-    // For the last OTP field
     otpControllers[5].addListener(() {
       if (otpControllers[5].text.isNotEmpty) {
-        FocusScope.of(context).unfocus(); // Hide the keyboard
-        _verifyOTP(); // Verify OTP when the last field is filled
+        FocusScope.of(context).unfocus();
+        _verifyOTP();
       }
     });
   }
@@ -71,15 +70,13 @@ class _OtpScreenState extends State<OtpEmailScreen> {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
-      (Timer timer) => setState(
-        () {
-          if (_start < 1) {
-            timer.cancel();
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
+      (Timer timer) => setState(() {
+        if (_start < 1) {
+          timer.cancel();
+        } else {
+          _start = _start - 1;
+        }
+      }),
     );
   }
 
@@ -98,8 +95,10 @@ class _OtpScreenState extends State<OtpEmailScreen> {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Future.delayed(Duration(seconds: 2), () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MyHomePage(tabIndex: 0,)));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MyHomePage(tabIndex: 0)));
             });
           } else if (state is SignInFailure) {
             final snackBar = SnackBar(
@@ -112,45 +111,38 @@ class _OtpScreenState extends State<OtpEmailScreen> {
           }
         },
         child: Scaffold(
-          body: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Positioned(
-                  top: -100,
-                  left: -100,
-                  child: Container(
-                    width: 300,
-                    height: 300,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromARGB(255, 178, 230, 214),
-                    ),
+          body: Stack(
+            children: [
+              Positioned(
+                top: -100,
+                left: -100,
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromARGB(255, 178, 230, 214),
                   ),
                 ),
-                Positioned(
-                  top: -150,
-                  right: -150,
-                  child: Container(
-                    width: 400,
-                    height: 400,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromARGB(255, 109, 205, 175),
-                    ),
+              ),
+              Positioned(
+                top: -150,
+                right: -150,
+                child: Container(
+                  width: 400,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color.fromARGB(255, 109, 205, 175),
                   ),
                 ),
-                Padding(
+              ),
+              Center(
+                child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(height: 50),
-                      SizedBox(
-                        width: 250,
-                        height: 250,
-                        child: Image.asset('assets/asset/robot.png'),
-                      ),
-                      SizedBox(height: 20),
                       Text(
                         'OTP Verification',
                         style: GoogleFonts.poppins(
@@ -191,8 +183,6 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                             : InkWell(
                                 onTap: () {
                                   AppExt.hideKeyboard(context);
-                                  // _otpBloc.add(OtpRetry(
-                                  //     phoneNumber: widget.phoneNumber));
                                   AuthenticationEmailRepository()
                                       .authenticate(email: widget.email);
                                   _start = 50;
@@ -202,14 +192,18 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: kIsWeb ? 15 : 10.0),
-                                  child: Text("Kirim Ulang",
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16, color: Colors.blue)),
+                                    horizontal: kIsWeb ? 15 : 10.0
+                                  ),
+                                  child: Text(
+                                    "Kirim Ulang",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: Constants.primaryColor,
+                                    ),
+                                  ),
                                 ),
                               ),
                       ),
-
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _verifyOTP,
@@ -218,26 +212,19 @@ class _OtpScreenState extends State<OtpEmailScreen> {
                               horizontal: 100, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
+                          
                           ),
+                          
                         ),
+                        
                         child: const Text('Submit'),
                       ),
-                      SizedBox(height: 20),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     // Navigate to Login screen
-                      //   },
-                      //   child: Text(
-                      //     'You have an account? Login',
-                      //     style: GoogleFonts.poppins(),
-                      //   ),
-                      // ),
                       SizedBox(height: 20), // Spacer to move content down
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
