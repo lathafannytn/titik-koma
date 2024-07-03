@@ -608,7 +608,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         style: GoogleFonts.poppins()),
                                   ],
                                 ),
-                                leading: Image.network(data.product_detail.image),
+                                leading:
+                                    Image.network(data.product_detail.image),
                                 trailing: Container(
                                   width: 120,
                                   child: Row(
@@ -700,14 +701,16 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                 onPressed: full_quantity < 10
                                     ? null
                                     : () {
-                                        Navigator.push(context, MaterialPageRoute(
-                                            builder: (context) =>
-                                              CheckoutScreen(
-                                                uuid: state.order[0].uuid,
-                                                count: full_quantity,
-                                                isPickupSelected:isPickupSelected,
-                                              )
-                                            ),
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CheckoutScreen(
+                                                    uuid: state.order[0].uuid,
+                                                    count: full_quantity,
+                                                    isPickupSelected:
+                                                        isPickupSelected,
+                                                  )),
                                         );
                                       },
                                 style: ElevatedButton.styleFrom(
