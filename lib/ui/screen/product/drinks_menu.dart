@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -693,36 +695,52 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                           },
                         ),
                         SizedBox(height: 8),
+                        // Bagian checkout button
                         BlocBuilder<OrderProductCubit, OrderProductState>(
                           bloc: _orderProductCubit,
                           builder: (context, state) {
                             if (state is OrderProductSuccess) {
-                              return ElevatedButton(
-                                onPressed: full_quantity < 10
-                                    ? null
-                                    : () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CheckoutScreen(
-                                                    uuid: state.order[0].uuid,
-                                                    count: full_quantity,
-                                                    isPickupSelected:
-                                                        isPickupSelected,
-                                                  )),
-                                        );
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Constants.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                              return Column(
+                                children: [
+                                  if (full_quantity < 10)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Text(
+                                        'Minimum purchase 10 item',
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.red, fontSize: 14),
+                                      ),
+                                    ),
+                                  ElevatedButton(
+                                    onPressed: full_quantity < 10
+                                        ? null
+                                        : () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CheckoutScreen(
+                                                        uuid:
+                                                            state.order[0].uuid,
+                                                        count: full_quantity,
+                                                        isPickupSelected:
+                                                            isPickupSelected,
+                                                      )),
+                                            );
+                                          },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Constants.primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text("Checkout",
+                                          style: GoogleFonts.poppins()),
+                                    ),
                                   ),
-                                ),
-                                child: Center(
-                                  child: Text("Checkout",
-                                      style: GoogleFonts.poppins()),
-                                ),
+                                ],
                               );
                             }
                             return SizedBox();
