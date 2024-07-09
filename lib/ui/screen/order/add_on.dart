@@ -2,6 +2,7 @@
 
 import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -329,15 +330,13 @@ class _AddOnScreenState extends State<AddOnScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      background: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(productImage),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        height: 400.0,
-                        width: double.infinity,
+                      background: CachedNetworkImage(
+                        imageUrl: productImage,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) =>
+                            const Center(child: Icon(Icons.error)),
                       ),
                     ),
                   ),

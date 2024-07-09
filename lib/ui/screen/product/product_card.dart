@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/order/add_on.dart';
@@ -32,12 +33,14 @@ class ProductCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                imagePath,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
+              child: CachedNetworkImage(
+                  imageUrl: imagePath,
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
             ),
             const SizedBox(width: 10),
             Expanded(
