@@ -1508,30 +1508,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     builder: (context) =>
                         PaymentPage(uuid: dataRes[1].toString()),
                   ));
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => MyHomePage(
-              //               tabIndex: 2,
-              //             )));
-              // DialogTemp().Informasi(
-              //     context: context,
-              //     onYes: () {
-              //       // Navigator.pushReplacement(
-              //       //     context,
-              //       //     MaterialPageRoute(
-              //       //         builder: (context) => MyHomePage(
-              //       //               tabIndex: 2,
-              //       //             )));
-              //       // Navigator.pushReplacement(
-              //       //     context,
-              //       //     MaterialPageRoute(
-              //       //         builder: (context) => PaymentMethodScreen(
-              //       //               totalAmount: total_price,
-              //       //             )));
-              //     },
-              //     onYesText: 'Oke',
-              //     title: 'Berhasil Melakukan Order');
             } else if (state is TransactionFailure) {
               AppExt.popScreen(context);
               DialogTemp().Informasi(
