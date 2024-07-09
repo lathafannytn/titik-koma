@@ -22,6 +22,7 @@ class PointHistory {
     } else {
       point_new = '-';
 
+// 
     }
 
     return PointHistory(

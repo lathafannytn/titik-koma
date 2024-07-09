@@ -16,13 +16,14 @@ class ProductDetail {
       required this.image});
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) {
-    print('model');
+    print('model product-detail');
     print(json);
     String imageUrl = default_url_image;
     if (json.containsKey('media') && json['media'].isNotEmpty) {
       print(json['media'][0]['original_url']);
       imageUrl = json['media'][0]['original_url'];
     }
+    print(imageUrl);
 
     return ProductDetail(
         id: json['id'].toString(),
