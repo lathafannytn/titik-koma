@@ -53,8 +53,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       setState(() {
         categories = data as List<Category>;
         if (categories.isNotEmpty) {
+          _drinksFuture = fetchDrinksByCategory(categories[0].uuid);
           uuidCategory = categories[0].uuid;
-          _drinksFuture = fetchDrinksByCategory(uuidCategory);
         }
       });
     });
@@ -511,7 +511,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                "Rp. ${state.categories[0].total_price}",
+                                "Rp. ${ full_quantity >= quantity_discount ? total_price_discount : state.categories[0].total_price}",
                                 style: GoogleFonts.poppins(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),

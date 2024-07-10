@@ -882,11 +882,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     OutlinedButton(
                       onPressed: () {
                         // Navigate to DrinksMenuScreen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DrinksMenuPage()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => DrinksMenuPage()),
+                        // );
+                         Navigator.pop(context);
                       },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: customGreen),
