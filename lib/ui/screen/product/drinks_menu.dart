@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,9 +45,20 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   String uuidCategory = "";
   String token = StorageService.getToken('token');
   bool isPickupSelected = true;
+  late Future<List<Drinks>> _drinksFuture;
 
   @override
   void initState() {
+    fetchCategories().then((data) {
+      setState(() {
+        categories = data as List<Category>;
+        if (categories.isNotEmpty) {
+          uuidCategory = categories[0].uuid;
+          _drinksFuture = fetchDrinksByCategory(uuidCategory);
+        }
+      });
+    });
+     
     _orderDataCubit = OrderDataCubit()..loadOrderData();
     _orderProductCubit = OrderProductCubit()..loadOrderProduct();
 
@@ -70,18 +82,17 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       }
     });
 
-    fetchCategories().then((data) {
-      setState(() {
-        categories = data as List<Category>;
-        if (categories.isNotEmpty) {
-          uuidCategory = categories[0].uuid;
-        }
-      });
-    });
+    
     handlePotonganDefault();
+     
+    
     super.initState();
   }
-
+  Future<void> _refreshDrinks() async {
+      setState(() {
+        _drinksFuture = fetchDrinksByCategory(uuidCategory);
+      });
+    }
   void handlePotonganDefault() async {
     print('panggil handler potongan');
     try {
@@ -190,7 +201,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
 
   void handleDelete(String uuid) {}
 
-  Future<void> handlePlusMinus(String uuid, String actions) async {
+  Future handlePlusMinus(String uuid, String actions) async {
     print(actions);
     try {
       final OrderRepository _OrderRepository = OrderRepository();
@@ -229,10 +240,11 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
           children: List.generate(
             categories.length,
             (index) => GestureDetector(
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   currentSelected = index;
                   uuidCategory = categories[index].uuid;
+                  _drinksFuture = fetchDrinksByCategory(uuidCategory);
                 });
               },
               child: Container(
@@ -386,7 +398,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                           delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                               return FutureBuilder<List<Drinks>>(
-                                future: fetchDrinksByCategory(uuidCategory),
+                                future:   _drinksFuture,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -553,7 +565,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10,
@@ -610,8 +622,14 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         style: GoogleFonts.poppins()),
                                   ],
                                 ),
-                                leading:
-                                    Image.network(data.product_detail.image),
+                                leading: CachedNetworkImage(
+                                  imageUrl: data.product_detail.image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
                                 trailing: Container(
                                   width: 120,
                                   child: Row(
@@ -620,6 +638,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                       IconButton(
                                         onPressed: () {
                                           handlePlusMinus(data.uuid, 'MINUS');
+                                    
                                         },
                                         icon: Icon(Icons.remove_circle_outline,
                                             color:
