@@ -6,6 +6,7 @@ import 'package:tikom/data/blocs/fetch_bundle/fetch_bundle_state.dart';
 import 'package:tikom/data/models/drinks.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/ui/screen/catering/add_on.dart';
+import 'package:tikom/ui/widgets/dialog.dart';
 import 'card/option.dart';
 
 class MenuOptionCafe extends StatefulWidget {
@@ -53,7 +54,7 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
       } else {
         print('remove');
         // checkedItems.remove([name, uuid, type]);
-         checkedItems.removeWhere((item) => item[1] == uuid);
+        checkedItems.removeWhere((item) => item[1] == uuid);
       }
       print('checked item');
       print(checkedItems);
@@ -189,29 +190,51 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                     ),
-                    onPressed: () {
-                      // Navigate to next page or perform action
-                      print(checkedItems);
-                      NewTransactionFullService newTransFullService =
-                          NewTransactionFullService(
-                              full_service:
-                                  widget.newTransactionFullService.full_service,
-                              package: widget.newTransactionFullService.package,
-                              product_list: checkedItems);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdditionalExtrasScreen(
-                                    newTransactionFullService:
-                                        newTransFullService,
-                                  )));
-                    },
+                    onPressed: checkedItems.length > 0
+                        ? () {
+                            // Navigate to next page or perform action
+
+                            print(checkedItems.length);
+                            print(widget.newTransactionFullService.package);
+                            var package = widget.newTransactionFullService.package.toString().split('//');
+                            var minimum = int.parse(package[1]);
+                            if (checkedItems.length >= minimum){
+                              NewTransactionFullService newTransFullService =
+                                  NewTransactionFullService(
+                                      full_service: widget
+                                          .newTransactionFullService.full_service,
+                                      package: widget
+                                          .newTransactionFullService.package,
+                                      product_list: checkedItems);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AdditionalExtrasScreen(
+                                            newTransactionFullService:
+                                                newTransFullService,
+                                          )));
+                            }
+                            else{
+                                DialogTemp().Informasi(
+                                context: context,
+                                onYes: () {
+                                  Navigator.pop(context);
+                                },
+                                onYesText: 'Ya',
+                                title: 'Minimum Produk $minimum' 
+                                );
+                            }
+
+                          }
+                        : null,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Next',
                           style: GoogleFonts.poppins(
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
