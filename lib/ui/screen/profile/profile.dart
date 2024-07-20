@@ -11,8 +11,11 @@ import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
 import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
 import 'package:tikom/ui/screen/order/checkout.dart';
+import 'package:tikom/ui/screen/profile/components/about.dart';
 import 'package:tikom/ui/screen/profile/components/edit.dart';
+import 'package:tikom/ui/screen/profile/components/help_center.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
+import 'package:tikom/ui/screen/profile/components/term_con.dart';
 import 'package:tikom/ui/screen/voucher/voucher_page.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
@@ -208,18 +211,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileMenu(
                   text: "Terms & Conditions",
                   icon: "assets/icons/setting.svg",
-                  press: () {},
+                  press: () => Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => TermsAndConditionsPage())),
                 ),
                 ProfileMenu(
                   text: "Help Center",
                   icon: "assets/icons/help_care.svg",
-                  press: () {},
+                  press: () => Navigator.push(context, 
+                      MaterialPageRoute(builder: (context) => HelpCenterPage())),
                 ),
                 ProfileMenu(
                   text: "About",
                   icon: "assets/icons/about.svg",
                   press: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfileAbout())),
+                      MaterialPageRoute(builder: (context) => AboutPage())),
                 ),
                 ProfileMenu(
                   text: "Log Out",

@@ -37,7 +37,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
           IconButton(
             icon: Icon(Icons.help_outline, color: Colors.black),
             onPressed: () {
-              // Help action
+              _showHelpDialog(context);
             },
           ),
         ],
@@ -51,7 +51,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Get a voucher discount voucher every time your friend joins via your referral code.",
+                    "Get a voucher discount every time your friend joins via your referral code.",
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black,
@@ -65,7 +65,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "Kode referral SAYA",
+                    "My Referral Code",
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -111,15 +111,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    "Hanya 3 langkah semua serba MURAH",
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 20),
+                  
                   Container(
                     height: 200,
                     child: ListView(
@@ -149,7 +141,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "Bagikan kode referral ke teman kamu",
+                                  "Share your referral code with friends",
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.black,
@@ -184,7 +176,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "Ajak teman kamu untuk daftar APP dan masukkan kode referral kamu",
+                                  "Ask your friend to sign up with your referral code",
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.black,
@@ -219,7 +211,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                                 ),
                                 SizedBox(height: 8),
                                 Text(
-                                  "Selesai! Kamu akan mendapatkan voucher.",
+                                  "Done! You'll receive a voucher.",
                                   style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.black,
@@ -259,13 +251,54 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          title: Text(
+            'Referral Code',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: Text(
+            'You can share your referral code with friends. When they sign up using your code, you both will receive rewards!',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "Close",
+                style: GoogleFonts.poppins(
+                  color: Constants.primaryColor,
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

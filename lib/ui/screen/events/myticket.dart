@@ -6,6 +6,8 @@ import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_cubit.dart';
 import 'package:tikom/data/blocs/fetch_event_data/fetch_event_data_state.dart';
 import 'package:tikom/ui/screen/events/view_ticket.dart';
 
+import '../../../utils/constant.dart';
+
 class TicketsScreen extends StatefulWidget {
   @override
   State<TicketsScreen> createState() => _TicketsScreenState();
@@ -17,7 +19,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'All Tickets',
+          'My Tickets',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -91,7 +93,8 @@ class TicketCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.network(imageUrl, width: 80, height: 80, fit: BoxFit.cover),
+                Image.network(imageUrl,
+                    width: 80, height: 80, fit: BoxFit.cover),
                 SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -132,13 +135,13 @@ class TicketCard extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green[50],
-                    border: Border.all(color: Colors.green),
+                    border: Border.all(color: Constants.primaryColor),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     status,
                     style: GoogleFonts.poppins(
-                      color: Colors.green,
+                      color: Constants.primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -152,8 +155,20 @@ class TicketCard extends StatelessWidget {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(primary: Colors.green),
-                  child: Text('View Ticket'),
+                  style:ElevatedButton.styleFrom(
+                    primary: Constants.primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    )
+                  ),
+                  child: Text(
+                    'View Ticket',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),

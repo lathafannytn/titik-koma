@@ -6,6 +6,8 @@ import 'package:tikom/data/blocs/fetch_my_point/fetch_my_point_state.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 
+import '../../../utils/constant.dart';
+
 class PointDetailsScreen extends StatefulWidget {
   @override
   State<PointDetailsScreen> createState() => _PointDetailsScreenState();
@@ -37,7 +39,7 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            // Navigate back
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -47,13 +49,14 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
                 TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
+        centerTitle: true, // Center the title
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
             icon: Icon(Icons.help_outline, color: Colors.black),
             onPressed: () {
-              // Help action
+              _showHelpDialog(context);
             },
           ),
         ],
@@ -75,11 +78,53 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
     );
   }
 
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          title: Text(
+            'Tikom Points History',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          content: Text(
+            'Here you can find the history of your Tikom Points transactions. Each entry shows the description, points, and the date of the transaction.',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "Close",
+                style: GoogleFonts.poppins(
+                  color: Constants.primaryColor,
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildPointsSummary() {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 30, 83, 66),
+        color: Constants.primaryColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
