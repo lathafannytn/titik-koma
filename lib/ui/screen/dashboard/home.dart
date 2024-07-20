@@ -13,7 +13,7 @@ import 'package:tikom/ui/screen/poin/point_detail.dart';
 import 'package:tikom/ui/screen/widget/catering_widget.dart';
 import 'package:tikom/ui/screen/widget/reveralwidget.dart';
 
-import '../voucher/voucher_page.dart';
+import '../voucher/voucher.dart';
 import 'list_notif.dart';
 
 class HomePage extends StatefulWidget {

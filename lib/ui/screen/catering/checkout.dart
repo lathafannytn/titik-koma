@@ -15,7 +15,7 @@ import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/data/repository/transaction_repository.dart';
 import 'package:tikom/ui/screen/catering/map.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
-import 'package:tikom/ui/screen/voucher/voucher_page.dart';
+import 'package:tikom/ui/screen/voucher/voucher.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';

@@ -98,7 +98,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                         SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Clipboard.setData(ClipboardData(text: widget.code)); // Perubahan di sini
+                            Clipboard.setData(ClipboardData(text: widget.code)); 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text("Referral code copied to clipboard!"),
@@ -157,7 +157,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Container(
-                            width: 200, // Adjust width as needed
+                            width: 200, 
                             padding: EdgeInsets.all(10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +192,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Container(
-                            width: 200, // Adjust width as needed
+                            width: 200, 
                             padding: EdgeInsets.all(10),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -243,7 +243,7 @@ class _KodeReferralPageState extends State<KodeReferralPage> {
               ),
               onPressed: () {
                 final String referralMessage =
-                    'Use my referral code ${widget.code} to get free coffee when you sign up!';
+                    'Use my referral code ${widget.code} to get voucher coffee when you sign up!';
                 Share.share(referralMessage);
               },
               child: Text(

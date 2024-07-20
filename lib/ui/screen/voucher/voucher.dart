@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_cubit.dart';
 import 'package:tikom/data/blocs/fetch_my_voucher/fetch_my_voucher_state.dart';
 import 'package:tikom/data/models/my_voucher.dart';
-import 'package:tikom/ui/screen/voucher/redeem.dart';
-import 'package:tikom/ui/screen/voucher/voucher_card.dart';
+import 'package:tikom/ui/screen/voucher/components/redeem.dart';
+import 'package:tikom/ui/screen/voucher/components/voucher_card.dart';
 
 import '../../../utils/constant.dart';
 

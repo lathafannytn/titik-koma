@@ -16,7 +16,7 @@ import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/help_center.dart';
 import 'package:tikom/ui/screen/profile/components/profile_about.dart';
 import 'package:tikom/ui/screen/profile/components/term_con.dart';
-import 'package:tikom/ui/screen/voucher/voucher_page.dart';
+import 'package:tikom/ui/screen/voucher/voucher.dart';
 import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/storage_service.dart';

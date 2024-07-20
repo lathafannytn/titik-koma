@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class VoucherCard extends StatelessWidget {
   final String title;
@@ -12,7 +13,7 @@ class VoucherCard extends StatelessWidget {
     required this.description,
     required this.expiryDate,
     required this.discount,
-     this.onclick,
+    this.onclick,
     Key? key,
   }) : super(key: key);
 
@@ -34,7 +35,7 @@ class VoucherCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -42,7 +43,7 @@ class VoucherCard extends StatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     description,
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[600],
                     ),
@@ -50,7 +51,7 @@ class VoucherCard extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     "Hingga $expiryDate",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 12,
                       color: Colors.grey[600],
                     ),
@@ -66,7 +67,7 @@ class VoucherCard extends StatelessWidget {
               children: [
                 Text(
                   discount,
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 62, 169, 126),
@@ -83,7 +84,7 @@ class VoucherCard extends StatelessWidget {
                   ),
                   child: Text(
                     'Pakai',
-                    style: TextStyle(color: Colors.white),
+                    style: GoogleFonts.poppins(color: Colors.white),
                   ),
                 ),
               ],

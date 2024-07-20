@@ -24,7 +24,7 @@ import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/storage_service.dart';
-import '../voucher/voucher_page.dart';
+import '../voucher/voucher.dart';
 
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
