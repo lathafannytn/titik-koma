@@ -66,7 +66,6 @@ class _PointDetailsScreenState extends State<PointDetailsScreen> {
             children: [
               buildPointsSummary(),
               SizedBox(height: 16),
-              // buildPointsHistoryHeader(),
               SizedBox(height: 8),
               buildPointsHistory(),
             ],
