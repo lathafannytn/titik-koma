@@ -24,6 +24,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   late SignUpBloc _signUpBloc;
+  bool _isDialogShown = false;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -42,21 +43,63 @@ class _SignUpState extends State<SignUp> {
 
   Future<void> _handleSignUp() async {
     AppExt.hideKeyboard(context);
-    DialogTemp().Konfirmasi(
-      context: context,
-      onYes: () {
-        LoadingDialog.show(context, barrierColor: const Color(0xFF777C7E));
-        _signUpBloc.add(SignUpButtonPressed(
-            email: widget.email,
-            name: _nameController.text,
-            phone: _phoneNumberController.text,
-            bornDate: _bornController.text,
-            address: _addressController.text,
-            code: _referralController.text ?? '--'));
-      },
-      title: "Apakah Ingin Melakukan Pendaftaran?",
-      onYesText: 'Ya',
-    );
+    if (!_isDialogShown) {
+      _isDialogShown = true; 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            title: Text(
+              "Apakah Ingin Melakukan Pendaftaran?",
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Constants.primaryColor,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(
+                  "Tidak",
+                  style: GoogleFonts.poppins(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  _isDialogShown = false; // Reset flag when dialog is closed
+                },
+              ),
+              TextButton(
+                child: Text(
+                  "Ya",
+                  style: GoogleFonts.poppins(
+                    color: Constants.primaryColor,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  _isDialogShown = false; // Reset flag after dialog is closed
+                  LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
+                  _signUpBloc.add(SignUpButtonPressed(
+                      email: widget.email,
+                      name: _nameController.text,
+                      phone: _phoneNumberController.text,
+                      bornDate: _bornController.text,
+                      address: _addressController.text,
+                      code: _referralController.text ?? '--'));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -70,7 +113,7 @@ class _SignUpState extends State<SignUp> {
           if (state is SignUpSuccess) {
             AppExt.popScreen(context);
             const snackBar = SnackBar(
-              content: Text('Login Success'),
+              content: Text('Sign Up Success'),
               backgroundColor: Colors.black,
               duration: Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
@@ -86,7 +129,7 @@ class _SignUpState extends State<SignUp> {
           } else if (state is SignUpFailure) {
             AppExt.popScreen(context);
             final snackBar = SnackBar(
-              content: Text('Login Failed: ${state.error}'),
+              content: Text('Sign Up Failed: ${state.error}'),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
@@ -95,7 +138,8 @@ class _SignUpState extends State<SignUp> {
           }
         },
         child: Scaffold(
-          body: Center( // Menambahkan Center untuk menempatkan konten di tengah
+          body: Center(
+            // Menambahkan Center untuk menempatkan konten di tengah
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: SingleChildScrollView(

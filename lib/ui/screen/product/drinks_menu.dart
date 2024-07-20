@@ -49,6 +49,9 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
 
   @override
   void initState() {
+    //biar awalnya ga NULL
+    _drinksFuture = Future.value([]);
+
     fetchCategories().then((data) {
       setState(() {
         categories = data as List<Category>;

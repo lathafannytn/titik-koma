@@ -44,6 +44,7 @@ class _SignInState extends State<SignIn> {
   bool _isObscured = true;
   GoogleSignInAccount? _currentUser;
   late SignInEmailBloc _signInBloc;
+  bool _isDialogShown = false;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -122,16 +123,63 @@ class _SignInState extends State<SignIn> {
   Future<void> _handleLogin() async {
     try {
       AppExt.hideKeyboard(context);
-      DialogTemp().Konfirmasi(
-        context: context,
-        onYes: () {
-          LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
-          _signInBloc.add(SignInButtonPressed(email: _emailController.text));
-        },
-        title: "Apakah Ingin Login?",
-        onYesText: 'Ya',
-      );
+      if (!_isDialogShown) {
+        // Cek flag sebelum menampilkan dialog
+        _isDialogShown =
+            true; // Set flag menjadi true ketika dialog ditampilkan
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              ),
+              title: Text(
+                "Apakah Ingin Login?",
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Constants.primaryColor,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    "Tidak",
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey,
+                      fontSize: 16,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Tutup dialog
+                    _isDialogShown = false; // Reset flag ketika dialog ditutup
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    "Ya",
+                    style: GoogleFonts.poppins(
+                      color: Constants.primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Tutup dialog
+                    _isDialogShown = false; // Reset flag setelah dialog ditutup
+                    LoadingDialog.show(context,
+                        barrierColor: Color(0xFF777C7E));
+                    _signInBloc
+                        .add(SignInButtonPressed(email: _emailController.text));
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (e) {
+      _isDialogShown = false; // Pastikan flag di-reset jika ada error
       throw Exception('Error : $e');
     }
   }
@@ -144,6 +192,7 @@ class _SignInState extends State<SignIn> {
       child: BlocListener<SignInEmailBloc, SignInEmailState>(
         listener: (context, state) {
           if (state is SignInSuccess) {
+            _isDialogShown = false; // Reset flag ketika login berhasil
             AppExt.popScreen(context);
             final snackBar = SnackBar(
               content: Text('Login Success'),
@@ -154,27 +203,74 @@ class _SignInState extends State<SignIn> {
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             Future.delayed(Duration(seconds: 2), () {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          OtpEmailScreen(email: _emailController.text)));
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      OtpEmailScreen(email: _emailController.text),
+                ),
+              );
             });
           } else if (state is SignInFailure) {
+            _isDialogShown = false; // Reset flag ketika login gagal
             AppExt.popScreen(context);
             if (state.message == 'Email Not Found') {
-              DialogTemp().Konfirmasi(
+              showDialog(
                 context: context,
-                onYes: () {
-                  LoadingDialog.show(context, barrierColor: Color(0xFF777C7E));
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SignUp(
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    title: Text(
+                      "Email Tidak Terdaftar?",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Constants.primaryColor,
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text(
+                          "Tidak",
+                          style: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Tutup dialog
+                          _isDialogShown =
+                              false; // Reset flag ketika dialog ditutup
+                        },
+                      ),
+                      TextButton(
+                        child: Text(
+                          "Daftar",
+                          style: GoogleFonts.poppins(
+                            color: Constants.primaryColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Tutup dialog
+                          _isDialogShown =
+                              false; // Reset flag setelah dialog ditutup
+                          LoadingDialog.show(context,
+                              barrierColor: Color(0xFF777C7E));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUp(
                                 email: _emailController.text,
-                              )));
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
                 },
-                title: "Email Tidak Terdaftar?",
-                onYesText: 'Daftar',
               );
             } else {
               final snackBar = SnackBar(
