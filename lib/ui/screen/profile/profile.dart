@@ -1,27 +1,22 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tikom/data/blocs/user_data/user_data_cubit.dart';
 import 'package:tikom/data/blocs/user_data/user_data_state.dart';
 import 'package:tikom/ui/screen/events/myticket.dart';
 import 'package:tikom/ui/screen/kode_referal/kode_referal.dart';
-import 'package:tikom/ui/screen/login/otp.dart';
 import 'package:tikom/ui/screen/login/signin.dart';
-import 'package:tikom/ui/screen/order/checkout.dart';
-import 'package:tikom/ui/screen/profile/components/about.dart';
 import 'package:tikom/ui/screen/profile/components/edit.dart';
 import 'package:tikom/ui/screen/profile/components/help_center.dart';
-import 'package:tikom/ui/screen/profile/components/profile_about.dart';
+import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
 import 'package:tikom/ui/screen/profile/components/term_con.dart';
 import 'package:tikom/ui/screen/voucher/voucher.dart';
-import 'package:tikom/ui/screen/profile/components/profile_menu.dart';
+import 'package:tikom/ui/screen/profile/components/about.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/storage_service.dart';
 
-import '../order/add_on.dart';
+import '../../../data/models/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -35,8 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _userDataCubit = BlocProvider.of<UserDataCubit>(context);
-    _userDataCubit
-        ?.loadUserData();
+    _userDataCubit?.loadUserData();
     print('Profile Page');
   }
 
@@ -53,11 +47,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final user = state.user;
                 print('User countVoucher: ${user.countVoucher}');
                 return buildProfileContent(
-                    context,
-                    user.name,
-                    user.point.toString(),
-                    user.referallCode,
-                    user.countVoucher.toString());
+                  context,
+                  user.name,
+                  user.point.toString(),
+                  user.referallCode,
+                  user.countVoucher.toString(),
+                  user, // Tambahkan argumen user di sini
+                );
               } else if (state is UserDataError) {
                 return Center(child: Text('Error: ${state.message}'));
               } else {
@@ -70,8 +66,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget buildProfileContent(BuildContext context, String userName,
-      String userPoints, String referral_code, String userVoucher) {
+  Widget buildProfileContent(
+    BuildContext context,
+    String userName,
+    String userPoints,
+    String referral_code,
+    String userVoucher,
+    User user, // Deklarasikan parameter user di sini
+  ) {
     return Column(
       children: [
         Stack(
@@ -200,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   press: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfilePage())),
+                          builder: (context) => EditProfilePage(user: user))), // Pastikan argumen user dikirim
                 ),
                 ProfileMenu(
                   text: "My Ticket",

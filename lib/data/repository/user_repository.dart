@@ -39,5 +39,10 @@ class UserRepository {
     return PointHistoryResponse.fromJson(response);
   }
 
+  Future<void> updateUser(User user) async {
+    await Future.delayed(Duration(seconds: 2)); // Menunggu selama 2 detik
+    print("Dummy update user: ${user.toJson()}"); // Menampilkan data pengguna yang diperbarui
+  }
+
 
 }
