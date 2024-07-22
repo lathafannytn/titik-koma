@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:tikom/data/blocs/fetch_voucher/vocuher_state.dart';
+import 'package:tikom/data/blocs/fetch_voucher/voucher_cubit.dart';
+import 'package:tikom/data/models/my_voucher.dart';
 import 'package:tikom/data/repository/my_voucher_repository.dart';
 import 'package:tikom/main.dart';
 import 'package:tikom/ui/screen/voucher/components/qr_scan.dart';
@@ -19,6 +23,28 @@ class RedeemVoucherPage extends StatefulWidget {
 
 class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
   final TextEditingController _voucherCodeController = TextEditingController();
+  late List<MyVoucher> voucherData;
+  late VoucherDataCubit _VoucherDataCubit;
+
+  @override
+  void initState() {
+    _VoucherDataCubit = VoucherDataCubit()..loadVoucherData();
+
+    // _VoucherDataCubit.stream.listen((state) {
+    //   if (state is VoucherDataLoaded) {
+    //     setState(() {
+    //       // for (var i = 0; i < count; i++) {
+    //       //   voucherData.add(state.voucher);
+    //       // }
+    //       voucherData = state.voucher;
+    //     });
+    //   }
+    // });
+
+    // print('hallo');
+    // print(voucherData.length);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -79,7 +105,7 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
         title: Text(
           'Tikom Redeem',
           style: GoogleFonts.poppins(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               color: Colors.black,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -139,11 +165,12 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     color: Color.fromARGB(255, 19, 78, 70)),
                               ),
                             ),
@@ -185,13 +212,34 @@ class _RedeemVoucherPageState extends State<RedeemVoucherPage> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    VoucherCard(
-                      title: 'Voucher Spesial',
-                      description:'Voucher TIKOM.',
-                      expiryDate: '31 Desember 2024',
-                      discount: '50%',
-                      onclick: () {
-                        print('Voucher digunakan');
+                    BlocBuilder<VoucherDataCubit, VoucherDataState>(
+                      bloc: VoucherDataCubit()..loadVoucherData(),
+                      builder: (context, state) {
+                        print('this success1');
+                        print(state);
+                        if (state is VoucherDataSuccess) {
+                          print('this success');
+
+                          return ListView(shrinkWrap: true, children: <Widget>[
+                            for (var i = 0; i < state.voucher.length; i++) ...[
+                              VoucherCard(
+                                title: state.voucher[i].name,
+                                description: state.voucher[i].desc,
+                                expiryDate: state.voucher[i].end_date,
+                                discount: '${state.voucher[i].percentage}% OFF',
+                                onclick: () {
+                                  setState(() {
+                                    _voucherCodeController.text = state.voucher[i].code;
+                                    handlerClaimVoucher();
+                                  });
+
+                                  print('Voucher digunakan');
+                                },
+                              ),
+                            ],
+                          ]);
+                        }
+                        return SizedBox();
                       },
                     ),
                   ],
