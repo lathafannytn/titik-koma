@@ -30,6 +30,16 @@ class UserDataCubit extends Cubit<UserDataState> {
       emit(UserDataError(error.toString()));
     }
   }
+
+  Future<void> updateUserProfile(User updatedUser) async {
+    try {
+      emit(UserDataLoading());
+      await _userRepository.updateUser(updatedUser);
+      emit(UserDataLoaded(updatedUser));
+    } catch (error) {
+      emit(UserDataError(error.toString()));
+    }
+  }
 }
 
 // class UserDataCubit extends Cubit<UserDataState> {
