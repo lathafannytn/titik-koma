@@ -5,6 +5,7 @@ import 'package:tikom/data/blocs/fetch_product_catering/product_catering_cubit.d
 import 'package:tikom/data/blocs/fetch_product_catering/product_catering_state.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/ui/screen/catering/add_on.dart';
+import 'package:tikom/utils/constant.dart';
 
 class MenuOptionsScreen extends StatefulWidget {
   const MenuOptionsScreen({required this.newTransactionFullService});
@@ -110,7 +111,8 @@ class _MenuOptionsScreenState extends State<MenuOptionsScreen> {
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
+                        elevation: 0,
+                        primary: Constants.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),

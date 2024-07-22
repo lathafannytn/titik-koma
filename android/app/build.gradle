@@ -72,6 +72,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    
 }
 
 // Tambahkan plugin google-services di bawah ini

@@ -90,7 +90,6 @@ class _PackageScreenState extends State<PackageScreen> {
                                     description:
                                         state.full_service[0].description,
                                     includes: const [
-                                      'serve 120 pax 8 oz cups (mini) OR serve 80 pax 12 oz cups (regular)',
                                       '4 hours rental of 1 unit Ice Cold Dispenser',
                                       'Ice Cubes + Styrofoam Box',
                                     ],

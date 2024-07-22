@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tikom/ui/screen/catering/checkout.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
+import 'package:tikom/utils/constant.dart';
 
 class CustomizableCupScreen extends StatefulWidget {
   final double totalCost;
@@ -142,7 +143,8 @@ class _CustomizableCupScreenState extends State<CustomizableCupScreen> {
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  elevation: 0,
+                  primary: Constants.primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

@@ -128,22 +128,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ListNotif()),
-                  );
-                },
-                child: Container(
-                  alignment: Alignment.topRight,
-                  child: const Icon(
-                    Icons.notifications_active,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     // Navigator.push(
+              //     //   context,
+              //     //   MaterialPageRoute(builder: (context) =>),
+              //     // );
+              //   },
+              //   child: Container(
+              //     alignment: Alignment.topRight,
+              //     child: const Icon(
+              //       Icons.notifications_active,
+              //       color: Colors.white,
+              //       size: 25,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

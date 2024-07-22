@@ -7,6 +7,7 @@ import 'package:tikom/data/models/drinks.dart';
 import 'package:tikom/data/models/transaction_full_service.dart';
 import 'package:tikom/ui/screen/catering/add_on.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/utils/constant.dart';
 import 'card/option.dart';
 
 class MenuOptionCafe extends StatefulWidget {
@@ -152,39 +153,40 @@ class _MenuOptionCafeState extends State<MenuOptionCafe> {
                     );
                   },
                 ),
-                if (checkedItems.isNotEmpty)
-                  Positioned(
-                    bottom: 80,
-                    left: 20,
-                    right: 20,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white, // Background color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        elevation: 4,
-                      ),
-                      onPressed: () {
-                        _showCheckedItems(context);
-                      },
-                      child: Text(
-                        'View Cart (${checkedItems.length})',
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
+                // if (checkedItems.isNotEmpty)
+                //   Positioned(
+                //     bottom: 80,
+                //     left: 20,
+                //     right: 20,
+                //     child: ElevatedButton(
+                //       style: ElevatedButton.styleFrom(
+                //         primary: Colors.white, // Background color
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(10.0),
+                //         ),
+                //         elevation: 4,
+                //       ),
+                //       onPressed: () {
+                //         _showCheckedItems(context);
+                //       },
+                //       child: Text(
+                //         'View Cart (${checkedItems.length})',
+                //         style: GoogleFonts.poppins(
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.bold,
+                //           color: Colors.black,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
                 Positioned(
                   bottom: 20,
                   left: 20,
                   right: 20,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green, // Background color
+                      elevation: 0,
+                      primary: Constants.primaryColor, // Background color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),

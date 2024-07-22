@@ -17,6 +17,7 @@ import 'package:tikom/ui/screen/catering/map.dart';
 import 'package:tikom/ui/screen/order/payment_qris.dart';
 import 'package:tikom/ui/screen/voucher/voucher.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
+import 'package:tikom/utils/constant.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
 
@@ -327,30 +328,6 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                         builder: (context) =>
                             PaymentPage(uuid: dataRes[1].toString()),
                       ));
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => MyHomePage(
-                  //               tabIndex: 2,
-                  //             )));
-                  // DialogTemp().Informasi(
-                  //     context: context,
-                  //     onYes: () {
-                  //       // Navigator.pushReplacement(
-                  //       //     context,
-                  //       //     MaterialPageRoute(
-                  //       //         builder: (context) => MyHomePage(
-                  //       //               tabIndex: 2,
-                  //       //             )));
-                  //       // Navigator.pushReplacement(
-                  //       //     context,
-                  //       //     MaterialPageRoute(
-                  //       //         builder: (context) => PaymentMethodScreen(
-                  //       //               totalAmount: total_price,
-                  //       //             )));
-                  //     },
-                  //     onYesText: 'Oke',
-                  //     title: 'Berhasil Melakukan Order');
                 } else if (state is CateringBlocFailure) {
                   AppExt.popScreen(context);
                   DialogTemp().Informasi(
@@ -366,19 +343,21 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    // Aksi ketika tombol Place Order ditekan
                     handlePlaceOrder();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    primary: Constants.primaryColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(30),
                     ),
+                    elevation: 0, 
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 15),
+                      horizontal: 40,
+                      vertical: 15,
+                    ),
                   ),
                   child: Text(
-                    'Place Order',
+                    'Place Order', 
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.white,
@@ -397,16 +376,9 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(8),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,7 +389,7 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Take your order at :',
+                  'Take your order at:',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -465,7 +437,6 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          // MapScreenCatering
           InkWell(
             onTap: () async {
               var data_back = await Navigator.push(
@@ -490,20 +461,20 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
                   payment_option += int.parse(delivery_price);
                 });
               }
-              // print(delivered);/
             },
             child: Padding(
               padding: const EdgeInsets.only(left: 32.0),
               child: Row(
                 children: [
-                  Text(
-                    delivery_place,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      delivery_place,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Spacer(),
                   const Icon(Icons.arrow_forward_ios, size: 16),
                 ],
               ),
@@ -520,14 +491,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,14 +542,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -719,14 +690,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -876,14 +847,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -953,14 +924,14 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey.withOpacity(0.3),
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1058,10 +1029,10 @@ class _CheckoutServiceScreenState extends State<CheckoutServiceScreen> {
               children: [
                 Text(
                   isPickupNowSelected
-                      ? 'Delivery now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
+                      ? 'Event now at ${DateFormat('MMM dd yyyy').format(selectedPickupDate)}'
                       : isSingleDate
-                          ? 'Delivery on ${DateFormat('MMM dd yyyy').format(selectedDate)} at ${selectedTime.format(context)}'
-                          : 'Delivery between ${DateFormat('MMM dd yyyy').format(selectedDateRange.start)} and ${DateFormat('MMM dd yyyy').format(selectedDateRange.end)} at ${selectedTime.format(context)}',
+                          ? 'Event on ${DateFormat('MMM dd yyyy').format(selectedDate)} at ${selectedTime.format(context)}'
+                          : 'Event between ${DateFormat('MMM dd yyyy').format(selectedDateRange.start)} and ${DateFormat('MMM dd yyyy').format(selectedDateRange.end)} at ${selectedTime.format(context)}',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(fontWeight: FontWeight.bold),
                   ),
