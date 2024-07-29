@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:tikom/ui/screen/product/product_card.dart';
 import 'package:tikom/common/shared_pref.dart';
@@ -61,7 +62,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
         }
       });
     });
-     
+
     _orderDataCubit = OrderDataCubit()..loadOrderData();
     _orderProductCubit = OrderProductCubit()..loadOrderProduct();
 
@@ -85,17 +86,17 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
       }
     });
 
-    
     handlePotonganDefault();
-     
-    
+
     super.initState();
   }
+
   Future<void> _refreshDrinks() async {
-      setState(() {
-        _drinksFuture = fetchDrinksByCategory(uuidCategory);
-      });
-    }
+    setState(() {
+      _drinksFuture = fetchDrinksByCategory(uuidCategory);
+    });
+  }
+
   void handlePotonganDefault() async {
     print('panggil handler potongan');
     try {
@@ -203,6 +204,12 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
   void handleShowOrder() {}
 
   void handleDelete(String uuid) {}
+
+  String formatCurrency(int amount) {
+    final formatter =
+        NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+    return formatter.format(amount);
+  }
 
   Future handlePlusMinus(String uuid, String actions) async {
     print(actions);
@@ -401,7 +408,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                           delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                               return FutureBuilder<List<Drinks>>(
-                                future:   _drinksFuture,
+                                future: _drinksFuture,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -514,7 +521,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                "Rp. ${ full_quantity >= quantity_discount ? total_price_discount : state.categories[0].total_price}",
+                                "Rp. ${full_quantity >= quantity_discount ? total_price_discount : state.categories[0].total_price}",
                                 style: GoogleFonts.poppins(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -641,7 +648,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                       IconButton(
                                         onPressed: () {
                                           handlePlusMinus(data.uuid, 'MINUS');
-                                    
                                         },
                                         icon: Icon(Icons.remove_circle_outline,
                                             color:

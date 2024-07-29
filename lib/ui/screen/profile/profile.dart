@@ -144,11 +144,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                        size: 25,
-                      ),
+                      // Icon(
+                      //   Icons.settings,
+                      //   color: Colors.white,
+                      //   size: 25,
+                      // ),
                     ],
                   ),
                 ),
