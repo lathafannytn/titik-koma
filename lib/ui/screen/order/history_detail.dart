@@ -160,7 +160,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                             ),
                             Divider(thickness: 1),
                           ],
-                           if (state.transactions[0].repayment == 2) ...[
+                          if (state.transactions[0].repayment == 2) ...[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -323,6 +323,58 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                       ),
                     ),
                   ],
+                  if ((state.transactions[0].repayment == 1 &&
+                      state.transactions[0].down_payment != 0)) ...[
+                    Card(
+                      margin: EdgeInsets.only(bottom: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Status DP',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text('Sisa Waktu',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                                Text('Tanggal',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14)),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                    '${state.transactions[0].repayment_status}',
+                                    style: GoogleFonts.poppins(fontSize: 13)),
+                                Text(
+                                    '${state.transactions[0].repayment_date_count}',
+                                    style: GoogleFonts.poppins(fontSize: 13)),
+                                Text(
+                                  DateFormat('dd MMM yyyy').format(
+                                      DateTime.parse(
+                                          state.transactions[0].repayment_date_last)),
+                                  style: GoogleFonts.poppins(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                   if (state.transactions[0].media != null) ...[
                     for (var i = 0;
                         i < state.transactions[0].media!.length;
@@ -353,7 +405,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                     ],
                   ],
                   if (state.transactions[0].status == 'WAITING PAYMENT' ||
-                      (state.transactions[0].repayment == 1 && state.transactions[0].down_payment != 0) ) ...[
+                      (state.transactions[0].repayment == 1 &&
+                          state.transactions[0].down_payment != 0)) ...[
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushReplacement(

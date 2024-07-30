@@ -44,6 +44,11 @@ class Transaction {
   final dynamic service_count;
   final dynamic custom_cup;
   final dynamic repayment;
+  final dynamic repayment_date_count;
+  final dynamic repayment_status;
+  final dynamic repayment_date_last;
+
+
 
   Transaction(
       {required this.id,
@@ -68,7 +73,11 @@ class Transaction {
       this.custom_cup,
       this.inventoryItems,
       this.repayment,
-      this.addOnCatering});
+      this.addOnCatering,
+      this.repayment_date_count,
+      this.repayment_status,
+      this.repayment_date_last,
+    });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     var productsJson = json['products'] as List<dynamic>;
@@ -114,8 +123,9 @@ class Transaction {
         service_count: json['service_count'] ?? '',
         custom_cup: json['custom_cup'] ?? '',
         repayment: json['repayments'] ?? '',
-
-        
+        repayment_date_count: json['count_repay'] ?? '',
+        repayment_status: json['status_repay'] ?? '',
+      repayment_date_last: json['repay_date_batas'] ?? '',
         inventoryItems: inventoryItemsDetails);
   }
 
