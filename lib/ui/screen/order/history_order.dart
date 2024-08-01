@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:tikom/data/blocs/transaction/transaction_bloc.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -27,6 +28,12 @@ class _OrdersPageState extends State<OrdersPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  // Tambahkan fungsi formatCurrency
+  String formatCurrency(num amount) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(amount);
   }
 
   @override
@@ -78,7 +85,7 @@ class _OrdersPageState extends State<OrdersPage>
                 controller: _tabController,
                 children: [
                   buildOrderList(context, 'PENDING'),
-                  buildOrderList(context, 'COMPLATED'),
+                  buildOrderList(context, 'COMPLETED'),
                   buildOrderList(context, 'CANCELED'),
                 ],
               ),
@@ -114,7 +121,7 @@ class _OrdersPageState extends State<OrdersPage>
                   return buildOrderItem(
                       context,
                       "Code : ${transaction.transaction_code}",
-                      "Rp. ${transaction.price}",
+                      transaction.price, // Kirim parameter price sebagai num
                       transaction.status,
                       'assets/images/kopi_aren_doppio.jpg',
                       transaction.service_date);
@@ -135,7 +142,7 @@ class _OrdersPageState extends State<OrdersPage>
     );
   }
 
-  Widget buildOrderItem(BuildContext context, String title, String subtitle,
+  Widget buildOrderItem(BuildContext context, String title, num subtitle, // Ubah parameter subtitle ke num
       String status, String imagePath, String date) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
@@ -163,9 +170,7 @@ class _OrdersPageState extends State<OrdersPage>
                 SizedBox(height: 4.0),
                 Row(
                   children: [
-                    // Icon(Icons.store, color: Colors.grey, size: 16),
-                    // SizedBox(width: 4.0),
-                    Text(subtitle,
+                    Text(formatCurrency(subtitle), // Gunakan formatCurrency
                         style: GoogleFonts.poppins(color: Colors.grey)),
                   ],
                 ),
@@ -194,7 +199,6 @@ class _OrdersPageState extends State<OrdersPage>
               ],
             ),
           ),
-          // Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         ],
       ),
     );

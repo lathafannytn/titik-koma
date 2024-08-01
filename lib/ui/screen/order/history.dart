@@ -12,6 +12,13 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+
+  // Tambahkan fungsi formatCurrency
+  String formatCurrency(num amount) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,7 +181,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               const SizedBox(height: 8.0),
               Text(
-                '$totalItems item • Rp $totalPrice',
+                '$totalItems item • ${formatCurrency(totalPrice)}', // Gunakan formatCurrency
                 style: GoogleFonts.poppins(),
               ),
             ],

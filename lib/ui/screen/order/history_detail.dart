@@ -18,6 +18,12 @@ class DetailHistoryOrderScreen extends StatefulWidget {
 }
 
 class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
+  String formatCurrency(num amount) {
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,8 +113,10 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                   style: GoogleFonts.poppins(fontSize: 14),
                                 ),
                                 Text(
-                                    'Rp ${state.transactions[0].product_detail[i].pivot_price}',
-                                    style: GoogleFonts.poppins(fontSize: 14)),
+                                  formatCurrency(state.transactions[0]
+                                      .product_detail[i].pivot_price),
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                )
                               ],
                             ),
                           ],
@@ -120,8 +128,10 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14)),
-                              Text('Rp ${state.transactions[0].price}',
-                                  style: GoogleFonts.poppins(fontSize: 14)),
+                              Text(
+                                formatCurrency(state.transactions[0].price),
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
                             ],
                           ),
                           Row(
@@ -132,7 +142,7 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14)),
                               Text(
-                                '- Rp ${state.transactions[0].price_discount}',
+                                '- ${formatCurrency(state.transactions[0].price_discount)}',
                                 style: GoogleFonts.poppins(
                                   textStyle: TextStyle(color: Colors.red),
                                   fontSize: 14,
@@ -186,10 +196,11 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                   style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14)),
-                              Text('Rp ${state.transactions[0].price_amount}',
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14)),
+                              Text(
+                                formatCurrency(
+                                    state.transactions[0].price_amount),
+                                style: GoogleFonts.poppins(fontSize: 14),
+                              ),
                             ],
                           ),
                         ],
@@ -364,8 +375,8 @@ class _DetailHistoryOrderScreenState extends State<DetailHistoryOrderScreen> {
                                     style: GoogleFonts.poppins(fontSize: 13)),
                                 Text(
                                   DateFormat('dd MMM yyyy').format(
-                                      DateTime.parse(
-                                          state.transactions[0].repayment_date_last)),
+                                      DateTime.parse(state.transactions[0]
+                                          .repayment_date_last)),
                                   style: GoogleFonts.poppins(fontSize: 13),
                                 ),
                               ],

@@ -207,7 +207,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
 
   String formatCurrency(int amount) {
     final formatter =
-        NumberFormat.currency(locale: 'id', symbol: 'Rp', decimalDigits: 0);
+        NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0);
     return formatter.format(amount);
   }
 
@@ -470,8 +470,6 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
               );
             }
             if (state is OrderDataSuccess) {
-              print('success');
-              print(state.categories.length);
               if (state.categories.isNotEmpty) {
                 return BottomAppBar(
                   color: Colors.white,
@@ -506,9 +504,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                         minWidth: 15,
                                         minHeight: 15,
                                       ),
-                                      // menghitung total-quantity untuk dimasukkan keranjang
                                       child: Text(
-                                        "${full_quantity}",
+                                        "$full_quantity",
                                         style: GoogleFonts.poppins(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -521,7 +518,10 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                               ),
                               SizedBox(width: 8),
                               Text(
-                                "Rp. ${full_quantity >= quantity_discount ? total_price_discount : state.categories[0].total_price}",
+                                full_quantity >= quantity_discount
+                                    ? formatCurrency(total_price_discount!)
+                                    : formatCurrency(
+                                        state.categories[0].total_price),
                                 style: GoogleFonts.poppins(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -699,7 +699,7 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                       fontWeight: FontWeight.bold),
                                   children: [
                                     TextSpan(
-                                      text: 'Rp $total_price',
+                                      text: formatCurrency(total_price),
                                       style: TextStyle(
                                         decoration:
                                             full_quantity >= quantity_discount
@@ -709,7 +709,8 @@ class _DrinksMenuPageState extends State<DrinksMenuPage> {
                                     ),
                                     if (full_quantity >= quantity_discount) ...[
                                       TextSpan(
-                                        text: ' $total_price_discount',
+                                        text:
+                                            ' ${formatCurrency(total_price_discount!)}',
                                         style: const TextStyle(
                                           color: Colors.red,
                                         ),

@@ -16,6 +16,7 @@ import 'package:tikom/ui/screen/product/drinks_menu.dart';
 import 'package:tikom/ui/widgets/dialog.dart';
 import 'package:tikom/utils/extentions.dart' as AppExt;
 import 'package:tikom/ui/widgets/loading_dialog.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/constant.dart';
 
@@ -109,6 +110,12 @@ class _AddOnScreenState extends State<AddOnScreen> {
     }
     print(selected);
     print(add_on);
+  }
+
+  String formatCurrency(num amount) {
+    final formatter =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(amount);
   }
 
   @override
@@ -409,7 +416,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Rp $_basePrice',
+            formatCurrency(_basePrice), // Menggunakan formatCurrency
             style: GoogleFonts.poppins(
               textStyle:
                   const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -666,7 +673,7 @@ class _AddOnScreenState extends State<AddOnScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Rp ${totalPrice.toStringAsFixed(0)}',
+            formatCurrency(totalPrice), // Menggunakan formatCurrency
             style: GoogleFonts.poppins(
               textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -701,8 +708,8 @@ class _AddOnScreenState extends State<AddOnScreen> {
                     ),
                   ),
                   TextSpan(
-                    text:
-                        'Rp ${(_basePrice + _additionalPrice).toStringAsFixed(0)}',
+                    text: formatCurrency(_basePrice +
+                        _additionalPrice), // Menggunakan formatCurrency
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontSize: 18,

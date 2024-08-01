@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart'; // Tambahkan ini
 import 'package:tikom/ui/screen/order/add_on.dart';
 
 class ProductCard extends StatelessWidget {
@@ -20,6 +21,12 @@ class ProductCard extends StatelessWidget {
     required this.stock,
   });
 
+  // Tambahkan fungsi formatCurrency
+  String formatCurrency(num amount) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    return formatter.format(amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -34,13 +41,13 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: CachedNetworkImage(
-                  imageUrl: imagePath,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
+                imageUrl: imagePath,
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -66,7 +73,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    'Rp ${price.toStringAsFixed(0)}',
+                    formatCurrency(price), // Gunakan formatCurrency di sini
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -76,20 +83,25 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: stock != 0 ?() {
-                print("IconButton pressed");
-                print(uuid);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddOnScreen(
+              onPressed: stock != 0
+                  ? () {
+                      print("IconButton pressed");
+                      print(uuid);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddOnScreen(
                             uuid: uuid,
-                          )),
-                );
-              } : null,
+                          ),
+                        ),
+                      );
+                    }
+                  : null,
               icon: Icon(
                 Icons.add_circle_outline_outlined,
-                color:  stock != 0 ?const Color.fromARGB(255, 3, 115, 76) : Colors.grey,
+                color: stock != 0
+                    ? const Color.fromARGB(255, 3, 115, 76)
+                    : Colors.grey,
               ),
             ),
           ],
